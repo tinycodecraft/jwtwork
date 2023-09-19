@@ -1,0 +1,24 @@
+﻿@import '@fontsource/fira-code';
+@import '@fontsource/great-vibes';
+@import '@fontsource/montserrat';
+@import '@fontsource/roboto';
+/* overrides for bulma & react-toastify defaults */
+@import 'base/variables';
+
+/* node_modules imports */
+@import 'bulma/bulma';
+@import 'react-toastify/dist/ReactToastify.css';
+
+/* local styles */
+@import 'base/generic', 'base/transition';
+@import 'components/navbar', 'components/tool-tip';
+
+/* tailwind css imports */
+
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+/* fix image in login */
+
+@import 'components/tailbase';
