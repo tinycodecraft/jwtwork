@@ -16,6 +16,7 @@
 
         public interface IJwtManager
         {
+            Task<bool> HasUser();
             Task<ILoginError?> Authenticate(string username, string password,string? newpassword=null);
             Task<string> Register(string username, string password);
         }

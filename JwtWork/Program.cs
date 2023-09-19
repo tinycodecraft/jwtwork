@@ -17,11 +17,13 @@ using JwtWork.Abstraction.Models;
 using JwtWork.Abstraction.Tools;
 using JwtWork.Abstraction;
 
-using JwtWork.UserDB;
+
 using static JwtWork.Abstraction.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebSockets;
 using Microsoft.AspNetCore.DataProtection;
+using JwtWork.SQLDB.Models;
+using JwtWork.SQLDB;
 //using Serilog.Core;
 //using System.Linq;
 //using System.Reflection.Metadata;
@@ -64,24 +66,9 @@ builder.Services.Configure<AuthSetting>(authsetting);
 //Setup IdentityDB Context and UserManager
 //If not, only DB Context service to be added
 
-builder.Services.AddDbContext<JwtDB>();
-builder.Services
-    .AddIdentityCore<IdentityUser>(opt =>
-    {
-        opt.User.RequireUniqueEmail = false;
-        opt.Password.RequireNonAlphanumeric = false;
-        opt.Password.RequireDigit = false;
-        opt.Password.RequireLowercase = false;
-        opt.Password.RequireUppercase = false;
-        opt.SignIn.RequireConfirmedPhoneNumber = false;
-        opt.SignIn.RequireConfirmedEmail = true;
-        opt.Password.RequiredLength = 3;
+builder.Services.AddDbContext<JWTWORKContext>();
 
-    }
-    )
-    .AddEntityFrameworkStores<JwtDB>()
-    .AddDefaultTokenProviders();
-builder.Services.AddScoped<IJwtManager,JwtManager>();
+
 //hosting environment variable in iwebhostenvironment
 //var isproduction = builder.Environment.IsProduction();
 
@@ -95,6 +82,9 @@ builder.Host.UseSerilog((ctx,srv, cfg) => {
 
     
 });
+
+builder.Services.AddScoped<IJwtManager, UserManager>();
+
 //only execute once
 builder.Services.AddHostedService<TracerService>();
 
