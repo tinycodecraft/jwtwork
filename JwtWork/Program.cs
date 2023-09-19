@@ -24,6 +24,7 @@ using Microsoft.AspNetCore.WebSockets;
 using Microsoft.AspNetCore.DataProtection;
 using JwtWork.SQLDB.Models;
 using JwtWork.SQLDB;
+using System.Text.Json.Serialization;
 //using Serilog.Core;
 //using System.Linq;
 //using System.Reflection.Metadata;
@@ -97,7 +98,10 @@ builder.Services.AddHealthChecksUI()
     .AddInMemoryStorage();
 
 builder.Services.AddCorsConfig(corsPolicyName);
-builder.Services.AddControllers(); 
+builder.Services.AddControllers().AddJsonOptions(opt=>
+{
+    opt.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+}); 
 
 //builder.Services.AddCustomLocalization();
 builder.Services.AddSignalR();
