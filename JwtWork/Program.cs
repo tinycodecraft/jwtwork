@@ -25,6 +25,9 @@ using Microsoft.AspNetCore.DataProtection;
 using JwtWork.SQLDB.Models;
 using JwtWork.SQLDB;
 using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 //using Serilog.Core;
 //using System.Linq;
 //using System.Reflection.Metadata;
@@ -114,6 +117,35 @@ builder.Services.AddResponseCompressionConfig(builder.Configuration);
 // Config change in asp.net core 3.0+ - 'Async' suffix in action names get stripped by default - so, to access them by full name with 'Async' part - opt out of this feature.
 builder.Services.AddMvc(opt => opt.SuppressAsyncSuffixInActionNames = false);
 
+//Try to add Jwt setup
+
+builder.Services
+        .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    //.AddAuthentication(option =>
+    //{
+    //    option.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    //    option.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+
+    //})    
+    .AddJwtBearer(options =>
+    {
+
+        options.TokenValidationParameters = new TokenValidationParameters()
+        {
+            ClockSkew = TimeSpan.Zero,
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = authsetting[nameof(AuthSetting.Issuer)],
+            ValidAudience = authsetting[nameof(AuthSetting.Audience)],
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(authsetting[nameof(AuthSetting.Secret)] ?? "")
+            ),
+        };
+    });
+
+
 //Try to add session
 builder.Services.AddDistributedMemoryCache();
 
@@ -194,8 +226,8 @@ app.UseRouting();
 
 
 //*Jwt enabled for auth*//
-//app.UseAuthentication();
-//app.UseAuthorization();
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.UseSession();
 

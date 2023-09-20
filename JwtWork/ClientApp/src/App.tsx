@@ -16,11 +16,12 @@ const App: FunctionComponent = () => {
       <SwitchTransition mode="out-in">
         <CSSTransition {...cssProps}>
           <Routes location={location}>
-            {routes.map(({ path, Component }) => (
+            {routes.map(({ path, Component, ...rest }) => (
               <Route
                 key={path}
-                path={path}                
-                element={<Component />}
+                path={path}   
+                             
+                element={<Component {...rest} />}
               />
             ))}
           </Routes>
