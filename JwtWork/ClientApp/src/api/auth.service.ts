@@ -9,8 +9,10 @@ class AuthService extends BaseService {
   private static _authService: AuthService;
   private static _controller = 'Auth';
 
+
   private constructor(name: string) {
     super(name);
+
   }
 
   public static get Instance(): AuthService {

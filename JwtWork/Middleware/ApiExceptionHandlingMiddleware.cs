@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using System;
 using JwtWork.Models;
 using System.Text.Json;
+using System.Text;
+using Azure.Core;
 
 namespace JwtWork.Middleware
 {
@@ -24,19 +26,34 @@ namespace JwtWork.Middleware
 
         public async Task Invoke(HttpContext context)
         {
+
+
+            var requestContent = new StringBuilder();
             try
             {
+
+                requestContent.AppendLine("=== Error happens to Request Info ===");
+                requestContent.AppendLine($"method = {context.Request.Method.ToUpper()}");
+                requestContent.AppendLine($"path = {context.Request.Path}");
+
+                requestContent.AppendLine("-- headers");
+                foreach (var (headerKey, headerValue) in context.Request.Headers)
+                {
+                    requestContent.AppendLine($"header = {headerKey}    value = {headerValue}");
+                }
                 await _next(context);
             }
             catch (Exception ex)
             {
-                await HandleExceptionAsync(context, ex);
+                await HandleExceptionAsync(context, ex,requestContent);
             }
         }
 
-        private async Task HandleExceptionAsync(HttpContext context, Exception ex)
+        private async Task HandleExceptionAsync(HttpContext context, Exception ex,StringBuilder sb)
         {
             string result;
+
+            _logger.LogError(sb.ToString());
 
             if (ex is DomainException e)
             {

@@ -44,7 +44,9 @@ export const BASEURL= process.env.NODE_ENV === 'production' ? 'http://localhost:
 export const NUGET_URL_CONFIG = {
   HealthUi: `${BASEURL}/healthchecks-ui`,
   HealthJson: `${BASEURL}/healthchecks-json`,
-  SwaggerDocs: `${BASEURL}/swagger`
+  SwaggerDocs: `${BASEURL}/swagger`,
+  RefreshTokenUrl: `${BASEURL}/auth/refreshToken`,
+
 };
 
 /**

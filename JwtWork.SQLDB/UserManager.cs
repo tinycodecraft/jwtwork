@@ -37,6 +37,25 @@ namespace JwtWork.SQLDB
             
         }
 
+        public async Task<IUser?> GetUser(string username)
+        {
+            try
+            {
+                var founduser =  await db.UserTB.FirstOrDefaultAsync(e => e.UserName == username);
+                if (founduser != null)
+                {
+                    return founduser;
+                }
+            }
+            catch(Exception ex)
+            {
+                logger.LogError(ex, ex.Message);
+                
+                
+            }
+            return null;
+        }
+
         public async Task<ILoginError?> Authenticate(string username, string password, string? newpassword = null)
         {
             var scm = new StringEncrypService();

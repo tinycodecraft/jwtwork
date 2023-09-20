@@ -8,3 +8,4 @@ export interface ColorType {
   id: UniqueIdentifier;
   color: string;
 }
+

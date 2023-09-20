@@ -114,6 +114,17 @@ builder.Services.AddResponseCompressionConfig(builder.Configuration);
 // Config change in asp.net core 3.0+ - 'Async' suffix in action names get stripped by default - so, to access them by full name with 'Async' part - opt out of this feature.
 builder.Services.AddMvc(opt => opt.SuppressAsyncSuffixInActionNames = false);
 
+//Try to add session
+builder.Services.AddDistributedMemoryCache();
+
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromSeconds(300);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+    options.Cookie.Name = ".JwtWork.Session";
+});
+
 // In production, the React files will be served from this directory
 builder.Services.AddSpaStaticFiles(opt => opt.RootPath = $"{spaSrcPath}/dist");
 
@@ -179,11 +190,14 @@ app.UseSerilogRequestLogging( option=>
 
 app.UseHttpsRedirection();
 app.UseRouting();
+
+
+
 //*Jwt enabled for auth*//
 //app.UseAuthentication();
 //app.UseAuthorization();
 
-
+app.UseSession();
 
 // Map controllers / SignalR hubs
 app.UseEndpoints(endpoints =>

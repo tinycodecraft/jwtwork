@@ -5,10 +5,11 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
+using static JwtWork.Abstraction.Interfaces;
 
 namespace JwtWork.SQLDB.Models;
 
-public partial class UserTB
+public partial class UserTB:IUser
 {
     [Key]
     public int Id { get; set; }
@@ -20,6 +21,10 @@ public partial class UserTB
     [Required]
     [StringLength(50)]
     public string Post { get; set; }
+
+    [StringLength(200)]
+    public string Email { get; set; }
+
 
     [StringLength(200)]
     public string UserName { get; set; }

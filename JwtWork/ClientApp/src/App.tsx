@@ -5,9 +5,11 @@ import { useCSSTransitionProps } from './hooks';
 import { useLocation, Route, Routes } from 'react-router-dom';
 import { CSSTransition, SwitchTransition } from 'react-transition-group';
 
+
 const App: FunctionComponent = () => {
   const location = useLocation();
   const cssProps = useCSSTransitionProps();
+  
 
   return (
     <Layout>
@@ -17,7 +19,7 @@ const App: FunctionComponent = () => {
             {routes.map(({ path, Component }) => (
               <Route
                 key={path}
-                path={path}
+                path={path}                
                 element={<Component />}
               />
             ))}

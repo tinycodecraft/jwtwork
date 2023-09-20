@@ -24,13 +24,15 @@ namespace JwtWork.Controllers
         private readonly ILogger _logger;
         private readonly JWTWORKContext _context;
         private readonly IJwtManager mgr;
+        private readonly TokenService jwtsvc;
 
-        public AuthController(IHubContext<UsersHub> usersHub,ILogger<AuthController> logger, JWTWORKContext db,IJwtManager itmgr)
+        public AuthController(IHubContext<UsersHub> usersHub,ILogger<AuthController> logger, JWTWORKContext db,IJwtManager itmgr,TokenService jwtmgr)
         {
             _hubContext = usersHub;
             _logger = logger;
             _context = db;
             mgr = itmgr;
+            jwtsvc = jwtmgr;
         }
 
         [HttpPost]
@@ -49,16 +51,23 @@ namespace JwtWork.Controllers
                 }
             }
             var loginError =await mgr.Authenticate(request.UserName,request.Password, request.NewPassword);
-           
-            if(loginError!=null && loginError.Error.HasError())
+
+            var user = await mgr.GetUser(request.UserName);
+
+            if(user==null)
+            {
+                return Ok(new AuthUser("fail", "", request.UserName, "No user found!", false));
+            }
+
+            if (loginError!=null && loginError.Error.HasError())
             {
                 return Ok(new AuthUser("fail", "", request.UserName, loginError.Error,loginError.NeedNew)); 
             }
 
-
             await _hubContext.Clients.All.SendAsync("UserLogin");
 
-            var token = Guid.NewGuid().ToString();
+            var token =  jwtsvc.CreateToken(user);
+
             var authUser = new AuthUser("success", token, request?.UserName ?? "");
 
             return Ok(authUser);

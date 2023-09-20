@@ -12,6 +12,7 @@ import { loginAsync, setAuthStatus, resetState, AuthStatusEnum, type Credentials
 import { Button, Checkbox, Input, Typography } from '@material-tailwind/react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
+
 const LoginForm: FunctionComponent = () => {
   const toastIdRef = useRef<Id>('')
   const {
@@ -34,6 +35,7 @@ const LoginForm: FunctionComponent = () => {
   const dispatch = useAppDispatch()
   const status = useAppSelector<AuthStatusEnum>((state) => state.auth.status)
   const error = useAppSelector<string | undefined>((state) => state.auth.error)
+
   
   const newShow = useAppSelector<boolean>((state) => state.auth.needNew)
   const dispatchAuthStatus = useCallback(
@@ -53,6 +55,7 @@ const LoginForm: FunctionComponent = () => {
     [dispatch, dispatchAuthStatus],
   )
   const onSuccessfulAuth = useCallback((): void => {
+    
     const homePath = Routes.find((x) => x.name === 'Home')?.path ?? '/'
     navigate(homePath)
   }, [navigate])
