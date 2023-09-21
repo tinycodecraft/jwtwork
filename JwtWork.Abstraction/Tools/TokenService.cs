@@ -64,7 +64,7 @@ namespace JwtWork.Abstraction.Tools
                     new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString(CultureInfo.InvariantCulture)),
                     new Claim(ClaimTypes.NameIdentifier, user.UserId),
                     new Claim(ClaimTypes.Name, user.UserName),
-                    new Claim(ClaimTypes.Email, user.Email)
+                    new Claim(ClaimTypes.Email, user.Email ?? $"{user.UserId}@unknown.com")
                 };
                 return claims;
             }

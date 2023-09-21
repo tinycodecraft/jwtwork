@@ -36,8 +36,9 @@ export abstract class BaseService {
     })
     this.$wAuthHttp.interceptors.request.use(
       (config) => {
+        console.log(this.token);
         if (this.token) {
-          config.headers.Authorization = this.token
+          config.headers.Authorization = `Bearer ${this.token}`
         }
 
         return config
