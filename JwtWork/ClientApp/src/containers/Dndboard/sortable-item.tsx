@@ -1,7 +1,7 @@
 import { type FC } from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { ColorSquare } from '../../fragments';
+import { ColorSquare } from 'src/fragments';
 
 interface Props {
   id: string | number;

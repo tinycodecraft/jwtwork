@@ -1,12 +1,12 @@
-import { AuthApi } from '../api';
-import { useAppDispatch } from '../store';
+import { AuthApi } from 'src/api';
+import { useAppDispatch } from 'src/store';
 import { useNavigate } from 'react-router-dom';
-import { resetState } from '../store/authSlice';
+import { resetState } from 'src/store/authSlice';
 import styled from '@emotion/styled';
 import { keyframes } from '@emotion/react';
-import { useIsLoggedIn, useOnClickOutside } from '../hooks';
+import { useIsLoggedIn, useOnClickOutside } from 'src/hooks';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Routes, NUGET_URL_CONFIG, LINK_ATTRIBUTES } from '../config';
+import { Routes, NUGET_URL_CONFIG, LINK_ATTRIBUTES } from 'src/config';
 import { useRef, useState, useCallback, type FunctionComponent } from 'react';
 
 const CLICK_OUTSIDE_EVENTS = ['click', 'touchend'];

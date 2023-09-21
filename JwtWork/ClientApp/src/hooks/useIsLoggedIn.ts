@@ -1,4 +1,4 @@
-import { useAppSelector } from '../store';
+import { useAppSelector } from 'src/store';
 import { useLocation } from 'react-router-dom';
 
 const useIsLoggedIn = (): boolean => {

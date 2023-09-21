@@ -1,8 +1,8 @@
-import { useIsLoggedIn } from '../hooks';
-import { Routes as routes } from '../config';
+import { useIsLoggedIn } from 'src/hooks';
+import { Routes as routes } from 'src/config';
 import type { FunctionComponent } from 'react';
 import { NavLink, generatePath } from 'react-router-dom';
-import { ReactComponent as BulmaLogoSVG } from '../assets/image/BulmaLogo.svg';
+import { ReactComponent as BulmaLogoSVG } from 'src/assets/image/BulmaLogo.svg';
 
 const Navbar: FunctionComponent = () => {
   const isLoggedIn = useIsLoggedIn();

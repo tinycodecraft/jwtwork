@@ -1,12 +1,12 @@
 import React, { useContext } from 'react'
-import { StyledSettings,SettingsLink,SettingsMenu, SettingsMenuLink, SettingsMenuTitle,BigIcon } from '../fragments'
-import OpenMenuContext from '../context/OpenMenuContext'
-import { Routes, NUGET_URL_CONFIG, LINK_ATTRIBUTES } from '../config';
-import { AuthApi } from '../api';
-import { useAppDispatch } from '../store';
+import { StyledSettings,SettingsLink,SettingsMenu, SettingsMenuLink, SettingsMenuTitle,BigIcon } from 'src/fragments'
+import OpenMenuContext from 'src/context/OpenMenuContext'
+import { Routes, NUGET_URL_CONFIG, LINK_ATTRIBUTES } from 'src/config';
+import { AuthApi } from 'src/api';
+import { useAppDispatch } from 'src/store';
 import { useNavigate } from 'react-router-dom';
-import { resetState } from '../store/authSlice';
-import { useIsLoggedIn } from '../hooks';
+import { resetState } from 'src/store/authSlice';
+import { useIsLoggedIn } from 'src/hooks';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 

@@ -10,11 +10,11 @@ import { DndContext, DragOverlay, rectIntersection } from '@dnd-kit/core'
 import { DraggableItem } from './draggable-item'
 import { DropZone } from './drop-zone'
 
-import { Row, Col, Item, ColorSquare } from '../../fragments'
+import { Row, Col, Item, ColorSquare } from 'src/fragments'
 import { ColorPallette } from './color-pallete'
 import { Trash } from './trash'
 
-import ColorPickContext from '../../context/ColorPickContext'
+import ColorPickContext from 'src/context/ColorPickContext'
 import { createPortal } from 'react-dom'
 
 export const ColorBoard: FC = () => {

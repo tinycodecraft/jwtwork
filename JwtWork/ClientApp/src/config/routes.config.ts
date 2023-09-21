@@ -1,6 +1,6 @@
 import type { ComponentType } from 'react';
 import type { Params } from 'react-router-dom';
-import { Login, Dashboard, FetchData, Form,Quillboard, DndBoard } from '../containers';
+import { Login, Dashboard, FetchData, Form,Quillboard, DndBoard } from 'src/containers';
 import type { IconProp } from '@fortawesome/fontawesome-svg-core';
 
 

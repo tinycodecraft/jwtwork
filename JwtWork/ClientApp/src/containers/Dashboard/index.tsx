@@ -1,5 +1,5 @@
 import type { FunctionComponent } from 'react'
-import { ReactComponent as ReactCoreSVG } from '../../assets/image/ReactCore.svg'
+import { ReactComponent as ReactCoreSVG } from 'src/assets/image/ReactCore.svg'
 
 const Dashboard: FunctionComponent = () => {
 

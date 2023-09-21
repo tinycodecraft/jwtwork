@@ -1,7 +1,7 @@
 import React, { createContext, useState, type SetStateAction, type FC, type ReactNode } from 'react'
 import { type DragEndEvent, type DragOverEvent, type UniqueIdentifier } from '@dnd-kit/core'
-import { type ColorType } from '../fragments/types'
-import { idGen } from '../utils'
+import { type ColorType } from 'src/fragments/types'
+import { idGen } from 'src/utils'
 import { arrayMove } from '@dnd-kit/sortable'
 
 export interface ColorPickContextProps {

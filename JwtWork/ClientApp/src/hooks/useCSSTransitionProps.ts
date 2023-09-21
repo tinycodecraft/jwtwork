@@ -1,5 +1,5 @@
 import { useLocation } from 'react-router-dom';
-import { Routes, TRANSITION_DEFAULT, type Transition } from '../config';
+import { Routes, TRANSITION_DEFAULT, type Transition } from 'src/config';
 
 export type CSSTransitionProps = Transition & { readonly key: string };
 

@@ -1,6 +1,6 @@
 import type { FunctionComponent } from 'react';
-import { increment, decrement } from '../../store/formSlice';
-import { useAppSelector, useAppDispatch } from '../../store';
+import { increment, decrement } from 'src/store/formSlice';
+import { useAppSelector, useAppDispatch } from 'src/store';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const CounterFormGroup: FunctionComponent = () => {

@@ -1,5 +1,5 @@
 import { type  FC } from 'react';
-import { ColorSquare } from '../../fragments';
+import { ColorSquare } from 'src/fragments';
 import { useDraggable } from '@dnd-kit/core';
 
 interface Props {

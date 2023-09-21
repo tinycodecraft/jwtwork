@@ -1,6 +1,6 @@
 import { memo } from 'react';
-import { clsxm } from '../../utils';
-import { useTextInput } from '../../hooks';
+import { clsxm } from 'src/utils';
+import { useTextInput } from 'src/hooks';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 type PasswordInputProps = Readonly<{

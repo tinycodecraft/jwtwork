@@ -1,5 +1,5 @@
 import type { AnchorHTMLAttributes } from 'react';
-import type { SelectOption } from '../store/formSlice';
+import type { SelectOption } from 'src/store/formSlice';
 
 
 /**

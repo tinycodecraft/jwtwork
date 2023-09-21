@@ -1,5 +1,5 @@
 import axios, { type AxiosInstance } from 'axios'
-import { BASEURL, NUGET_URL_CONFIG } from '../config'
+import { BASEURL, NUGET_URL_CONFIG } from 'src/config'
 
 /**
  * Service API base class - configures default settings/error handling for inheriting class

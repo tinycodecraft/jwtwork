@@ -1,11 +1,11 @@
 import { type FC } from "react";
 import styled from "@emotion/styled";
-import type { ColorType } from "../../fragments/types";
+import type { ColorType } from "src/fragments/types";
 
 import { SortableContext, rectSortingStrategy } from '@dnd-kit/sortable';
 import { useDroppable } from "@dnd-kit/core";
 
-import { Item } from '../../fragments';
+import { Item } from 'src/fragments';
 import { SortableItem } from './sortable-item';
 
 const List = styled.ul`

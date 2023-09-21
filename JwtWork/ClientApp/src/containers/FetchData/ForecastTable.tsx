@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import type { WeatherState } from '../../store/weatherSlice';
+import type { WeatherState } from 'src/store/weatherSlice';
 
 type ForecastTableProps = Pick<WeatherState, 'forecasts'>;
 

@@ -7,7 +7,7 @@ import { createLogger } from 'redux-logger'
 import sessionStorage from 'redux-persist/es/storage/session'
 import { persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from 'redux-persist'
 import persistStore from 'redux-persist/es/persistStore'
-import autoMergeLevel2 from 'redux-persist/es/stateReconciler/autoMergeLevel2'
+import hardSet from 'redux-persist/es/stateReconciler/hardSet'
 
 
 const logger = createLogger()
@@ -16,7 +16,8 @@ const persistConfig = {
   key: 'root',
   storage: sessionStorage,
   whitelist: ['auth'],
-  stateReconciler: autoMergeLevel2,
+  // hardset can locate the useSelector error if happens in publish
+  stateReconciler: hardSet,
   
 }
 

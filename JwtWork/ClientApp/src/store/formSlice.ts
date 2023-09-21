@@ -1,4 +1,4 @@
-import { DROPDOWN_TEST_DATA } from '../config';
+import { DROPDOWN_TEST_DATA } from 'src/config';
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import { type SingleValue } from 'react-select';
 

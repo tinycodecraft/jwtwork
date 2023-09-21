@@ -1,7 +1,7 @@
-import { Checkbox } from '../../components';
-import { setChecked } from '../../store/formSlice';
+import { Checkbox } from 'src/components';
+import { setChecked } from 'src/store/formSlice';
 import { useCallback, type FunctionComponent } from 'react';
-import { useAppSelector, useAppDispatch } from '../../store';
+import { useAppSelector, useAppDispatch } from 'src/store';
 
 const CheckboxFormGroup: FunctionComponent = () => {
   const dispatch = useAppDispatch();

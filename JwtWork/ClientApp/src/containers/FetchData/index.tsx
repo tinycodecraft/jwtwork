@@ -1,21 +1,24 @@
 import Pagination from './Pagination';
-import { Spinner } from '../../components';
+import { Spinner } from 'src/components';
 import ForecastTable from './ForecastTable';
 import { useParams } from 'react-router-dom';
 import { useEffect, type FunctionComponent } from 'react';
-import { useAppSelector, useAppDispatch } from '../../store';
-import { getForecastsAsync, type WeatherForecast } from '../../store/weatherSlice';
+import { useAppSelector, useAppDispatch } from 'src/store';
+import { getForecastsAsync, type WeatherForecast } from 'src/store/weatherSlice';
 
 
 
 const FetchData: FunctionComponent = () => {
   const dispatch = useAppDispatch();
   const { startDateIndex: startDateIndexDefault = '0' } = useParams();
+  console.log(`fetching component init with param ${startDateIndexDefault}`)
 
   const intNextStartDateIndex = parseInt(startDateIndexDefault, 10);  
   const isLoading = useAppSelector<boolean>((state) => state.weather.isLoading);
   const forecasts = useAppSelector<WeatherForecast[]>((state) => state.weather.forecasts);
   const startDateIndex = useAppSelector<number>((state) => state.weather.startDateIndex);
+
+  console.log(`all constants should be ready for fetch data with state ${startDateIndex}`)
 
   useEffect(() => {
     if (startDateIndex !== intNextStartDateIndex) {

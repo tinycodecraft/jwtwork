@@ -1,5 +1,5 @@
 import { useEffect, memo } from 'react';
-import { AuthStatusEnum } from '../store/authSlice';
+import { AuthStatusEnum } from 'src/store/authSlice';
 import styled from '@emotion/styled';
 import { keyframes } from '@emotion/react';
 import PropTypes from 'prop-types'

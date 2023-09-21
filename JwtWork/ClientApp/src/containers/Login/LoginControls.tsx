@@ -1,5 +1,5 @@
 import { memo, Fragment } from 'react';
-import { Checkbox } from '../../components';
+import { Checkbox } from 'src/components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 type LoginControlsProps = Readonly<{
