@@ -59,7 +59,7 @@ export abstract class BaseService {
             this.token = response.data
 
             if (this.token) {
-              requestConfig.headers.Authorization = this.token
+              requestConfig.headers.Authorization = `Bearer ${this.token}`
             }
             return axios(requestConfig)
           }
