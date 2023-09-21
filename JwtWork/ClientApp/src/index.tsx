@@ -4,7 +4,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { useEffect, StrictMode, Fragment } from 'react';
 import App from './App';
 import './assets/style/scss/site.scss';
-import { store } from './store';
+import { store,persistor } from './store';
 import { ToastContainer } from 'react-toastify';
 import reportWebVitals from './reportWebVitals';
 import { SignalRApi } from './api/signalr.service';
@@ -12,6 +12,7 @@ import { toastifyProps, registerIcons } from './config';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 import { Toaster } from 'react-hot-toast';
 import { ThemeProvider } from '@material-tailwind/react';
+import { PersistGate } from 'redux-persist/integration/react';
 
 registerIcons();
 
@@ -29,12 +30,14 @@ function AppRenderer() {
     <Fragment>
       <BrowserRouter>
         <Provider store={store}>
+          <PersistGate loading={null} persistor={persistor}>
           <StrictMode>
             <ThemeProvider>
             <App />
-            </ThemeProvider>
-            
+            </ThemeProvider>            
           </StrictMode>
+          </PersistGate>
+
         </Provider>
       </BrowserRouter>
       <ToastContainer {...toastifyProps} />

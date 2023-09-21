@@ -71,6 +71,7 @@ export const Routes: Route[] = [
       timeout: { enter: 350, exit: 250 }
     },
     params: {
+      // this value set the location path parameter correctly
       startDateIndex: '0'
     }
   }

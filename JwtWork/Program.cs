@@ -28,6 +28,8 @@ using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using System.Threading.Tasks;
+using Azure.Core;
 //using Serilog.Core;
 //using System.Linq;
 //using System.Reflection.Metadata;
@@ -144,7 +146,31 @@ builder.Services
             IssuerSigningKey = new SymmetricSecurityKey(
                 Encoding.UTF8.GetBytes(authsetting[nameof(AuthSetting.Secret)] ?? "")
             ),
+
         };
+        options.Events = new JwtBearerEvents()
+        {
+            
+            OnAuthenticationFailed = (context) =>
+            {
+                var requestContent = new StringBuilder();
+                requestContent.AppendLine("=== Error happens to Request Info ===");
+                requestContent.AppendLine($"method = {context.Request.Method.ToUpper()}");
+                requestContent.AppendLine($"path = {context.Request.Path}");
+
+                requestContent.AppendLine("-- headers");
+                foreach (var (headerKey, headerValue) in context.Request.Headers)
+                {
+                    requestContent.AppendLine($"header = {headerKey} value = {headerValue}");
+                }
+                Log.Logger.Error(context.Exception, $"{requestContent.ToString()} get JWT Auth error at path {context.Request.Path}");
+
+                return Task.CompletedTask;
+
+
+            },
+        };
+    
     });
 
 

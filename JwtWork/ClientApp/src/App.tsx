@@ -20,6 +20,7 @@ const App: FunctionComponent = () => {
               <Route
                 key={path}
                 path={path}   
+                
                              
                 element={<Component {...rest} />}
               />
