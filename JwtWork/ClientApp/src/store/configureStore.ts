@@ -7,6 +7,7 @@ import { createLogger } from 'redux-logger'
 import sessionStorage from 'redux-persist/es/storage/session'
 import { persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from 'redux-persist'
 import persistStore from 'redux-persist/es/persistStore'
+import autoMergeLevel2 from 'redux-persist/es/stateReconciler/autoMergeLevel2'
 
 
 const logger = createLogger()
@@ -15,6 +16,7 @@ const persistConfig = {
   key: 'root',
   storage: sessionStorage,
   whitelist: ['auth'],
+  stateReconciler: autoMergeLevel2,
   
 }
 
@@ -23,7 +25,7 @@ const rootReducer = combineReducers({
   form: formReducer,
   weather: weatherReducer,
 })
-const persistedReducer = persistReducer(persistConfig, rootReducer)
+const persistedReducer = persistReducer<ReturnType<typeof rootReducer>>(persistConfig, rootReducer)
 
 export const store = configureStore({
   reducer: persistedReducer,
