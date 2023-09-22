@@ -14,7 +14,11 @@ const FetchData: FunctionComponent = () => {
   console.log(`fetching component init with param ${startDateIndexDefault}`)
 
   const intNextStartDateIndex = parseInt(startDateIndexDefault, 10);  
-  const {isLoading,forecasts, startDateIndex } = useAppSelector<WeatherState>((state)=> state.weather);
+  const weatherstate = useAppSelector<WeatherState>((state)=> state.weather);
+  const isLoading = (weatherstate && weatherstate.isLoading ) ?? true;
+  const startDateIndex = (weatherstate && weatherstate.startDateIndex ) ?? -1;
+  const forecasts = (weatherstate && weatherstate.forecasts) ?? [];
+
 
   console.log(`all constants should be ready for fetch data with state ${startDateIndex}`)
 
