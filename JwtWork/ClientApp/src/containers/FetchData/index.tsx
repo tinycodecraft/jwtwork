@@ -4,7 +4,8 @@ import ForecastTable from './ForecastTable';
 import { useParams } from 'react-router-dom';
 import { useEffect, type FunctionComponent } from 'react';
 import { useAppSelector, useAppDispatch } from 'src/store';
-import { getForecastsAsync,type WeatherState } from 'src/store/weatherSlice';
+import { getForecastsAsync} from 'src/store/weatherSlice';
+import { type WeatherState } from 'src/fragments/types';
 
 
 

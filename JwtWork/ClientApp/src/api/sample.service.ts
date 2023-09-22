@@ -1,5 +1,5 @@
 import { BaseService } from './base.service';
-import type { WeatherForecast } from 'src/store/weatherSlice';
+import type { WeatherForecast } from 'src/fragments/types';
 
 /**
  * SampleData API abstraction layer communication via Axios (typescript singleton pattern)

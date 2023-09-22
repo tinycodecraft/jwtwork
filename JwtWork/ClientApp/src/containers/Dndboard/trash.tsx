@@ -1,6 +1,6 @@
 import { type FC } from "react";
 import { useDroppable } from "@dnd-kit/core";
-import { Box } from "../../fragments";
+import { Box } from "src/fragments";
 
 
 

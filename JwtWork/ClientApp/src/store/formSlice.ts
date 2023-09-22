@@ -1,18 +1,6 @@
 import { DROPDOWN_TEST_DATA } from 'src/config';
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
-import { type SingleValue } from 'react-select';
-
-
-export type SelectOption = Readonly<{
- value: number,
- label:string,
-}>
-
-export type FormState = Readonly<{
-  count: number;
-  checked: boolean;
-  selectedOption: SingleValue<SelectOption>;
-}>;
+import { type FormState,type SelectedOption  } from 'src/fragments/types';
 
 const initialState: FormState = {
   count: 0,
@@ -33,7 +21,7 @@ export const formSlice = createSlice({
     setChecked: (state, action: PayloadAction<boolean>) => {
       state.checked = action.payload;
     },
-    selectOption: (state, action: PayloadAction<SingleValue<SelectOption>>) => {
+    selectOption: (state, action: PayloadAction<SelectedOption>) => {
       state.selectedOption = action.payload;
     },
   },

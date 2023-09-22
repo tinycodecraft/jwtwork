@@ -1,8 +1,9 @@
 import Select, { type SingleValue } from "react-select";
 import { useCallback, type FunctionComponent } from "react";
-import { useAppSelector, useAppDispatch } from "../../store";
-import { DROPDOWN_TEST_DATA } from "../../config";
-import { selectOption, type SelectOption } from "../../store/formSlice";
+import { useAppSelector, useAppDispatch } from "src/store";
+import { DROPDOWN_TEST_DATA } from "src/config";
+import { selectOption } from "src/store/formSlice";
+import {  type SelectOption } from "src/fragments/types";
 
 
 const SelectFormGroup: FunctionComponent = () => {

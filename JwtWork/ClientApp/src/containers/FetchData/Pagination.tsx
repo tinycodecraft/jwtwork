@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import type { WeatherState } from 'src/store/weatherSlice';
+import type { WeatherState } from 'src/fragments/types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 type PaginationProps = Pick<WeatherState, 'startDateIndex'>;

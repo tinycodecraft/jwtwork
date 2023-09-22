@@ -1,22 +1,8 @@
 import { SampleApi } from 'src/api'
 import { createAsyncThunk, createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import type { RootState } from './configureStore'
+import { type WeatherState, type ReceiveForecastsPayload } from 'src/fragments/types'
 
-export type WeatherForecast = Readonly<{
-  id: number
-  summary: string
-  temperatureC: number
-  temperatureF: number
-  dateFormatted: string
-}>
-
-export type WeatherState = Readonly<{
-  isLoading: boolean
-  startDateIndex: number
-  forecasts: WeatherForecast[]
-}>
-
-export type ReceiveForecastsPayload = Pick<WeatherState, 'forecasts' | 'startDateIndex'>
 
 const initialState: WeatherState = {
   forecasts: [],
@@ -28,6 +14,7 @@ export const weatherSlice = createSlice({
   name: 'weather',
   initialState,
   reducers: {
+    
     requestForecasts: (state, action: PayloadAction<number>) => {
       state.isLoading = true
       state.startDateIndex = action.payload

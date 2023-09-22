@@ -1,4 +1,4 @@
-import type { WeatherState } from 'src/store/weatherSlice';
+import type { WeatherState } from 'src/fragments/types';
 
 type ForecastTableProps = Pick<WeatherState, 'forecasts'>;
 
