@@ -4,7 +4,7 @@ import ForecastTable from './ForecastTable';
 import { useParams } from 'react-router-dom';
 import { useEffect, type FunctionComponent } from 'react';
 import { useAppSelector, useAppDispatch } from 'src/store';
-import { getForecastsAsync, type WeatherForecast } from 'src/store/weatherSlice';
+import { getForecastsAsync,type WeatherState } from 'src/store/weatherSlice';
 
 
 
@@ -14,9 +14,7 @@ const FetchData: FunctionComponent = () => {
   console.log(`fetching component init with param ${startDateIndexDefault}`)
 
   const intNextStartDateIndex = parseInt(startDateIndexDefault, 10);  
-  const isLoading = useAppSelector<boolean>((state) => state.weather.isLoading);
-  const forecasts = useAppSelector<WeatherForecast[]>((state) => state.weather.forecasts);
-  const startDateIndex = useAppSelector<number>((state) => state.weather.startDateIndex);
+  const {isLoading,forecasts, startDateIndex } = useAppSelector<WeatherState>((state)=> state.weather);
 
   console.log(`all constants should be ready for fetch data with state ${startDateIndex}`)
 
@@ -39,7 +37,7 @@ const FetchData: FunctionComponent = () => {
           <h5 className="subtitle is-5">
             This component demonstrates fetching data from the server and working with URL parameters.
           </h5>
-          <Spinner isLoading={isLoading} />
+          <Spinner isLoading={isLoading ?? true} />
           <ForecastTable forecasts={forecasts} />
           <Pagination startDateIndex={startDateIndex} />
         </div>

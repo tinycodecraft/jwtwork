@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-redeclare */
 import { AuthApi } from 'src/api';
 import { createAsyncThunk, createSlice, type PayloadAction } from '@reduxjs/toolkit';
+import { type Credentials, type AuthState } from 'src/fragments/types';
 
 export const AuthStatusEnum = {
   FAIL: 'fail',
@@ -10,23 +11,6 @@ export const AuthStatusEnum = {
 } as const;
 
 export type AuthStatusEnum = typeof AuthStatusEnum[keyof typeof AuthStatusEnum];
-
-export type Credentials = {
-  userName?: string;
-  password?: string;
-  newPassword?:string;
-  rememberMe?: boolean;
-};
-
-export type AuthUser = {
-  token?: string;
-  userName?: string;
-  status: AuthStatusEnum;
-  error?: string;
-  needNew: boolean;
-};
-
-export type AuthState = AuthUser & { isAuthenticated: boolean; };
 
 const initialState: AuthState = {
   token: '',
