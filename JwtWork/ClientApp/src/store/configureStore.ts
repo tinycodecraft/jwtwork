@@ -2,6 +2,7 @@ import authReducer from './authSlice'
 import formReducer from './formSlice'
 import weatherReducer from './weatherSlice'
 import { configureStore, combineReducers } from '@reduxjs/toolkit'
+import { setupListeners } from '@reduxjs/toolkit/query'
 
 import { createLogger } from 'redux-logger'
 import sessionStorage from 'redux-persist/es/storage/session'
@@ -38,9 +39,12 @@ export const store = configureStore({
     }).concat(logger),
 })
 
+setupListeners(store.dispatch)
+
 export const persistor = persistStore(store)
 // Infer the `RootState` and `AppDispatch` types from the store itself
 export type RootState = ReturnType<typeof store.getState>
 
 // Inferred type: {auth: AuthState, form: FormState, weather: WeatherState}
 export type AppDispatch = typeof store.dispatch
+

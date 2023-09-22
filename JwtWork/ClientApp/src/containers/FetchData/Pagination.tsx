@@ -1,11 +1,10 @@
-import { memo } from 'react';
 import { Link } from 'react-router-dom';
 import type { WeatherState } from 'src/store/weatherSlice';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 type PaginationProps = Pick<WeatherState, 'startDateIndex'>;
 
-const Pagination = memo<PaginationProps>(({ startDateIndex = 0 }: PaginationProps) => (
+const Pagination = ({ startDateIndex = 0 }: PaginationProps) => (
   <p className="buttons pagination-group">
     <Link
       className="button is-info"
@@ -20,7 +19,7 @@ const Pagination = memo<PaginationProps>(({ startDateIndex = 0 }: PaginationProp
       <FontAwesomeIcon icon="angle-double-right" />
     </Link>
   </p>
-));
+);
 
 Pagination.displayName = 'Pagination';
 

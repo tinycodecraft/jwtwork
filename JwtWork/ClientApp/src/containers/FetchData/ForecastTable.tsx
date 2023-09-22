@@ -1,9 +1,8 @@
-import { memo } from 'react';
 import type { WeatherState } from 'src/store/weatherSlice';
 
 type ForecastTableProps = Pick<WeatherState, 'forecasts'>;
 
-const ForecastTable = memo<ForecastTableProps>(({ forecasts }: ForecastTableProps) => (
+const ForecastTable = ({ forecasts }: ForecastTableProps) => (
   <table className="table is-fullwidth">
     <thead>
       <tr>
@@ -24,7 +23,7 @@ const ForecastTable = memo<ForecastTableProps>(({ forecasts }: ForecastTableProp
       ))}
     </tbody>
   </table>
-));
+);
 
 ForecastTable.displayName = 'ForecastTable';
 

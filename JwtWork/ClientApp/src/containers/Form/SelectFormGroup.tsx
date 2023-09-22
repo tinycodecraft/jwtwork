@@ -4,10 +4,11 @@ import { useAppSelector, useAppDispatch } from "../../store";
 import { DROPDOWN_TEST_DATA } from "../../config";
 import { selectOption, type SelectOption } from "../../store/formSlice";
 
+
 const SelectFormGroup: FunctionComponent = () => {
   const dispatch = useAppDispatch();
   const selectedOption = useAppSelector<SingleValue<SelectOption>>(
-    (state) => state.form.selectedOption
+    (state) => (state.form && state.form.selectedOption ) ?? DROPDOWN_TEST_DATA[0]
   );
 
   const onOptionChange = useCallback(

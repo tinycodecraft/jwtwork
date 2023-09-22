@@ -31,6 +31,7 @@ export const weatherSlice = createSlice({
     requestForecasts: (state, action: PayloadAction<number>) => {
       state.isLoading = true
       state.startDateIndex = action.payload
+      state.forecasts=[]
     },
     receiveForecasts: (state, action: PayloadAction<ReceiveForecastsPayload>) => {
       const { forecasts, startDateIndex } = action.payload
@@ -48,10 +49,13 @@ export const weatherSlice = createSlice({
 export const getForecastsAsync = createAsyncThunk('weather/getForecastsAsync', async (startDateIndex: number, { dispatch, getState }) => {
   // If param startDateIndex === state.startDateIndex, do not perform action
 
+  console.log(`try to get async forccast`)
   const {
-    weather: { startDateIndex: stateIdx },
+    weather,
     auth: { token: accessToken },
   } = (getState as () => RootState)()
+
+  const stateIdx = (weather && weather.startDateIndex ) ?? -1;
 
   if (startDateIndex === stateIdx) {
     return

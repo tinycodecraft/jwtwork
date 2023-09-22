@@ -5,7 +5,8 @@ import { useAppSelector, useAppDispatch } from 'src/store';
 
 const BuCheckboxFormGroup: FunctionComponent = () => {
   const dispatch = useAppDispatch();
-  const checked = useAppSelector<boolean>((state) => state.form.checked);
+  
+  const checked = useAppSelector<boolean>((state) => (state.form && state.form.checked) ?? false);
 
   const handleOnCheck = useCallback((checked: boolean) => {
     dispatch(setChecked(checked));

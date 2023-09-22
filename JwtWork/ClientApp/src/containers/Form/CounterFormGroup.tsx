@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const BuCounterFormGroup: FunctionComponent = () => {
   const dispatch = useAppDispatch();
-  const count = useAppSelector<number>((state) => state.form.count);
+  const count = useAppSelector<number>((state) => (state.form && state.form.count) ?? 0);
 
   return (
     <div className="column">
