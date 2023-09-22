@@ -49,13 +49,13 @@ export const weatherSlice = createSlice({
 export const getForecastsAsync = createAsyncThunk('weather/getForecastsAsync', async (startDateIndex: number, { dispatch, getState }) => {
   // If param startDateIndex === state.startDateIndex, do not perform action
 
-  console.log(`try to get async forccast`)
+  
   const {
-    weather,
+    weather: { startDateIndex: stateIdx},
     auth: { token: accessToken },
   } = (getState as () => RootState)()
 
-  const stateIdx = (weather && weather.startDateIndex ) ?? -1;
+  // getstate is function such that the value weather would not be null
 
   if (startDateIndex === stateIdx) {
     return
