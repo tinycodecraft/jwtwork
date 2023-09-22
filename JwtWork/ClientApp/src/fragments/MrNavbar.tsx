@@ -227,7 +227,7 @@ function NavList() {
   );
 }
  
-export function MuNavbar() {
+const MuNavbar =()=> {
   const [isNavOpen, setIsNavOpen] = React.useState(false);
  
   const toggleIsNavOpen = () => setIsNavOpen((cur) => !cur);
@@ -269,3 +269,5 @@ export function MuNavbar() {
     </Navbar>
   );
 }
+
+export default MuNavbar;

@@ -1,4 +1,4 @@
-import { useIsLoggedIn } from 'src/hooks';
+import { useIsLoggedIn } from 'src/utils';
 import { Routes as routes } from 'src/config';
 import type { FunctionComponent } from 'react';
 import { NavLink, generatePath } from 'react-router-dom';

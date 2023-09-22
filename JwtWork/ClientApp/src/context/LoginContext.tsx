@@ -1,5 +1,4 @@
 import React, { createContext, useCallback, useState, type SetStateAction, useRef, useEffect } from 'react'
-import { useTextInput } from 'src/hooks'
 
 interface LoginContextProps {
   userName: string

@@ -1,6 +1,6 @@
 import React, { useContext, type FunctionComponent, useCallback, type FormEvent, useRef } from 'react'
 
-import { Authenticator } from 'src/components'
+import { Authenticator } from 'src/fragments'
 import BasedGhostLogoPNG from 'src/assets/image/based-ghost-main.png'
 import { useAppDispatch, useAppSelector } from 'src/store'
 import { Routes } from 'src/config'

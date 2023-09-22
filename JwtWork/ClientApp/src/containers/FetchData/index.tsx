@@ -1,5 +1,5 @@
 import Pagination from './Pagination';
-import { Spinner } from 'src/components';
+import { Spinner } from 'src/fragments';
 import ForecastTable from './ForecastTable';
 import { useParams } from 'react-router-dom';
 import { useEffect, type FunctionComponent } from 'react';

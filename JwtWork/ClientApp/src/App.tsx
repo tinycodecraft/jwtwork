@@ -1,7 +1,7 @@
 import Layout from './Layout';
 import { Routes as routes } from './config';
 import type { FunctionComponent } from 'react';
-import { useCSSTransitionProps } from './hooks';
+import { useCSSTransitionProps } from 'src/utils';
 import { useLocation, Route, Routes } from 'react-router-dom';
 import { CSSTransition, SwitchTransition } from 'react-transition-group';
 

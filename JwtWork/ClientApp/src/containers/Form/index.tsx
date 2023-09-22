@@ -1,7 +1,7 @@
 import type { FunctionComponent } from 'react';
 import SelectFormGroup from './SelectFormGroup';
-import CounterFormGroup from './CounterFormGroup';
-import CheckboxFormGroup from './CheckboxFormGroup';
+import {BuCounterFormGroup} from './CounterFormGroup';
+import {BuCheckboxFormGroup} from './CheckboxFormGroup';
 
 const Form: FunctionComponent = () => (
   <div className="section">
@@ -9,9 +9,9 @@ const Form: FunctionComponent = () => (
       <h3 className="title is-3">Form Controls</h3>
       <div className="box container-box">
         <div className="columns form-columns">
-          <CounterFormGroup />
+          <BuCounterFormGroup />
           <SelectFormGroup />
-          <CheckboxFormGroup />
+          <BuCheckboxFormGroup />
         </div>
       </div>
     </div>

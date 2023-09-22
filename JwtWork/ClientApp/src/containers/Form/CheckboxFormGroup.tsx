@@ -1,9 +1,9 @@
-import { Checkbox } from 'src/components';
+import { BuCheckbox } from 'src/fragments';
 import { setChecked } from 'src/store/formSlice';
 import { useCallback, type FunctionComponent } from 'react';
 import { useAppSelector, useAppDispatch } from 'src/store';
 
-const CheckboxFormGroup: FunctionComponent = () => {
+const BuCheckboxFormGroup: FunctionComponent = () => {
   const dispatch = useAppDispatch();
   const checked = useAppSelector<boolean>((state) => state.form.checked);
 
@@ -16,7 +16,7 @@ const CheckboxFormGroup: FunctionComponent = () => {
       <h3 className="title is-4">Checkbox</h3>
       <h5 className="subtitle is-5">Toggle the checkbox</h5>
       <div className="field form-control-group">
-        <Checkbox
+        <BuCheckbox
           checked={checked}
           onCheck={handleOnCheck}
         />
@@ -28,4 +28,4 @@ const CheckboxFormGroup: FunctionComponent = () => {
   );
 };
 
-export default CheckboxFormGroup;
+export { BuCheckboxFormGroup}

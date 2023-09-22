@@ -6,11 +6,11 @@ import { AuthApi } from 'src/api';
 import { useAppDispatch } from 'src/store';
 import { useNavigate } from 'react-router-dom';
 import { resetState } from 'src/store/authSlice';
-import { useIsLoggedIn } from 'src/hooks';
+import { useIsLoggedIn } from 'src/utils';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 
-export const FloatMenu = () => {
+const FloatMenu = () => {
     
     
     const isLoggedIn = useIsLoggedIn();
@@ -79,3 +79,5 @@ export const FloatMenu = () => {
     </StyledSettings>
   )
 }
+
+export default FloatMenu;

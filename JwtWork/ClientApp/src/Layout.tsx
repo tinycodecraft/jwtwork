@@ -1,5 +1,4 @@
-import { Footer, Navbar } from './components';
-import { FloatMenu } from './components/FloatMenu';
+import { Footer, Navbar,FloatMenu } from 'src/fragments';
 import { OpenMenuProvider} from './context/OpenMenuContext';
 
 import { Fragment, type FunctionComponent, type PropsWithChildren } from 'react';

@@ -3,7 +3,7 @@ import { increment, decrement } from 'src/store/formSlice';
 import { useAppSelector, useAppDispatch } from 'src/store';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-const CounterFormGroup: FunctionComponent = () => {
+const BuCounterFormGroup: FunctionComponent = () => {
   const dispatch = useAppDispatch();
   const count = useAppSelector<number>((state) => state.form.count);
 
@@ -32,4 +32,4 @@ const CounterFormGroup: FunctionComponent = () => {
   );
 };
 
-export default CounterFormGroup;
+export {BuCounterFormGroup}
