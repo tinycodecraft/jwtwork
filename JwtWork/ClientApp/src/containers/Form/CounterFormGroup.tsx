@@ -2,10 +2,11 @@ import type { FunctionComponent } from 'react';
 import { increment, decrement } from 'src/store/formSlice';
 import { useAppSelector, useAppDispatch } from 'src/store';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { FormStateInit } from 'src/config';
 
 const BuCounterFormGroup: FunctionComponent = () => {
   const dispatch = useAppDispatch();
-  const count = useAppSelector<number>((state) => (state.form && state.form.count) ?? 0);
+  const count = useAppSelector<number>((state) => (state.form ?? FormStateInit).count);
 
   return (
     <div className="column">

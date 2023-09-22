@@ -1,18 +1,13 @@
 import { SampleApi } from 'src/api'
 import { createAsyncThunk, createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import type { RootState } from './configureStore'
-import { type WeatherState, type ReceiveForecastsPayload } from 'src/fragments/types'
+import { type ReceiveForecastsPayload } from 'src/fragments/types'
+import { WeatherStateInit } from 'src/config'
 
-
-const initialState: WeatherState = {
-  forecasts: [],
-  isLoading: false,
-  startDateIndex: 5,
-}
 
 export const weatherSlice = createSlice({
   name: 'weather',
-  initialState,
+  initialState: WeatherStateInit,
   reducers: {
     
     requestForecasts: (state, action: PayloadAction<number>) => {

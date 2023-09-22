@@ -1,28 +1,5 @@
 import type { AnchorHTMLAttributes } from 'react';
-import type { SelectOption } from 'src/fragments/types';
-
-
-/**
- * react-functional-select 'themeConfig' property
- */
-
-
-export const THEME_CONFIG = {
-  color: {
-    primary: '#09d3ac'
-  },
-  control: {
-    boxShadowColor: 'rgba(9, 211, 172, 0.25)',
-    focusedBorderColor: 'rgba(9, 211, 172, 0.75)'
-  },
-  menu: {
-    option: {
-      selectedColor: '#fff',
-      selectedBgColor: '#09d3ac',
-      focusedBgColor: 'rgba(9, 211, 172, 0.225)'
-    }
-  }
- };
+import type { SelectOption,WeatherState,FormState } from 'src/fragments/types';
 
 /**
  * Select control test data
@@ -56,4 +33,16 @@ export const LINK_ATTRIBUTES: AnchorHTMLAttributes<HTMLAnchorElement> = {
   role: 'button',
   target: '_blank',
   rel: 'noopener noreferrer'
+};
+
+export const WeatherStateInit: WeatherState = {
+  forecasts: [],
+  isLoading: true,
+  startDateIndex: -1,
+}
+
+export const FormStateInit: FormState = {
+  count: 0,
+  checked: false,
+  selectedOption: DROPDOWN_TEST_DATA[0]
 };

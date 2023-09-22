@@ -2,11 +2,12 @@ import { BuCheckbox } from 'src/fragments';
 import { setChecked } from 'src/store/formSlice';
 import { useCallback, type FunctionComponent } from 'react';
 import { useAppSelector, useAppDispatch } from 'src/store';
+import { FormStateInit } from 'src/config';
 
 const BuCheckboxFormGroup: FunctionComponent = () => {
   const dispatch = useAppDispatch();
   
-  const checked = useAppSelector<boolean>((state) => (state.form && state.form.checked) ?? false);
+  const checked = useAppSelector<boolean>((state) => (state.form ?? FormStateInit).checked);
 
   const handleOnCheck = useCallback((checked: boolean) => {
     dispatch(setChecked(checked));

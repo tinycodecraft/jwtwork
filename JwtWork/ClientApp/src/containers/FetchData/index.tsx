@@ -6,6 +6,7 @@ import { useEffect, type FunctionComponent } from 'react';
 import { useAppSelector, useAppDispatch } from 'src/store';
 import { getForecastsAsync} from 'src/store/weatherSlice';
 import { type WeatherState } from 'src/fragments/types';
+import { WeatherStateInit } from 'src/config';
 
 
 
@@ -15,10 +16,8 @@ const FetchData: FunctionComponent = () => {
   console.log(`fetching component init with param ${startDateIndexDefault}`)
 
   const intNextStartDateIndex = parseInt(startDateIndexDefault, 10);  
-  const weatherstate = useAppSelector<WeatherState>((state)=> state.weather);
-  const isLoading = (weatherstate && weatherstate.isLoading ) ?? true;
-  const startDateIndex = (weatherstate && weatherstate.startDateIndex ) ?? -1;
-  const forecasts = (weatherstate && weatherstate.forecasts) ?? [];
+  const { isLoading,startDateIndex,forecasts } = useAppSelector<WeatherState>((state)=> state.weather ?? WeatherStateInit);
+
 
 
   console.log(`all constants should be ready for fetch data with state ${startDateIndex}`)

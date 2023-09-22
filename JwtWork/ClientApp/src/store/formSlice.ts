@@ -1,16 +1,10 @@
-import { DROPDOWN_TEST_DATA } from 'src/config';
+import { FormStateInit } from 'src/config';
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
-import { type FormState,type SelectedOption  } from 'src/fragments/types';
-
-const initialState: FormState = {
-  count: 0,
-  checked: false,
-  selectedOption: DROPDOWN_TEST_DATA[0]
-};
+import { type SelectedOption  } from 'src/fragments/types';
 
 export const formSlice = createSlice({
   name: 'form',
-  initialState,
+  initialState: FormStateInit,
   reducers: {
     increment: (state) => {
       state.count += 1;
