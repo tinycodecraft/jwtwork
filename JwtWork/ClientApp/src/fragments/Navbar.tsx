@@ -1,11 +1,21 @@
 import { useIsLoggedIn } from 'src/utils';
 import { Routes as routes } from 'src/config';
-import type { FunctionComponent } from 'react';
+import  React,{ type FunctionComponent } from 'react';
 import { NavLink, generatePath } from 'react-router-dom';
 import { ReactComponent as BulmaLogoSVG } from 'src/assets/image/BulmaLogo.svg';
+import { Bars4Icon, IdentificationIcon, PencilIcon, PuzzlePieceIcon, SunIcon } from '@heroicons/react/24/outline';
+
 
 const Navbar: FunctionComponent = () => {
   const isLoggedIn = useIsLoggedIn();
+
+  const icons = [
+    Bars4Icon,
+    IdentificationIcon,    
+    PuzzlePieceIcon,
+    PencilIcon,
+    SunIcon,
+  ]
 
   return (
     <nav
@@ -26,17 +36,18 @@ const Navbar: FunctionComponent = () => {
           {isLoggedIn &&
             routes
               .filter(({ showInNav }) => showInNav)
-              .map(({ path, name, params }) => (
+              .map(({ path, name, params },index) => (
                 <NavLink
                   key={name}
                   to={generatePath(path, params)}
                   className={({ isActive }) => 'navbar-item' + (isActive ? ' is-active' : '')}
                 >
-                  {name}
+                  {React.createElement(icons[index], { className: 'h-[18px] w-[18px] mr-2' })} {name}
                 </NavLink>
               ))}
         </div>
-      </div>
+     
+      </div>       
     </nav>
   );
 };

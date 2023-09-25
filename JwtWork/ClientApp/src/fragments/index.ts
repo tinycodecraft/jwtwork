@@ -7,4 +7,6 @@ export { default as Spinner } from './Spinner';
 export { default as BuCheckbox} from './Checkbox'
 export { default as Authenticator } from './Authenticator';
 export { default as FloatMenu} from './FloatMenu'
-export { default as MuNavbar} from './MrNavbar'
+export { MrNavBar } from './MrNavbar';
+export { MrUserMenu } from './MrUserMenu';
+export { MrHoverList } from './MrHoverList';

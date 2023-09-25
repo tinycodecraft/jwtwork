@@ -20,6 +20,7 @@ export type Route = Readonly<{
   transition: Transition;
   Component: RouteComponent;
   params?: Readonly<Params<string>>;
+  iconIndex? : number;
 }>;
 
 export const Routes: Route[] = [
@@ -30,6 +31,15 @@ export const Routes: Route[] = [
     Component: Login,
     transition: TRANSITION_DEFAULT
   },
+
+  {
+    showInNav: true,
+    path: '/home',
+    name: 'Home',
+    Component: Dashboard,
+    transition: TRANSITION_DEFAULT,
+    iconIndex: 0,
+  },
   {
     path: '/form',
     showInNav: true,
@@ -38,28 +48,24 @@ export const Routes: Route[] = [
     transition: {
       classNames: 'page-slide-left',
       timeout: { enter: 350, exit: 250 }
-    }
-  },
-  {
-    showInNav: true,
-    path: '/home',
-    name: 'Home',
-    Component: Dashboard,
-    transition: TRANSITION_DEFAULT
+    },
+    iconIndex: 1,
   },
   {
     showInNav: true,
     path: '/dnd',
     name: 'Drag and Drop',
     Component: DndBoard,
-    transition: TRANSITION_DEFAULT
+    transition: TRANSITION_DEFAULT,
+    iconIndex: 2,
   },    
   {
     showInNav: true,
     path: '/quill',
     name: 'Quill',
     Component: Quillboard,
-    transition: TRANSITION_DEFAULT
+    transition: TRANSITION_DEFAULT,
+    iconIndex:3,
   },  
   {
     showInNav: true,
@@ -73,6 +79,7 @@ export const Routes: Route[] = [
     params: {
       // this value set the location path parameter correctly
       startDateIndex: '0'
-    }
+    },
+    iconIndex:4,
   }
 ];
