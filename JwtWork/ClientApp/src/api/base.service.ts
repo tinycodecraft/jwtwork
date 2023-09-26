@@ -1,5 +1,6 @@
 import axios, { type AxiosInstance } from 'axios'
 import { BASEURL, NUGET_URL_CONFIG } from 'src/config'
+import type { RefreshTokenState } from 'src/fragments/types'
 
 /**
  * Service API base class - configures default settings/error handling for inheriting class
@@ -16,6 +17,7 @@ export abstract class BaseService {
   set token(value: string) {
     this._token = value
   }
+  
 
   get refreshToken(): string {
     return this._refreshToken
@@ -56,9 +58,15 @@ export abstract class BaseService {
         }
         try {
           if (NUGET_URL_CONFIG.RefreshTokenUrl && this.refreshToken) {
-            const response = await axios.post(NUGET_URL_CONFIG.RefreshTokenUrl, { refreshToken: this.refreshToken })
-            this.token = response.data
-
+            const url = `${NUGET_URL_CONFIG.RefreshTokenUrl}?token=${this.refreshToken}`
+            console.log(`get refresh token by ${url}`)
+            const response = await axios.get(url) as RefreshTokenState
+            console.log(`the response from refresh ${response}`)
+            if(response && response.status!='fail')
+            {
+              this.token = response.newToken  ?? this.token
+            }
+            
             if (this.token) {
               requestConfig.headers.Authorization = `Bearer ${this.token}`
             }

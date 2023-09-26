@@ -1,5 +1,6 @@
 import { SampleApi } from 'src/api'
 import { createAsyncThunk, createSlice, type PayloadAction } from '@reduxjs/toolkit'
+import { setNewToken } from './authSlice'
 import type { RootState } from './configureStore'
 import { type ReceiveForecastsPayload } from 'src/fragments/types'
 import { WeatherStateInit } from 'src/config'
@@ -34,7 +35,7 @@ export const getForecastsAsync = createAsyncThunk('weather/getForecastsAsync', a
   
   const {
     weather: { startDateIndex: stateIdx},
-    auth: { token: accessToken },
+    auth: { token: accessToken, refreshToken: renewToken },
   } = (getState as () => RootState)()
 
   // getstate is function such that the value weather would not be null
@@ -51,10 +52,16 @@ export const getForecastsAsync = createAsyncThunk('weather/getForecastsAsync', a
     if (accessToken) {
       SampleApi.token = accessToken
     }
+    if(renewToken)
+    {
+      SampleApi.refreshToken = renewToken;
+    }
 
     const forecasts = await SampleApi.getForecastsAsync(startDateIndex)
     const payload = { forecasts, startDateIndex }
     dispatch(receiveForecasts(payload))
+    // if the instance of SampleApi still exist , it must keep the renewtoken while it retries
+    dispatch(setNewToken(SampleApi.token))
   } catch (e) {
     console.error(e)
   }

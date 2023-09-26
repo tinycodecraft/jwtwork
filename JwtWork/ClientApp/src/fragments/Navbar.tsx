@@ -5,7 +5,7 @@ import { NavLink, generatePath } from 'react-router-dom'
 import { ReactComponent as BulmaLogoSVG } from 'src/assets/image/BulmaLogo.svg'
 import { Bars4Icon, IdentificationIcon, PencilIcon, PuzzlePieceIcon, SunIcon } from '@heroicons/react/24/outline'
 import { useEventListener, useMediaQuery } from 'usehooks-ts'
-import { Drawer, IconButton, MobileNav } from '@material-tailwind/react'
+import { Drawer, IconButton, Typography } from '@material-tailwind/react'
 
 const Navbar: FunctionComponent = () => {
   const isLoggedIn = useIsLoggedIn()
@@ -21,9 +21,27 @@ const Navbar: FunctionComponent = () => {
     <div>
       <Drawer open={isNavOpen} onClose={() => setNavOpen(false)}>
         <aside className='menu'>
-          <p className='menu-label'>
-            Options
-          </p>
+        <div className="mb-2 flex items-center justify-between p-4">
+          <Typography variant="h5" color="blue-gray">
+            BULMA Menu
+          </Typography>
+          <IconButton variant="text" color="blue-gray" onClick={()=>setNavOpen(false)} className='mb-[1.5rem]'>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={2}
+              stroke="currentColor"
+              className="h-5 w-5"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </IconButton>
+        </div>
           <ul className='menu-list'>
             {isLoggedIn &&
               routes
@@ -33,10 +51,11 @@ const Navbar: FunctionComponent = () => {
                     <NavLink
                       key={name}
                       to={generatePath(path, params)}
-                      onClick={()=> setNavOpen(false)}
+                      onClick={() => setNavOpen(false)}
                       className={({ isActive }) => 'navbar-item items-center' + (isActive ? ' is-active' : '')}
                     >
-                      {React.createElement(icons[index], { className: 'h-[18px] w-[18px] mr-2' })} {name}
+                      
+                      {React.createElement(icons[index], { className: 'h-[18px] w-[18px] mr-2 inline' })} {name}
                     </NavLink>
                   </li>
                 ))}

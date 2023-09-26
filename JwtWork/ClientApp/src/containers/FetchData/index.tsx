@@ -5,6 +5,7 @@ import { useParams } from 'react-router-dom';
 import { useEffect, type FunctionComponent } from 'react';
 import { useAppSelector, useAppDispatch } from 'src/store';
 import { getForecastsAsync} from 'src/store/weatherSlice';
+
 import { type WeatherState } from 'src/fragments/types';
 import { WeatherStateInit } from 'src/config';
 

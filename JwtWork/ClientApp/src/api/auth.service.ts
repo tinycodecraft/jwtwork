@@ -1,6 +1,6 @@
 import { BaseService } from './base.service';
 import type { AxiosResponse } from 'axios';
-import { type Credentials,type AuthUser } from 'src/fragments/types';
+import { type Credentials,type AuthUser, type RefreshTokenState } from 'src/fragments/types';
 
 /**
  * Auth API abstraction layer communication via Axios (typescript singleton pattern)
@@ -27,6 +27,12 @@ class AuthService extends BaseService {
     const { data } = await this.$http.post<AuthUser>('Login', credentials);
     return data;
   }
+
+  public async getNewTokenAsync(refreshToken:string): Promise<RefreshTokenState> {
+    const url = `RefreshToken?token=${refreshToken}`;
+    const { data } = await this.$http.get<RefreshTokenState>(url);
+    return data;
+  }  
 }
 
 export const AuthApi = AuthService.Instance;

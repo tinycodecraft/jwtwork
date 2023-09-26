@@ -23,7 +23,7 @@ const initialState: AuthState = {
 
 const replaceState = (
   state: AuthState,
-  { status, token, userName, isAuthenticated, error,needNew }: AuthState,
+  { status, token, refreshToken, userName, isAuthenticated, error,needNew }: AuthState,
   resetOnly = false,
 
 ) => {
@@ -32,6 +32,7 @@ const replaceState = (
   state.status = status;
   state.userName = userName;
   state.isAuthenticated = isAuthenticated;
+  state.refreshToken = refreshToken;
   if(!resetOnly)
   {
     state.needNew = needNew;
@@ -49,6 +50,10 @@ export const authSlice = createSlice({
     },
     setUserLogin: (state, action: PayloadAction<AuthState>) => {
       replaceState(state, action.payload);
+    },
+    setNewToken: (state, action: PayloadAction<string>)=> {
+      state.token = action.payload;
+
     },
     resetState: (state) => {      
       replaceState(state, initialState,state.needNew);      
@@ -70,6 +75,6 @@ export const loginAsync = createAsyncThunk(
   }
 );
 
-export const { setAuthStatus, setUserLogin, resetState } = authSlice.actions;
+export const { setAuthStatus, setUserLogin, resetState, setNewToken } = authSlice.actions;
 
 export default authSlice.reducer;

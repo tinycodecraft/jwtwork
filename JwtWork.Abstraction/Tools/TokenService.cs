@@ -7,6 +7,7 @@ using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using static JwtWork.Abstraction.Interfaces;
@@ -30,9 +31,9 @@ namespace JwtWork.Abstraction.Tools
         public string CreateToken(IUser user)
         {
             var expiration = DateTime.UtcNow.AddMinutes(ExpirationMinutes);
-
+            var userClaims = CreateClaims(user);
             var token = CreateJwtToken(
-                CreateClaims(user),
+                userClaims,
                 CreateSigningCredentials(),
                 expiration
             );
@@ -51,7 +52,15 @@ namespace JwtWork.Abstraction.Tools
                 expires: expiration,
                 signingCredentials: credentials
             );
-
+        public static string GenerateRefreshToken()
+        {
+            var randomNumber = new byte[32];
+            using (var rng = RandomNumberGenerator.Create())
+            {
+                rng.GetBytes(randomNumber);
+                return Convert.ToBase64String(randomNumber);
+            }
+        }
 
         private List<Claim> CreateClaims(IUser user)
         {

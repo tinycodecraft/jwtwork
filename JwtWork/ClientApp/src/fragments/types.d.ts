@@ -20,6 +20,7 @@ export type Credentials = {
 
 export type AuthUser = {
   token?: string;
+  refreshToken?:string;
   userName?: string;
   status: AuthStatusEnum;
   error?: string;
@@ -53,4 +54,9 @@ export type FormState = Readonly<{
   count: number;
   checked: boolean;
   selectedOption: SelectedOption;
+}>;
+
+export type RefreshTokenState =Readonly<{
+  status: string
+  newToken?: string
 }>;

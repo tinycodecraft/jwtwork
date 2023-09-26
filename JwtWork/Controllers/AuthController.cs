@@ -12,6 +12,10 @@ using System.Linq;
 using static JwtWork.Abstraction.Interfaces;
 using JwtWork.Abstraction.Tools;
 using JwtWork.SQLDB.Models;
+using Microsoft.AspNetCore.Authentication;
+using System.Collections.Generic;
+using System.Security.Claims;
+using Microsoft.EntityFrameworkCore;
 
 namespace JwtWork.Controllers
 {
@@ -34,6 +38,22 @@ namespace JwtWork.Controllers
             mgr = itmgr;
             jwtsvc = jwtmgr;
         }
+        [HttpGet]
+        public async Task<IActionResult> RefreshToken(string token)
+        {
+            var savedrefresh = Request.HttpContext.Session.GetString("REFRESHTOKEN");
+            var saveduserid = Request.HttpContext.Session.GetString("USERID");
+
+            var user =await _context.UserTB.FirstOrDefaultAsync(e => e.UserId == saveduserid);
+            if(user!=null && savedrefresh == token && token != null)
+            {
+                var newtoken = jwtsvc.CreateToken(user);
+                return Ok(new { newToken= newtoken,status="success" });
+            }
+
+            return Ok(new { status = "fail" });
+           
+        }
 
         [HttpPost]
         [ProducesResponseType(typeof(AuthUser), StatusCodes.Status200OK)]
@@ -46,7 +66,7 @@ namespace JwtWork.Controllers
                 var registerError = await mgr.Register(request.UserName, request.Password);
                 if(!string.IsNullOrEmpty(registerError))
                 {
-                    return Ok(new AuthUser("fail", "", request.UserName, registerError, false));
+                    return Ok(AuthUser.CreateFailureFor(request.UserName, registerError, false));
 
                 }
             }
@@ -56,19 +76,24 @@ namespace JwtWork.Controllers
 
             if(user==null)
             {
-                return Ok(new AuthUser("fail", "", request.UserName, "No user found!", false));
+                return Ok(AuthUser.CreateFailureFor(request.UserName, "No user found!", false));
             }
 
             if (loginError!=null && loginError.Error.HasError())
             {
-                return Ok(new AuthUser("fail", "", request.UserName, loginError.Error,loginError.NeedNew)); 
+                return Ok(AuthUser.CreateFailureFor( request.UserName, loginError.Error,loginError.NeedNew)); 
             }
-
+            
             await _hubContext.Clients.All.SendAsync("UserLogin");
-
+            
             var token =  jwtsvc.CreateToken(user);
+            
+            var refreshtoken = TokenService.GenerateRefreshToken();
 
-            var authUser = new AuthUser("success", token, request?.UserName ?? "");
+            Request.HttpContext.Session.SetString("REFRESHTOKEN", refreshtoken);
+            Request.HttpContext.Session.SetString("USERID", user.UserId);
+
+            var authUser = new AuthUser("success", token, refreshtoken, request?.UserName ?? "");
 
             return Ok(authUser);
         }
