@@ -22,7 +22,7 @@ export const NUGET_URL_CONFIG = {
   HealthUi: `${BASEURL}/healthchecks-ui`,
   HealthJson: `${BASEURL}/healthchecks-json`,
   SwaggerDocs: `${BASEURL}/swagger`,
-  RefreshTokenUrl: `${BASEURL}/auth/RefreshToken`,
+  RefreshTokenUrl: `${BASEURL}/api/auth/RefreshToken`,
 
 };
 

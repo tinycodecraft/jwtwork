@@ -38,11 +38,11 @@ namespace JwtWork.Controllers
             mgr = itmgr;
             jwtsvc = jwtmgr;
         }
-        [HttpGet]
+        [HttpPost]
         public async Task<IActionResult> RefreshToken(string token)
         {
-            var savedrefresh = Request.HttpContext.Session.GetString("REFRESHTOKEN");
-            var saveduserid = Request.HttpContext.Session.GetString("USERID");
+            var savedrefresh = HttpContext.Session.GetString("REFRESHTOKEN");
+            var saveduserid = HttpContext.Session.GetString("USERID");
 
             var user =await _context.UserTB.FirstOrDefaultAsync(e => e.UserId == saveduserid);
             if(user!=null && savedrefresh == token && token != null)
@@ -90,8 +90,8 @@ namespace JwtWork.Controllers
             
             var refreshtoken = TokenService.GenerateRefreshToken();
 
-            Request.HttpContext.Session.SetString("REFRESHTOKEN", refreshtoken);
-            Request.HttpContext.Session.SetString("USERID", user.UserId);
+            HttpContext.Session.SetString("REFRESHTOKEN", refreshtoken);
+            HttpContext.Session.SetString("USERID", user.UserId);
 
             var authUser = new AuthUser("success", token, refreshtoken, request?.UserName ?? "");
 
