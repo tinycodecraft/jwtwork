@@ -39,7 +39,7 @@ namespace JwtWork.Controllers
             jwtsvc = jwtmgr;
         }
         [HttpPost]
-        public async Task<IActionResult> RefreshToken(string token)
+        public async Task<IActionResult> RefreshToken([FromBody]string token)
         {
             var savedrefresh = HttpContext.Session.GetString("REFRESHTOKEN");
             var saveduserid = HttpContext.Session.GetString("USERID");

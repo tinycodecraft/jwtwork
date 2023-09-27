@@ -64,7 +64,7 @@ const Navbar: FunctionComponent = () => {
       </Drawer>
       <nav role='navigation' className='navbar' aria-label='main navigation'>
         <div className='navbar-wrapper'>
-          <div className='brand-wrapper'>
+          <div className={clsxm('brand-wrapper',isfullwidth ? '': '!w-full')}>
             <BulmaLogoSVG width='130' height='65' aria-hidden title='bulma.io-logo' />
           </div>
 

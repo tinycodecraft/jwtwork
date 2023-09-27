@@ -58,7 +58,7 @@ export abstract class BaseService {
         }
         try {
           if (NUGET_URL_CONFIG.RefreshTokenUrl && this.refreshToken) {
-            const url = `${NUGET_URL_CONFIG.RefreshTokenUrl}`
+            const url = `${NUGET_URL_CONFIG.RefreshTokenUrl}/`
             console.log(`get refresh token by ${url}`)
             const response = await axios.post(url,{ token: this.refreshToken}) as RefreshTokenState
             console.log(`the response from refresh ${response}`)
