@@ -4,6 +4,7 @@ import type { FunctionComponent } from 'react';
 import { useCSSTransitionProps } from 'src/utils';
 import { useLocation, Route, Routes } from 'react-router-dom';
 import { CSSTransition, SwitchTransition } from 'react-transition-group';
+import { Dashboard } from './containers';
 
 
 const App: FunctionComponent = () => {
@@ -25,6 +26,8 @@ const App: FunctionComponent = () => {
                 element={<Component {...rest} />}
               />
             ))}
+            {/* catch all  */}
+            {(<Route path='*' element={<Dashboard />} />)}
           </Routes>
         </CSSTransition>
       </SwitchTransition>
