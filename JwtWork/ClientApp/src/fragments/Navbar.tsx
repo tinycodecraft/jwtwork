@@ -21,18 +21,18 @@ const Navbar: FunctionComponent = () => {
     <div>
       <Drawer open={isNavOpen} onClose={() => setNavOpen(false)}>
         <aside className='menu'>
-          <div className='mb-[0.75rem] flex items-center justify-between px-4 pt-4 bg-blue-gray-200/50' >
+          <div className='mb-[0.75rem] flex items-center justify-between px-4 pt-4 bg-amber-50' >
             <svg viewBox='0 0 200 60' xmlns='http://www.w3.org/2000/svg' dominantBaseline='middle'>
-              <text y='25' fontFamily='Great Vibes' fontWeight={700} fill='#e6072c' fontSize={36}>
+              <text y='25' fontFamily='Great Vibes' fontWeight={900} fill='#1e2fc5e8' fontSize={36}>
                 B
               </text>
-              <text x='40' y='25' fontFamily='Roboto' fontWeight={400}>
+              <text x='40' y='25' fontFamily='Roboto' fontWeight={400} fill='#2c2c23e4'>
                 ulma
               </text>     
-              <text x='90' y='30' fontFamily='Great Vibes' fontWeight={700} fill='#e6072c' fontSize={36}>
+              <text x='90' y='30' fontFamily='Great Vibes' fontWeight={900} fill='#1e2fc5e8' fontSize={36}>
                 M
               </text>
-              <text x='140' y='25' fontFamily='Roboto' fontWeight={400}>
+              <text x='140' y='25' fontFamily='Roboto' fontWeight={400} fill='#2c2c23e4'>
                 enu
               </text>     
 
