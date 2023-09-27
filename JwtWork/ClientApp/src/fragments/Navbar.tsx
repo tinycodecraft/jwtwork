@@ -21,27 +21,28 @@ const Navbar: FunctionComponent = () => {
     <div>
       <Drawer open={isNavOpen} onClose={() => setNavOpen(false)}>
         <aside className='menu'>
-        <div className="mb-2 flex items-center justify-between p-4">
-          <Typography variant="h5" color="blue-gray">
-            BULMA Menu
-          </Typography>
-          <IconButton variant="text" color="blue-gray" onClick={()=>setNavOpen(false)} className='mb-[1.5rem]'>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={2}
-              stroke="currentColor"
-              className="h-5 w-5"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M6 18L18 6M6 6l12 12"
-              />
+          <div className='mb-[0.75rem] flex items-center justify-between px-4 pt-4 bg-blue-gray-200/50' >
+            <svg viewBox='0 0 200 60' xmlns='http://www.w3.org/2000/svg' dominantBaseline='middle'>
+              <text y='25' fontFamily='Great Vibes' fontWeight={700} fill='#e6072c' fontSize={36}>
+                B
+              </text>
+              <text x='40' y='25' fontFamily='Roboto' fontWeight={400}>
+                ulma
+              </text>     
+              <text x='90' y='30' fontFamily='Great Vibes' fontWeight={700} fill='#e6072c' fontSize={36}>
+                M
+              </text>
+              <text x='140' y='25' fontFamily='Roboto' fontWeight={400}>
+                enu
+              </text>     
+
             </svg>
-          </IconButton>
-        </div>
+            <IconButton variant='text' color='blue-gray' onClick={() => setNavOpen(false)} className='mb-[0.75rem]'>
+              <svg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' strokeWidth={2} stroke='currentColor' className='h-5 w-5'>
+                <path strokeLinecap='round' strokeLinejoin='round' d='M6 18L18 6M6 6l12 12' />
+              </svg>
+            </IconButton>
+          </div>
           <ul className='menu-list'>
             {isLoggedIn &&
               routes
@@ -54,7 +55,6 @@ const Navbar: FunctionComponent = () => {
                       onClick={() => setNavOpen(false)}
                       className={({ isActive }) => 'navbar-item items-center' + (isActive ? ' is-active' : '')}
                     >
-                      
                       {React.createElement(icons[index], { className: 'h-[18px] w-[18px] mr-2 inline' })} {name}
                     </NavLink>
                   </li>
@@ -64,7 +64,7 @@ const Navbar: FunctionComponent = () => {
       </Drawer>
       <nav role='navigation' className='navbar' aria-label='main navigation'>
         <div className='navbar-wrapper'>
-          <div className={clsxm('brand-wrapper',isfullwidth ? '': '!w-full')}>
+          <div className={clsxm('brand-wrapper', isfullwidth ? '' : '!w-full')}>
             <BulmaLogoSVG width='130' height='65' aria-hidden title='bulma.io-logo' />
           </div>
 

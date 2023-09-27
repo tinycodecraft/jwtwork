@@ -9,7 +9,9 @@ export interface ColorType {
   id: UniqueIdentifier;
   color: string;
 }
-
+export type TokenState ={
+  token?:string;
+}
 
 export type Credentials = {
   userName?: string;

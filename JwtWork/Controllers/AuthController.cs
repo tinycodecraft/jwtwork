@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Authentication;
 using System.Collections.Generic;
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
+using JwtWork.Abstraction.Models;
 
 namespace JwtWork.Controllers
 {
@@ -39,19 +40,20 @@ namespace JwtWork.Controllers
             jwtsvc = jwtmgr;
         }
         [HttpPost]
-        public async Task<IActionResult> RefreshToken([FromBody]string token)
+        [ProducesResponseType(typeof(RefreshTokenState),StatusCodes.Status200OK)]
+        public async Task<IActionResult> Renew([FromBody]TokenState request)
         {
             var savedrefresh = HttpContext.Session.GetString("REFRESHTOKEN");
             var saveduserid = HttpContext.Session.GetString("USERID");
 
             var user =await _context.UserTB.FirstOrDefaultAsync(e => e.UserId == saveduserid);
-            if(user!=null && savedrefresh == token && token != null)
+            if(user!=null && savedrefresh == request.Token && request.Token != null)
             {
                 var newtoken = jwtsvc.CreateToken(user);
-                return Ok(new { newToken= newtoken,status="success" });
+                return Ok(new RefreshTokenState { NewToken= newtoken,Status="success" });
             }
 
-            return Ok(new { status = "fail" });
+            return Ok(new RefreshTokenState { Status = "fail" });
            
         }
 
