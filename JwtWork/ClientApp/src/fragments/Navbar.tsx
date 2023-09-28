@@ -4,7 +4,7 @@ import React, { useState, type FunctionComponent } from 'react'
 import { NavLink, generatePath } from 'react-router-dom'
 import { ReactComponent as BulmaLogoSVG } from 'src/assets/image/BulmaLogo.svg'
 import { Bars4Icon, IdentificationIcon, PencilIcon, PuzzlePieceIcon, SunIcon } from '@heroicons/react/24/outline'
-import { useEventListener, useMediaQuery } from 'usehooks-ts'
+import { useEventListener, useMediaQuery } from '@mantine/hooks'
 import { Drawer, IconButton, Typography } from '@material-tailwind/react'
 
 const Navbar: FunctionComponent = () => {

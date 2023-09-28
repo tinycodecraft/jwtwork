@@ -1,0 +1,59 @@
+﻿{
+   "CodeGenerationMode": 3,
+   "ContextClassName": "JWTPISContext",
+   "ContextNamespace": null,
+   "DefaultDacpacSchema": null,
+   "FilterSchemas": false,
+   "IncludeConnectionString": true,
+   "ModelNamespace": null,
+   "OutputContextPath": null,
+   "OutputPath": "Models",
+   "PreserveCasingWithRegex": true,
+   "ProjectRootNamespace": "JwtWork.PISDB",
+   "Schemas": null,
+   "SelectedHandlebarsLanguage": 3,
+   "SelectedToBeGenerated": 0,
+   "T4TemplatePath": null,
+   "Tables": [
+      {
+         "Name": "[dbo].[FileCategory]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[FileSubCategory]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[PSItem]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[PSItemLink]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[PSJob]",
+         "ObjectType": 0
+      }
+   ],
+   "UiHint": "bns-app1.JWTPIS.dbo",
+   "UncountableWords": null,
+   "UseBoolPropertiesWithoutDefaultSql": false,
+   "UseDatabaseNames": true,
+   "UseDateOnlyTimeOnly": false,
+   "UseDbContextSplitting": false,
+   "UseFluentApiOnly": false,
+   "UseHandleBars": false,
+   "UseHierarchyId": false,
+   "UseInflector": false,
+   "UseLegacyPluralizer": false,
+   "UseManyToManyEntity": true,
+   "UseNoDefaultConstructor": true,
+   "UseNoObjectFilter": false,
+   "UseNodaTime": false,
+   "UseNullableReferences": false,
+   "UseSchemaFolders": false,
+   "UseSchemaNamespaces": false,
+   "UseSpatial": false,
+   "UseT4": false
+}

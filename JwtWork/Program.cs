@@ -30,6 +30,8 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Threading.Tasks;
 using Azure.Core;
+using JwtWork.PISDB.Models;
+using Microsoft.AspNetCore.Http.Features;
 //using Serilog.Core;
 //using System.Linq;
 //using System.Reflection.Metadata;
@@ -66,13 +68,25 @@ var encryptionService = new StringEncrypService();
 authsetting[nameof(AuthSetting.Secret)] = encryptionService.EncryptString(authsetting[nameof(AuthSetting.SecretKey)] ?? "");
 
 builder.Services.Configure<AuthSetting>(authsetting);
+builder.Services.Configure<FormOptions>(opt => {
+    //opt.BufferBodyLengthLimit = 512 * 1024 * 1024;
 
+    //it needs
+    opt.MultipartBodyLengthLimit = 512 * 1024 * 1024;
+    
+});
 
+builder.Services.Configure<IISServerOptions>(opt =>
+{
+    opt.MaxRequestBodySize = 512 * 1024 * 1024;
+
+});
 
 //Setup IdentityDB Context and UserManager
 //If not, only DB Context service to be added
 
 builder.Services.AddDbContext<JWTWORKContext>();
+builder.Services.AddDbContext<JWTPISContext>();
 
 
 //hosting environment variable in iwebhostenvironment
@@ -88,6 +102,7 @@ builder.Host.UseSerilog((ctx,srv, cfg) => {
 
     
 });
+
 
 builder.Services.AddScoped<IJwtManager, UserManager>();
 
