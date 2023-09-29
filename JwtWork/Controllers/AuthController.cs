@@ -83,6 +83,7 @@ namespace JwtWork.Controllers
 
             if (loginError!=null && loginError.Error.HasError())
             {
+                
                 return Ok(AuthUser.CreateFailureFor( request.UserName, loginError.Error,loginError.NeedNew)); 
             }
             
@@ -105,6 +106,7 @@ namespace JwtWork.Controllers
         public async Task<IActionResult> Logout()
         {
             _logger.LogInformation("Logout api is called.");
+            
 
             await _hubContext.Clients.All.SendAsync("UserLogout");
             return Ok();

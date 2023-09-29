@@ -7,5 +7,6 @@ namespace JwtWork.Hubs
         Task UserLogin();
         Task UserLogout();
         Task CloseAllConnections(string reason);
+        Task<string> GetConnectionId();
     }
 }

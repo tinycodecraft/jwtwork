@@ -1,10 +1,14 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using GhostUI.Services;
+using JwtWork.Controllers;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.Logging;
 using Microsoft.Net.Http.Headers;
 using System.IO;
 
 using System.Threading.Tasks;
+using static JwtWork.Abstraction.Interfaces;
 
 namespace GhostUI.Controllers
 {
@@ -12,15 +16,26 @@ namespace GhostUI.Controllers
     [ApiController]
     public class FilesController : ControllerBase
     {
-
+        private readonly ILogger _logger;
+        private readonly IFileService _fileService;
+        public FilesController(ILogger<FilesController> logger, IFileService fileservice)
+        {
+            _logger = logger;
+            _fileService = fileservice;
+            _logger.LogInformation("Files Controller being invoked.");
+        }
+        //**this method is uploading through streaming 
         [HttpPost]
+        [Route(nameof(SimpleUpload))]
+        [ProducesResponseType(StatusCodes.Status415UnsupportedMediaType)]
+        [MultipartFormData]
+        [DisableFormValueModelBinding]
         [RequestSizeLimit(512*1024*1024)]
         //size limit using with formoption set in Program service builder
-        public IActionResult SimpleUpload(IFormFile file)
+        public async Task<IActionResult> SimpleUpload()
         {
-            var filesizeInMB = file.Length /(1024*1024);
-
-            return Ok(filesizeInMB);
+            var fileUploadSummary = await _fileService.UploadFileAsync(HttpContext.Request.Body, Request.ContentType);
+            return CreatedAtAction(nameof(SimpleUpload), fileUploadSummary);
         }
 
 
@@ -34,6 +49,10 @@ namespace GhostUI.Controllers
         /// <returns></returns>
         [HttpPost]
         [Route(nameof(UploadLargeFile))]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status415UnsupportedMediaType)]
+        [MultipartFormData]
+        [DisableFormValueModelBinding]
         [RequestSizeLimit(512 * 1024 * 1024)]
         public async Task<IActionResult> UploadLargeFile()
         {
