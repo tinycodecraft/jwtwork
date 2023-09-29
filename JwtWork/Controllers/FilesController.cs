@@ -32,7 +32,7 @@ namespace GhostUI.Controllers
         [DisableFormValueModelBinding]
         [RequestSizeLimit(512*1024*1024)]
         //size limit using with formoption set in Program service builder
-        public async Task<IActionResult> SimpleUpload()
+        public async Task<IActionResult> SimpleUpload(string connectionid)
         {
             var fileUploadSummary = await _fileService.UploadFileAsync(HttpContext.Request.Body, Request.ContentType);
             return CreatedAtAction(nameof(SimpleUpload), fileUploadSummary);

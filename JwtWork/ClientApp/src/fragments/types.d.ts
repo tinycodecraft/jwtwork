@@ -2,6 +2,7 @@ import { RadioProps } from "@mui/material";
 import React, { PropsWithChildren } from "react";
 import internal from "stream";
 import { type SingleValue } from 'react-select';
+import { type FileWithPath } from "@mantine/dropzone";
 
 export as namespace fragmentSps;
 
@@ -11,6 +12,18 @@ export interface ColorType {
 }
 export type TokenState ={
   token?:string;
+}
+
+export type UploadDataInput ={
+  connectionId: string;
+  files: FileWithPath[];
+}
+
+export type FileUploadSummaryState={
+  totalFilesUploaded: number;
+  totalSizeUploaded: string;
+  filePaths: string[];
+  NotUploadedFiles: string[];
 }
 
 export type Credentials = {

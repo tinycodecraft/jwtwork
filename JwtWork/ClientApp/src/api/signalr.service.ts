@@ -45,7 +45,7 @@ class SignalRService {
   public async startConnection(): Promise<void> {
     try {
       await this._hubConnection?.start()
-      this.getConnectionId()
+      await this.getConnectionId()
       console.assert(this.connectionState === HubConnectionState.Connected)
     } catch (e) {
       console.assert(this.connectionState === HubConnectionState.Disconnected)

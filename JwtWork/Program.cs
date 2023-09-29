@@ -107,6 +107,7 @@ builder.Host.UseSerilog((ctx,srv, cfg) => {
 builder.Services.AddScoped<IJwtManager, UserManager>();
 
 builder.Services.AddScoped<TokenService,TokenService>();
+builder.Services.AddScoped<IFileService, FileService>();
 
 //only execute once
 builder.Services.AddHostedService<TracerService>();
