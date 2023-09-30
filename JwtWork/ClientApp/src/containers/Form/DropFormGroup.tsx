@@ -25,8 +25,12 @@ export const DropFormGroup: FunctionComponent = (props: Partial<DropzoneProps>) 
 // 1024**2 == 1M
   return (
     <div className='column'>
-      <h3 className='title is-4'>File Drop Zone</h3>
-      <h5 className='subtitle is-5'>Only image will be accepted</h5>
+      <div className='level-right'>
+        <p className='level-item'><h3 className='title is-4'>File Drop Zone</h3></p>
+        <p className='level-item'><a className='button is-success' {...{'disabled': !files || files.length==0}}>Upload</a></p>
+      </div>
+      
+      
       <Dropzone
         openRef={openRef}
         onDrop={ondrop}
