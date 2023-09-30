@@ -16,13 +16,13 @@ export const DropFormGroup: FunctionComponent = (props: Partial<DropzoneProps>) 
     const imageUrl = URL.createObjectURL(file)
     return (
       <div className='block' key={`${file.name}-${index}`}>
-        
+        <button className='delete is-large z-10 float-right top-10' onClick={()=>  setFiles( files.filter(f=> f!==files[index]))}></button>
         <Image key={index} src={imageUrl} imageProps={{ onLoad: () => URL.revokeObjectURL(imageUrl) }} />
         
       </div>
     )
   })
-
+// 1024**2 == 1M
   return (
     <div className='column'>
       <h3 className='title is-4'>File Drop Zone</h3>
@@ -31,6 +31,7 @@ export const DropFormGroup: FunctionComponent = (props: Partial<DropzoneProps>) 
         openRef={openRef}
         onDrop={ondrop}
         onReject={(files) => console.log('rejected files', files)}
+        
         maxSize={20 * 1024 ** 2}
         accept={[MIME_TYPES.jpeg, MIME_TYPES.gif, MIME_TYPES.png, MIME_TYPES.mp4]}
         {...props}
