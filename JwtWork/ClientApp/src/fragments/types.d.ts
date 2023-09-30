@@ -6,6 +6,21 @@ import { type FileWithPath } from "@mantine/dropzone";
 
 export as namespace fragmentSps;
 
+export const UploadStatusEnum ={
+  FAIL: 'fail',
+  SUCCESS: 'success',
+  PROCESSING: 'processing',
+  IDLE: 'idle'
+} as const;
+
+export type UploadStatusEnum = typeof UploadStatusEnum[keyof typeof UploadStatusEnum];
+
+export type UploadState ={
+  connectionId: string;
+  status : UploadStatusEnum;
+  progress?: number;
+}
+
 export interface ColorType {
   id: UniqueIdentifier;
   color: string;
