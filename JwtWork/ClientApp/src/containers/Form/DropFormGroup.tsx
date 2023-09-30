@@ -3,7 +3,7 @@ import { Group, Text, useMantineTheme, rem, Image, SimpleGrid } from '@mantine/c
 import { IconUpload, IconPhoto, IconX } from '@tabler/icons-react'
 import { Dropzone, type DropzoneProps, MIME_TYPES, type FileWithPath } from '@mantine/dropzone'
 
-export const DropFormGroup:FunctionComponent = (props: Partial<DropzoneProps>) => {
+export const DropFormGroup: FunctionComponent = (props: Partial<DropzoneProps>) => {
   const theme = useMantineTheme()
   // use to invoke FileManager for upload i.e. openRef.current()
   const openRef = useRef<() => void>(null)
@@ -14,7 +14,13 @@ export const DropFormGroup:FunctionComponent = (props: Partial<DropzoneProps>) =
   }
   const previews = files.map((file, index) => {
     const imageUrl = URL.createObjectURL(file)
-    return <Image key={index} src={imageUrl} imageProps={{ onLoad: () => URL.revokeObjectURL(imageUrl) }} />
+    return (
+      <div className='block' key={`${file.name}-${index}`}>
+        
+        <Image key={index} src={imageUrl} imageProps={{ onLoad: () => URL.revokeObjectURL(imageUrl) }} />
+        
+      </div>
+    )
   })
 
   return (
@@ -25,7 +31,7 @@ export const DropFormGroup:FunctionComponent = (props: Partial<DropzoneProps>) =
         openRef={openRef}
         onDrop={ondrop}
         onReject={(files) => console.log('rejected files', files)}
-        maxSize={3 * 1024 ** 2}
+        maxSize={20 * 1024 ** 2}
         accept={[MIME_TYPES.jpeg, MIME_TYPES.gif, MIME_TYPES.png, MIME_TYPES.mp4]}
         {...props}
       >
