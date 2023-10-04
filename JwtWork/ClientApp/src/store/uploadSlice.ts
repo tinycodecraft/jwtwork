@@ -50,10 +50,10 @@ export const uploadSlice = createSlice({
 export const uploadFileAsync = createAsyncThunk('file/uploadFileAsync', async (data: UploadDataInput, { dispatch }) => {
   try {
     const result = await UploadApi.uploadAsync(data, (progress) => {
-      console.log(progress)
+      console.log(`the progress return:`,progress)
       dispatch(setProgress(progress))
     })
-    console.log(result)
+    console.log(`the result return:`,result)
     dispatch(setUploadState({ status: UploadStatusEnum.SUCCESS, connectionId: data.connectionId }))
   } catch (e) {
     console.log(e)

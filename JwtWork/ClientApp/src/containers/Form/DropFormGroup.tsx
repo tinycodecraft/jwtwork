@@ -1,41 +1,59 @@
-import React, { useRef, useState, type FunctionComponent } from 'react'
+import React, { useRef, useState, type FunctionComponent, useCallback } from 'react'
 import { Group, Text, useMantineTheme, rem, Image, SimpleGrid } from '@mantine/core'
 import { IconUpload, IconPhoto, IconX } from '@tabler/icons-react'
 import { Dropzone, type DropzoneProps, MIME_TYPES, type FileWithPath } from '@mantine/dropzone'
+import { useAppDispatch, useAppSelector } from 'src/store'
+import { UploadStatusEnum, uploadFileAsync } from 'src/store/uploadSlice'
+import { useEventListener } from '@mantine/hooks'
+
 
 export const DropFormGroup: FunctionComponent = (props: Partial<DropzoneProps>) => {
   const theme = useMantineTheme()
   // use to invoke FileManager for upload i.e. openRef.current()
   const openRef = useRef<() => void>(null)
   const [files, setFiles] = useState<FileWithPath[]>([])
+  const connectionId = useAppSelector<string | undefined>((state) => state.auth.connectionId)
+  const dropstatus = useAppSelector<UploadStatusEnum>((state)=>  state.file?.status ?? UploadStatusEnum.FAIL)
+  const dispatch = useAppDispatch()
   const ondrop = (drops: FileWithPath[]) => {
     setFiles(drops)
     console.log('files being accepted', drops)
   }
+  const onupload = useCallback(() => {
+    if (connectionId) {
+      dispatch(uploadFileAsync({ connectionId, files }))
+    }
+  }, [connectionId,files])
+  const uploadRef = useEventListener('click', onupload)
+
   const previews = files.map((file, index) => {
     const imageUrl = URL.createObjectURL(file)
     return (
       <div className='block' key={`${file.name}-${index}`}>
-        <button className='delete is-large z-10 float-right top-10' onClick={()=>  setFiles( files.filter(f=> f!==files[index]))}></button>
+        <button className='delete is-large z-10 float-right top-10' onClick={() => setFiles(files.filter((f) => f !== files[index]))}></button>
         <Image key={index} src={imageUrl} imageProps={{ onLoad: () => URL.revokeObjectURL(imageUrl) }} />
-        
       </div>
     )
   })
-// 1024**2 == 1M
+  // 1024**2 == 1M
   return (
     <div className='column'>
       <div className='level-right'>
-        <p className='level-item'><h3 className='title is-4'>File Drop Zone</h3></p>
-        <p className='level-item'><a className='button is-success' {...{'disabled': !files || files.length==0}}>Upload</a></p>
+        <p className='level-item'>
+          <h3 className='title is-4'>File Drop Zone</h3>
+        </p>
+        <p className='level-item'>
+          <a className='button is-success' {...{ disabled: !files || files.length == 0 }} ref={uploadRef}>
+            Upload
+          </a>
+        </p>
       </div>
-      
-      
+
       <Dropzone
+      {...{loading: dropstatus=== UploadStatusEnum.PROCESSING}}
         openRef={openRef}
         onDrop={ondrop}
         onReject={(files) => console.log('rejected files', files)}
-        
         maxSize={20 * 1024 ** 2}
         accept={[MIME_TYPES.jpeg, MIME_TYPES.gif, MIME_TYPES.png, MIME_TYPES.mp4]}
         {...props}
