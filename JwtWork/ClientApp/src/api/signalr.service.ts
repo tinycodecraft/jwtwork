@@ -1,5 +1,6 @@
 import { toast } from 'react-toastify'
 import { LogLevel, HubConnection, HubConnectionState, HubConnectionBuilder } from '@microsoft/signalr'
+import { canWait } from 'src/utils'
 
 const SIGNALR_CONFIG = {
   messageDelay: 3000,
@@ -50,7 +51,8 @@ class SignalRService {
     } catch (e) {
       console.assert(this.connectionState === HubConnectionState.Disconnected)
       console.error(e)
-      setTimeout(() => this.startConnection(), 5000)
+      await canWait(5000)
+      await this.startConnection()
     }
   }
   private async getConnectionId(): Promise<void> {

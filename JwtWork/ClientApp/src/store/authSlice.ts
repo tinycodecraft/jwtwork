@@ -45,6 +45,10 @@ export const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
+    setConnectionValue: (state,action: PayloadAction<string>)=> {
+      state.connectionId = action.payload;
+
+    },
     setAuthStatus: (state, action: PayloadAction<AuthStatusEnum>) => {
       state.status = action.payload;
     },
@@ -75,6 +79,6 @@ export const loginAsync = createAsyncThunk(
   }
 );
 
-export const { setAuthStatus, setUserLogin, resetState, setNewToken } = authSlice.actions;
+export const { setAuthStatus, setUserLogin, resetState, setNewToken,setConnectionValue } = authSlice.actions;
 
 export default authSlice.reducer;

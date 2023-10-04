@@ -1,7 +1,17 @@
 /* eslint-disable @typescript-eslint/no-redeclare */
 import { UploadApi } from 'src/api'
 import { createAsyncThunk, createSlice, type PayloadAction } from '@reduxjs/toolkit'
-import { UploadStatusEnum, type UploadState, type UploadDataInput } from 'src/fragments/types'
+import {  type UploadState, type UploadDataInput } from 'src/fragments/types'
+
+
+export const UploadStatusEnum ={
+  FAIL: 'fail',
+  SUCCESS: 'success',
+  PROCESSING: 'processing',
+  IDLE: 'idle'
+} as const;
+
+export type UploadStatusEnum = typeof UploadStatusEnum[keyof typeof UploadStatusEnum];
 
 const initialState: UploadState = {
   connectionId: '',

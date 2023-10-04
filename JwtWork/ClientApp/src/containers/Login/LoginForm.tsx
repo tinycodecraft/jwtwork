@@ -8,11 +8,11 @@ import { toast, type Id } from 'react-toastify'
 import alerttoast from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
 import LoginContext from 'src/context/LoginContext'
-import { loginAsync, setAuthStatus, resetState, AuthStatusEnum } from 'src/store/authSlice'
+import { loginAsync, setAuthStatus, resetState, AuthStatusEnum, setConnectionValue } from 'src/store/authSlice'
 import { type Credentials } from 'src/fragments/types'
 import { Button, Checkbox, Input, Typography } from '@material-tailwind/react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-
+import { SignalRApi } from 'src/api'
 
 const LoginForm: FunctionComponent = () => {
   const toastIdRef = useRef<Id>('')
@@ -37,7 +37,6 @@ const LoginForm: FunctionComponent = () => {
   const status = useAppSelector<AuthStatusEnum>((state) => state.auth.status)
   const error = useAppSelector<string | undefined>((state) => state.auth.error)
 
-  
   const newShow = useAppSelector<boolean>((state) => state.auth.needNew)
   const dispatchAuthStatus = useCallback(
     (status: AuthStatusEnum): void => {
@@ -56,10 +55,13 @@ const LoginForm: FunctionComponent = () => {
     [dispatch, dispatchAuthStatus],
   )
   const onSuccessfulAuth = useCallback((): void => {
-    
+    if (SignalRApi.connectionId) {
+      dispatch(setConnectionValue(SignalRApi.connectionId))
+    }
+
     const homePath = Routes.find((x) => x.name === 'Home')?.path ?? '/'
     navigate(homePath)
-  }, [navigate])
+  }, [navigate, dispatch])
 
   const handleLogin = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault()
@@ -104,7 +106,11 @@ const LoginForm: FunctionComponent = () => {
             <img className='block ml-[auto] mr-[auto]' width='170' aria-hidden id='login-img' alt='based-ghost-logo' src={BasedGhostLogoPNG} />
             <form onSubmit={handleLogin}>
               <div className='form-login'>
-                {lastError && <Typography variant='small' color='red' className='!text-left mb-0'>{lastError}</Typography>}
+                {lastError && (
+                  <Typography variant='small' color='red' className='!text-left mb-0'>
+                    {lastError}
+                  </Typography>
+                )}
                 <Input
                   variant='outlined'
                   label='User Name'

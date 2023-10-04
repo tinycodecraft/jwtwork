@@ -3,17 +3,10 @@ import React, { PropsWithChildren } from "react";
 import internal from "stream";
 import { type SingleValue } from 'react-select';
 import { type FileWithPath } from "@mantine/dropzone";
-
+import type { UploadStatusEnum } from "src/store/uploadSlice";
+import type { AuthStatusEnum } from "src/store/authSlice";
 export as namespace fragmentSps;
 
-export const UploadStatusEnum ={
-  FAIL: 'fail',
-  SUCCESS: 'success',
-  PROCESSING: 'processing',
-  IDLE: 'idle'
-} as const;
-
-export type UploadStatusEnum = typeof UploadStatusEnum[keyof typeof UploadStatusEnum];
 
 export type UploadState ={
   connectionId: string;
@@ -55,6 +48,7 @@ export type AuthUser = {
   status: AuthStatusEnum;
   error?: string;
   needNew: boolean;
+  connectionId?: string;
 };
 
 export type AuthState = AuthUser & { isAuthenticated: boolean; };

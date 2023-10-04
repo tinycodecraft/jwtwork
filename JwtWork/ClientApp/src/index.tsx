@@ -13,6 +13,7 @@ import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 import { Toaster } from 'react-hot-toast';
 import { ThemeProvider } from '@material-tailwind/react';
 import { PersistGate } from 'redux-persist/integration/react';
+import { canWait } from './utils';
 
 registerIcons();
 
@@ -21,9 +22,12 @@ const root = createRoot(container as HTMLElement);
 
 function AppRenderer() {
   useEffect(() => {
-    setTimeout(() => {
-      SignalRApi.startConnection();
-    }, 250);
+    const connect = async() => {
+      await canWait(250)
+      await SignalRApi.startConnection()
+    }
+    connect()
+
   }, []);
 
   return (
@@ -31,6 +35,7 @@ function AppRenderer() {
       <BrowserRouter basename={process.env.PUBLIC_URL}>
         <Provider store={store}>
           <PersistGate loading={null} persistor={persistor}>
+            {/* Strict Mode only enable for Development, Please remove it for Production */}
           <StrictMode>
             <ThemeProvider>
             <App />
