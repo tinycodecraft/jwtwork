@@ -3,9 +3,9 @@ import { Group, Text, useMantineTheme, rem, Image, SimpleGrid } from '@mantine/c
 import { IconUpload, IconPhoto, IconX } from '@tabler/icons-react'
 import { Dropzone, type DropzoneProps, MIME_TYPES, type FileWithPath } from '@mantine/dropzone'
 import { useAppDispatch, useAppSelector } from 'src/store'
-import { UploadStatusEnum, uploadFileAsync } from 'src/store/uploadSlice'
+import { UploadStatusEnum, setUploadStatus, uploadFileAsync } from 'src/store/uploadSlice'
 import { useEventListener } from '@mantine/hooks'
-
+import { canWait } from 'src/utils'
 
 export const DropFormGroup: FunctionComponent = (props: Partial<DropzoneProps>) => {
   const theme = useMantineTheme()
@@ -13,17 +13,30 @@ export const DropFormGroup: FunctionComponent = (props: Partial<DropzoneProps>) 
   const openRef = useRef<() => void>(null)
   const [files, setFiles] = useState<FileWithPath[]>([])
   const connectionId = useAppSelector<string | undefined>((state) => state.auth.connectionId)
-  const dropstatus = useAppSelector<UploadStatusEnum>((state)=>  state.file?.status ?? UploadStatusEnum.FAIL)
+  const uploadFiles = useAppSelector<string[] | undefined>((state) => state.file?.filePaths ?? [])
+  const dropstatus = useAppSelector<UploadStatusEnum>((state) => state.file?.status ?? UploadStatusEnum.IDLE)
   const dispatch = useAppDispatch()
+  const dispatchUploadStatus = useCallback(
+    (status: UploadStatusEnum) => {
+      return dispatch(setUploadStatus(status))
+    },
+    [dispatch],
+  )
   const ondrop = (drops: FileWithPath[]) => {
     setFiles(drops)
     console.log('files being accepted', drops)
   }
-  const onupload = useCallback(() => {
+  const onupload = useCallback(async () => {
     if (connectionId) {
-      dispatch(uploadFileAsync({ connectionId, files }))
+      await dispatchUploadStatus(UploadStatusEnum.PROCESSING)
+      await dispatch(uploadFileAsync({ connectionId, files }))
+      if (dropstatus === UploadStatusEnum.SUCCESS) {
+        setFiles([])
+      }
+    } else {
+      dispatchUploadStatus(UploadStatusEnum.FAIL)
     }
-  }, [connectionId,files])
+  }, [connectionId, files])
   const uploadRef = useEventListener('click', onupload)
 
   const previews = files.map((file, index) => {
@@ -50,7 +63,7 @@ export const DropFormGroup: FunctionComponent = (props: Partial<DropzoneProps>) 
       </div>
 
       <Dropzone
-      {...{loading: dropstatus=== UploadStatusEnum.PROCESSING}}
+        {...{ loading: dropstatus === UploadStatusEnum.PROCESSING }}
         openRef={openRef}
         onDrop={ondrop}
         onReject={(files) => console.log('rejected files', files)}
@@ -68,15 +81,33 @@ export const DropFormGroup: FunctionComponent = (props: Partial<DropzoneProps>) 
           <Dropzone.Idle>
             <IconPhoto size='3.2rem' stroke={1.5} />
           </Dropzone.Idle>
-
-          <div>
-            <Text size='xl' inline>
-              Drag images here or click to select files
-            </Text>
-            <Text size='sm' color='dimmed' inline mt={7}>
-              Attach as many files as you like, each file should not exceed 5mb
-            </Text>
-          </div>
+          {dropstatus === UploadStatusEnum.IDLE && (
+            <div>
+              <Text size='xl' inline>
+                Drag images here or click to select files
+              </Text>
+              <Text size='sm' color='dimmed' inline mt={7}>
+                Attach as many files as you like, each file should not exceed 5mb
+              </Text>
+            </div>
+          )}
+          {dropstatus === UploadStatusEnum.SUCCESS && (
+            <div>
+              {uploadFiles &&
+                uploadFiles.map((f, i) => (
+                  <Text size='xl' inline key={`file${i}`}>
+                    `${f}`
+                  </Text>
+                ))}
+            </div>
+          )}
+          {dropstatus === UploadStatusEnum.FAIL && (
+            <div>
+              <Text size='xl' inline>
+                Your files could not be upload!!
+              </Text>
+            </div>
+          )}
         </Group>
       </Dropzone>
       <SimpleGrid cols={4} breakpoints={[{ maxWidth: 'sm', cols: 1 }]} mt={previews.length > 0 ? 'xl' : 0}>

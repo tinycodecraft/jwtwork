@@ -12,6 +12,8 @@ export type UploadState ={
   connectionId: string;
   status : UploadStatusEnum;
   progress?: number;
+  filePaths?:string[];
+  
 }
 
 export interface ColorType {

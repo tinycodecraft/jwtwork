@@ -1,17 +1,16 @@
 /* eslint-disable @typescript-eslint/no-redeclare */
 import { UploadApi } from 'src/api'
 import { createAsyncThunk, createSlice, type PayloadAction } from '@reduxjs/toolkit'
-import {  type UploadState, type UploadDataInput } from 'src/fragments/types'
+import { type UploadState, type UploadDataInput } from 'src/fragments/types'
 
-
-export const UploadStatusEnum ={
+export const UploadStatusEnum = {
   FAIL: 'fail',
   SUCCESS: 'success',
   PROCESSING: 'processing',
-  IDLE: 'idle'
-} as const;
+  IDLE: 'idle',
+} as const
 
-export type UploadStatusEnum = typeof UploadStatusEnum[keyof typeof UploadStatusEnum];
+export type UploadStatusEnum = typeof UploadStatusEnum[keyof typeof UploadStatusEnum]
 
 const initialState: UploadState = {
   connectionId: '',
@@ -19,9 +18,12 @@ const initialState: UploadState = {
   progress: 0,
 }
 
-const replaceState = (state: UploadState, { connectionId, status, progress }: UploadState) => {
+const replaceState = (state: UploadState, { connectionId, status, progress, filePaths }: UploadState) => {
   state.connectionId = connectionId
+
   state.status = status
+
+  state.filePaths = filePaths
   if (progress) {
     state.progress = progress
   }
@@ -49,13 +51,15 @@ export const uploadSlice = createSlice({
 
 export const uploadFileAsync = createAsyncThunk('file/uploadFileAsync', async (data: UploadDataInput, { dispatch }) => {
   try {
-    const result = await UploadApi.uploadAsync(data, (progress) => {
-      console.log(`the progress return:`,progress)
+    
+    const result = await UploadApi.uploadAsync(data, (progress) => {      
       dispatch(setProgress(progress))
     })
-    console.log(`the result return:`,result)
-    dispatch(setUploadState({ status: UploadStatusEnum.SUCCESS, connectionId: data.connectionId }))
+    
+    const finalstatus = (result.filePaths?.length ?? 0) > 0 ? UploadStatusEnum.SUCCESS : UploadStatusEnum.FAIL
+    dispatch(setUploadState({ status: finalstatus, connectionId: data.connectionId, filePaths: result.filePaths }))
   } catch (e) {
+
     console.log(e)
     dispatch(setUploadStatus(UploadStatusEnum.FAIL))
   }
