@@ -36,7 +36,15 @@ export const DropFormGroup: FunctionComponent = (props: Partial<DropzoneProps>) 
       dispatchUploadStatus(UploadStatusEnum.FAIL)
     }
   }, [connectionId, files])
+
+  const oncancel = useCallback(async () => {
+    await dispatchUploadStatus(UploadStatusEnum.IDLE)
+    setFiles([])
+
+  },[dropstatus])
+
   const uploadRef = useEventListener('click', onupload)
+  const cancelRef =useEventListener('click',oncancel)
 
   const previews = files.map((file, index) => {
     const imageUrl = URL.createObjectURL(file)
@@ -55,9 +63,10 @@ export const DropFormGroup: FunctionComponent = (props: Partial<DropzoneProps>) 
           <h3 className='title is-4'>File Drop Zone</h3>
         </p>
         <p className='level-item'>
-          <a className='button is-success' {...{ disabled: !files || files.length == 0 }} ref={uploadRef}>
+          <a className='button is-success' {...{ disabled: !files || files.length == 0 || dropstatus!== UploadStatusEnum.IDLE }} ref={uploadRef}>
             Upload
           </a>
+          <a className='button is-light' {...{ disabled: !(dropstatus ===UploadStatusEnum.SUCCESS || dropstatus===UploadStatusEnum.FAIL)}} ref={cancelRef}>Cancel</a>
         </p>
       </div>
 
