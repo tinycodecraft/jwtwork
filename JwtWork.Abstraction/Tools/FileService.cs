@@ -1,11 +1,6 @@
 ﻿using JwtWork.Abstraction.Models;
 using Microsoft.AspNetCore.WebUtilities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Microsoft.Net.Http.Headers;
-using System.Text;
-using System.Threading.Tasks;
 using static JwtWork.Abstraction.Interfaces;
 
 namespace JwtWork.Abstraction.Tools

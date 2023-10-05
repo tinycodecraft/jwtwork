@@ -1,7 +1,9 @@
 ﻿using GhostUI.Services;
 using JwtWork.Controllers;
+using JwtWork.Hubs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using Microsoft.Net.Http.Headers;
@@ -17,11 +19,13 @@ namespace GhostUI.Controllers
     public class FilesController : ControllerBase
     {
         private readonly ILogger _logger;
+        private readonly IHubContext<UsersHub> _usersHub;
         private readonly IFileService _fileService;
-        public FilesController(ILogger<FilesController> logger, IFileService fileservice)
+        public FilesController(ILogger<FilesController> logger, IFileService fileservice, IHubContext<UsersHub> usersHub)
         {
             _logger = logger;
             _fileService = fileservice;
+            _usersHub = usersHub;
             _logger.LogInformation("Files Controller being invoked.");
         }
         //**this method is uploading through streaming 
@@ -35,6 +39,7 @@ namespace GhostUI.Controllers
         public async Task<IActionResult> SimpleUpload(string connectionid)
         {
             var fileUploadSummary = await _fileService.UploadFileAsync(HttpContext.Request.Body, Request.ContentType);
+            
             return CreatedAtAction(nameof(SimpleUpload), fileUploadSummary);
         }
 

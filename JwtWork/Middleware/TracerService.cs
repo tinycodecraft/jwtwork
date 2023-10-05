@@ -12,6 +12,7 @@ namespace JwtWork.Middleware
         public TracerService(ILogger<TracerService> logger,IHostEnvironment env) { 
             _logger = logger;
             _env = env;
+            
         }
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
