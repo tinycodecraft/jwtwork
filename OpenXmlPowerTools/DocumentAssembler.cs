@@ -49,7 +49,7 @@ namespace OpenXmlPowerTools
             }
         }
 
-        private static void ProcessTemplatePart(XElement data, TemplateError te, OpenXmlPart part)
+        private static void ProcessTemplatePart(XElement data, TemplateError te, OpenXmlPart part,bool NoSkip=false)
         {
             XDocument xDoc = part.GetXDocument();
 
@@ -483,6 +483,7 @@ namespace OpenXmlPowerTools
                                   <xs:element name='Table'>
                                     <xs:complexType>
                                       <xs:attribute name='Select' type='xs:string' use='required' />
+                                      <xs:attribute name='NoHeader' type='xs:string' use='optional' />
                                     </xs:complexType>
                                   </xs:element>
                                 </xs:schema>",
@@ -571,6 +572,7 @@ namespace OpenXmlPowerTools
             public static XName EndConditional = "EndConditional";
 
             public static XName Select = "Select";
+            public static XName NoHeader = "NoHeader";
             public static XName Optional = "Optional";
             public static XName Match = "Match";
             public static XName NotMatch = "NotMatch";
@@ -600,7 +602,7 @@ namespace OpenXmlPowerTools
                     XElement para = element.Descendants(W.p).FirstOrDefault();
                     XElement run = element.Descendants(W.r).FirstOrDefault();
 
-                    var xPath = (string) element.Attribute(PA.Select);
+                    var xPath = (string) element.Attribute(PA.Select);                    
                     var optionalString = (string) element.Attribute(PA.Optional);
                     bool optional = (optionalString != null && optionalString.ToLower() == "true");
 
@@ -666,7 +668,8 @@ namespace OpenXmlPowerTools
                             //else
                             //    return new XElement(W.r);
                         }
-                        return CreateContextErrorMessage(element, "Repeat: Select returned no data", templateError);
+                        return CreateContextErrorMessage(element, "", templateError);
+                        //return CreateContextErrorMessage(element, "Repeat: Select returned no data", templateError);
                     }
                     var newContent = repeatingData.Select(d =>
                         {
@@ -691,12 +694,26 @@ namespace OpenXmlPowerTools
                         return CreateContextErrorMessage(element, "XPathException: " + e.Message, templateError);
                     }
                     if (tableData.Count() == 0)
-                        return CreateContextErrorMessage(element, "Table Select returned no data", templateError);
+                        return CreateContextErrorMessage(element, "", templateError);
+                    //return CreateContextErrorMessage(element, "Table Select returned no data", templateError);
                     XElement table = element.Element(W.tbl);
-                    XElement protoRow = table.Elements(W.tr).Skip(1).FirstOrDefault();
+                    var noheadervalue = (string)element.Attribute(PA.NoHeader);
+                    var IsnoHeader = noheadervalue == "True";
+
+                    XElement protoRow = table.Elements(W.tr).Skip(IsnoHeader ? 0: 1).FirstOrDefault();
+                    bool fakeproto = false;
+                    if(protoRow==null)
+                    {
+                        protoRow = table.Elements(W.tr).FirstOrDefault();
+                        fakeproto = true;
+                    }
+                    if (IsnoHeader)
+                        fakeproto = true;
+
+
                     var footerRowsBeforeTransform = table
                         .Elements(W.tr)
-                        .Skip(2)
+                        .Skip(IsnoHeader ? 1: 2)
                         .ToList();
                     var footerRows = footerRowsBeforeTransform
                         .Select(x => ContentReplacementTransform(x, data, templateError))
@@ -707,7 +724,7 @@ namespace OpenXmlPowerTools
                     protoRow.Descendants(W.bookmarkEnd).Remove();
                     XElement newTable = new XElement(W.tbl,
                         table.Elements().Where(e => e.Name != W.tr),
-                        table.Elements(W.tr).FirstOrDefault(),
+                        fakeproto ? null: table.Elements(W.tr).FirstOrDefault(),
                         tableData.Select(d =>
                             new XElement(W.tr,
                                 protoRow.Elements().Where(r => r.Name != W.tc),
@@ -743,6 +760,7 @@ namespace OpenXmlPowerTools
                                     }))),
                                     footerRows
                                     );
+
                     return newTable;
                 }
                 if (element.Name == PA.Conditional)
@@ -767,7 +785,7 @@ namespace OpenXmlPowerTools
                         return CreateContextErrorMessage(element, e.Message, templateError);
                     }
                   
-                    if ((match != null && testValue == match) || (notMatch != null && testValue != notMatch))
+                    if ((match != null && TypeHelper.CompareBool( testValue, match)) || (notMatch != null && TypeHelper.CompareBool(testValue, notMatch,false)))
                     {
                         var content = element.Elements().Select(e => ContentReplacementTransform(e, data, templateError));
                         return content;
@@ -795,6 +813,13 @@ namespace OpenXmlPowerTools
         private static XElement CreateRunErrorMessage(string errorMessage, TemplateError templateError)
         {
             templateError.HasError = true;
+
+            if (string.IsNullOrEmpty(errorMessage))
+            {
+                return new XElement(W.r,
+                    new XElement(W.t, errorMessage));
+            }
+
             var errorRun = new XElement(W.r,
                 new XElement(W.rPr,
                     new XElement(W.color, new XAttribute(W.val, "FF0000")),
@@ -836,7 +861,9 @@ namespace OpenXmlPowerTools
                 if (!selectedData.Any())
                 {
                     if (optional) return string.Empty;
-                    throw new XPathException(string.Format("XPath expression ({0}) returned no results", xPath));
+                    //remove the invalid selector exception
+                    return "";
+                    //throw new XPathException(string.Format("XPath expression ({0}) returned no results", xPath));
                 }
                 if (selectedData.Count() > 1)
                 {
