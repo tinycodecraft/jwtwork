@@ -72,6 +72,8 @@ export const DropFormGroup: FunctionComponent = (props: Partial<DropzoneProps>) 
 
       <Dropzone
         {...{ loading: dropstatus === UploadStatusEnum.PROCESSING }}
+        {...{disabled: dropstatus !== UploadStatusEnum.IDLE}}
+        
         openRef={openRef}
         onDrop={ondrop}
         onReject={(files) => console.log('rejected files', files)}
