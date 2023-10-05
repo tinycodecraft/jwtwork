@@ -29,10 +29,9 @@ export const DropFormGroup: FunctionComponent = (props: Partial<DropzoneProps>) 
   const onupload = useCallback(async () => {
     if (connectionId) {
       await dispatchUploadStatus(UploadStatusEnum.PROCESSING)
+      await canWait(500) // working
       await dispatch(uploadFileAsync({ connectionId, files }))
-      if (dropstatus === UploadStatusEnum.SUCCESS) {
-        setFiles([])
-      }
+
     } else {
       dispatchUploadStatus(UploadStatusEnum.FAIL)
     }
@@ -93,6 +92,9 @@ export const DropFormGroup: FunctionComponent = (props: Partial<DropzoneProps>) 
           )}
           {dropstatus === UploadStatusEnum.SUCCESS && (
             <div>
+              <Text size='xl' color='dimmed' inline mb={7}>
+                Files below successfully uploaded:
+              </Text>              
               {uploadFiles &&
                 uploadFiles.map((f, i) => (
                   <Text size='xl' inline key={`file${i}`}>
