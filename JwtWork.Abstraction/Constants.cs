@@ -11,6 +11,7 @@ namespace JwtWork.Abstraction
         public static class Setting
         {
             public const string AuthSetting = nameof(AuthSetting);
+            public const string PathSetting = nameof(PathSetting);
         }
     }
 }

@@ -1,5 +1,7 @@
 ﻿using JwtWork.Abstraction.Models;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Microsoft.Net.Http.Headers;
 using static JwtWork.Abstraction.Interfaces;
 
@@ -7,11 +9,42 @@ namespace JwtWork.Abstraction.Tools
 {
     public class FileService : IFileService
     {
-        private const string UploadsSubDirectory = "FilesUploaded";
+        //private const string UploadsSubDirectory = "FilesUploaded";
 
-        private readonly IEnumerable<string> allowedExtensions = new List<string> { ".zip", ".bin", ".png", ".jpg",".mp4" };
+        private readonly IEnumerable<string> allowedExtensions = new List<string> { ".zip", ".bin", ".png", ".jpg", ".mp4" };
 
-        public async Task<FileUploadSummary> UploadFileAsync(Stream fileStream, string contentType)
+        private readonly ILogger _logger;
+        private readonly IOptions<PathSetting> _pathsetting;
+
+        public FileService(IOptions<PathSetting> pathsetting, ILogger<FileService> logger)
+        {
+            _pathsetting = pathsetting;
+            _logger = logger;
+        }
+        public async Task<string> DownloadFilesAsync(Stream fileStream, string type, string filename)
+        {
+            var file = string.Empty;
+            try
+            {
+                file = SubStringExtensions.GetPath(_pathsetting.Value, PathType.Share, type, filename);
+                if (File.Exists(file))
+                {
+                    var bytes = await File.ReadAllBytesAsync(file);
+                    await new MemoryStream(bytes).CopyToAsync(fileStream);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return "";
+            }
+
+            return file;
+
+        }
+
+
+        public async Task<FileUploadSummary> UploadFileAsync(Stream fileStream, string contentType, string type)
         {
             var fileCount = 0;
             long totalSizeInBytes = 0;
@@ -21,15 +54,15 @@ namespace JwtWork.Abstraction.Tools
             var section = await multipartReader.ReadNextSectionAsync();
 
             var filePaths = new List<string>();
-            var notUploadedFiles = new List<string>();
+            var fileDescs = new List<string>();
             while (section != null)
             {
                 var hasContentDispositionHeader = ContentDispositionHeaderValue.TryParse(section.ContentDisposition, out ContentDispositionHeaderValue contentDisposition);
-                
+
                 var fileSection = section.AsFileSection();
-                if (hasContentDispositionHeader && HasFileContentDisposition(contentDisposition) && fileSection != null)
+                if (fileSection != null && hasContentDispositionHeader && HasFileContentDisposition(contentDisposition) && fileSection != null)
                 {
-                    totalSizeInBytes += await SaveFileAsync(fileSection, filePaths, notUploadedFiles);
+                    totalSizeInBytes += await SaveFileAsync(fileSection, filePaths, fileDescs, type);
                     fileCount++;
                 }
 
@@ -41,33 +74,36 @@ namespace JwtWork.Abstraction.Tools
                 TotalFilesUploaded = fileCount,
                 TotalSizeUploaded = ConvertSizeToString(totalSizeInBytes),
                 FilePaths = filePaths,
-                NotUploadedFiles = notUploadedFiles
+                FileDescs = fileDescs,
+
             };
         }
 
-        private async Task<long> SaveFileAsync(FileMultipartSection fileSection, IList<string> filePaths, IList<string> notUploadedFiles)
+        private async Task<long> SaveFileAsync(FileMultipartSection fileSection, IList<string> filePaths, IList<string> fileDescs, string type)
         {
-            
-            var extension = Path.GetExtension(fileSection.FileName);
-            if (!allowedExtensions.Contains(extension))
-            {
-                notUploadedFiles.Add(fileSection.FileName);
-                return 0;
-            }
 
-            Directory.CreateDirectory(UploadsSubDirectory);
 
-            var filePath = Path.Combine(UploadsSubDirectory, fileSection?.FileName);
+
+            var uploadpath = SubStringExtensions.GetPath(_pathsetting.Value, PathType.Upload, "All");
+            Directory.CreateDirectory(uploadpath);
+
+
+            var filePath = Path.Combine(uploadpath, fileSection.FileName);
+
+            fileDescs.Add(fileSection.FileName);
 
             await using var stream = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None, 1024);
-            await fileSection.FileStream?.CopyToAsync(stream);
-            
-            filePaths.Add(GetFullFilePath(fileSection));
+
+            await fileSection.FileStream.CopyToAsync(stream);
+
+            var streampath = SubStringExtensions.GetPath(_pathsetting.Value, PathType.Stream, type, fileSection.FileName);
+
+            filePaths.Add(streampath);
 
             return fileSection.FileStream.Length;
         }
 
-        private  bool HasFileContentDisposition(ContentDispositionHeaderValue contentDisposition)
+        private bool HasFileContentDisposition(ContentDispositionHeaderValue contentDisposition)
         {
             // Content-Disposition: form-data; name="myfile1"; filename="Misc 002.jpg"
             return contentDisposition != null
@@ -76,12 +112,7 @@ namespace JwtWork.Abstraction.Tools
                     || !string.IsNullOrEmpty(contentDisposition.FileNameStar.Value));
         }
 
-        private string GetFullFilePath(FileMultipartSection fileSection)
-        {
-            return !string.IsNullOrEmpty(fileSection.FileName)
-                ? Path.Combine(Directory.GetCurrentDirectory(), UploadsSubDirectory, fileSection.FileName)
-                : string.Empty;
-        }
+
 
         private string ConvertSizeToString(long bytes)
         {

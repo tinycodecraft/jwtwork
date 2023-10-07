@@ -34,12 +34,12 @@ namespace GhostUI.Controllers
         [ProducesResponseType(StatusCodes.Status415UnsupportedMediaType)]
         [MultipartFormData]
         [DisableFormValueModelBinding]
-        [RequestSizeLimit(512*1024*1024)]
+        [RequestSizeLimit(512 * 1024 * 1024)]
         //size limit using with formoption set in Program service builder
-        public async Task<IActionResult> SimpleUpload(string connectionid)
+        public async Task<IActionResult> SimpleUpload(string connectionid, string type)
         {
-            var fileUploadSummary = await _fileService.UploadFileAsync(HttpContext.Request.Body, Request.ContentType);
-            
+            var fileUploadSummary = await _fileService.UploadFileAsync(HttpContext.Request.Body, Request.ContentType, type);
+
             return CreatedAtAction(nameof(SimpleUpload), fileUploadSummary);
         }
 

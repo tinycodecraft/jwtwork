@@ -49,31 +49,36 @@ using Microsoft.AspNetCore.Http.Features;
 var spaSrcPath = "ClientApp";
 var corsPolicyName = "AllowAll";
 Log.Logger = new LoggerConfiguration().MinimumLevel.Override("Microsoft", Serilog.Events.LogEventLevel.Information)
-    .Enrich.FromLogContext()    
+    .Enrich.FromLogContext()
     .WriteTo.Console()
     .CreateBootstrapLogger();
+
 
 var builder = WebApplication.CreateBuilder(new WebApplicationOptions
 {
     Args = args,
     ApplicationName = typeof(Program).Assembly.FullName,
     ContentRootPath = Directory.GetCurrentDirectory(),
-    
+
     //EnvironmentName =  Environments.Development,
     //WebRootPath = "wwwroot"
 });
 
 var authsetting = builder.Configuration.GetSection(Constants.Setting.AuthSetting);
+var pathsetting = builder.Configuration.GetSection(Constants.Setting.PathSetting);
 var encryptionService = new StringEncrypService();
 authsetting[nameof(AuthSetting.Secret)] = encryptionService.EncryptString(authsetting[nameof(AuthSetting.SecretKey)] ?? "");
-
+pathsetting[nameof(PathSetting.Base)] = Directory.GetCurrentDirectory();
 builder.Services.Configure<AuthSetting>(authsetting);
-builder.Services.Configure<FormOptions>(opt => {
+builder.Services.Configure<PathSetting>(pathsetting);
+
+builder.Services.Configure<FormOptions>(opt =>
+{
     //opt.BufferBodyLengthLimit = 512 * 1024 * 1024;
 
     //it needs
     opt.MultipartBodyLengthLimit = 512 * 1024 * 1024;
-    
+
 });
 
 builder.Services.Configure<IISServerOptions>(opt =>
@@ -94,19 +99,20 @@ builder.Services.AddDbContext<JWTPISContext>();
 
 builder.Services.AddTransient<ProblemDetailsFactory, CustomProblemDetailsFactory>();
 
-builder.Host.UseSerilog((ctx,srv, cfg) => { 
-    
+builder.Host.UseSerilog((ctx, srv, cfg) =>
+{
+
     cfg
     .ReadFrom.Configuration(ctx.Configuration)
-    .ReadFrom.Services(srv); 
+    .ReadFrom.Services(srv);
 
-    
+
 });
 
 
 builder.Services.AddScoped<IJwtManager, UserManager>();
 
-builder.Services.AddScoped<TokenService,TokenService>();
+builder.Services.AddScoped<TokenService, TokenService>();
 builder.Services.AddScoped<IFileService, FileService>();
 
 //only execute once
@@ -121,10 +127,10 @@ builder.Services.AddHealthChecksUI()
     .AddInMemoryStorage();
 
 builder.Services.AddCorsConfig(corsPolicyName);
-builder.Services.AddControllers().AddJsonOptions(opt=>
+builder.Services.AddControllers().AddJsonOptions(opt =>
 {
     opt.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
-}); 
+});
 
 //builder.Services.AddCustomLocalization();
 builder.Services.AddSignalR();
@@ -166,7 +172,7 @@ builder.Services
         };
         options.Events = new JwtBearerEvents()
         {
-            
+
             OnAuthenticationFailed = (context) =>
             {
                 var requestContent = new StringBuilder();
@@ -186,7 +192,7 @@ builder.Services
 
             },
         };
-    
+
     });
 
 
@@ -219,8 +225,8 @@ var app = builder.Build();
 // If production, enable Brotli/Gzip response compression & strict transport security headers
 if (app.Environment.IsDevelopment())
 {
- 
-    
+
+
     app.UseDeveloperExceptionPage();
 }
 else
@@ -255,7 +261,7 @@ app.UseHealthChecks("/healthchecks-json", new HealthCheckOptions()
 
 
 //add enrich parameter for each logging request
-app.UseSerilogRequestLogging( option=>
+app.UseSerilogRequestLogging(option =>
 {
     option.EnrichDiagnosticContext = (diagnostic, http) =>
     {

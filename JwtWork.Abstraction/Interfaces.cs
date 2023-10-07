@@ -6,7 +6,8 @@ namespace JwtWork.Abstraction
     {
         public interface IFileService
         {
-            Task<FileUploadSummary> UploadFileAsync(Stream fileStream, string contentType);
+            Task<string> DownloadFilesAsync(Stream fileStream, string type, string filename);
+            Task<FileUploadSummary> UploadFileAsync(Stream fileStream, string contentType, string type);
         }
         public interface ILanguageService
         {
@@ -22,7 +23,7 @@ namespace JwtWork.Abstraction
         public interface IUser
         {
             public string UserName { get; }
-            public string Email { get;  }
+            public string Email { get; }
             public string UserId { get; }
 
         }
@@ -31,7 +32,7 @@ namespace JwtWork.Abstraction
         {
             Task<bool> HasUser();
             Task<IUser?> GetUser(string username);
-            Task<ILoginError?> Authenticate(string username, string password,string? newpassword=null);
+            Task<ILoginError?> Authenticate(string username, string password, string? newpassword = null);
             Task<string> Register(string username, string password);
         }
     }

@@ -13,6 +13,7 @@ export type UploadState ={
   status : UploadStatusEnum;
   progress?: number;
   filePaths?:string[];
+  fileDescs?:string[];
   
 }
 
@@ -33,7 +34,7 @@ export type FileUploadSummaryState={
   totalFilesUploaded: number;
   totalSizeUploaded: string;
   filePaths: string[];
-  NotUploadedFiles: string[];
+  FileDescs: string[];
 }
 
 export type Credentials = {

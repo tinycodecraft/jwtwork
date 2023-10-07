@@ -14,6 +14,7 @@ export const DropFormGroup: FunctionComponent = (props: Partial<DropzoneProps>) 
   const [files, setFiles] = useState<FileWithPath[]>([])
   const connectionId = useAppSelector<string | undefined>((state) => state.auth.connectionId)
   const uploadFiles = useAppSelector<string[] | undefined>((state) => state.file?.filePaths ?? [])
+  const uploadDescs = useAppSelector<string[]|undefined>((state)=> state.file.fileDescs ?? [])
   const dropstatus = useAppSelector<UploadStatusEnum>((state) => state.file?.status ?? UploadStatusEnum.IDLE)
   const dispatch = useAppDispatch()
   const dispatchUploadStatus = useCallback(
@@ -106,11 +107,10 @@ export const DropFormGroup: FunctionComponent = (props: Partial<DropzoneProps>) 
               <Text size='xl' color='dimmed' inline mb={7}>
                 Files below successfully uploaded:
               </Text>              
-              {uploadFiles &&
+              {uploadFiles && uploadDescs &&
                 uploadFiles.map((f, i) => (
-                  <Text size='xl' inline key={`file${i}`}>
-                    `${f}`
-                  </Text>
+                  <a key={`${f}${i}`} href={`${f}`}>{uploadDescs[i]}</a>
+
                 ))}
             </div>
           )}

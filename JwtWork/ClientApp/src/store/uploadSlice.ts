@@ -18,12 +18,13 @@ const initialState: UploadState = {
   progress: 0,
 }
 
-const replaceState = (state: UploadState, { connectionId, status, progress, filePaths }: UploadState) => {
+const replaceState = (state: UploadState, { connectionId, status, progress, filePaths,fileDescs }: UploadState) => {
   state.connectionId = connectionId
 
   state.status = status
 
   state.filePaths = filePaths
+  state.fileDescs=fileDescs
   if (progress) {
     state.progress = progress
   }
@@ -57,7 +58,8 @@ export const uploadFileAsync = createAsyncThunk('file/uploadFileAsync', async (d
     })
     
     const finalstatus = (result.filePaths?.length ?? 0) > 0 ? UploadStatusEnum.SUCCESS : UploadStatusEnum.FAIL
-    dispatch(setUploadState({ status: finalstatus, connectionId: data.connectionId, filePaths: result.filePaths }))
+    console.log(`the result received: `,result)
+    dispatch(setUploadState({ status: finalstatus, connectionId: data.connectionId, filePaths: result.filePaths, fileDescs: result.FileDescs }))
   } catch (e) {
 
     console.log(e)

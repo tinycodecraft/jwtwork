@@ -9,11 +9,172 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
+using JwtWork.Abstraction.Models;
 
 namespace JwtWork.Abstraction.Tools
 {
+
+
+
+
+    public static class SubStringExtensions
+    {
+
+        public static bool CanInline(string fileName)
+        {
+            var fileNamelwr = fileName.ToLower();
+            if (fileNamelwr.EndsWith(".jpg"))
+                return true;
+            else if (fileNamelwr.EndsWith(".jpg"))
+                return true;
+            else if (fileNamelwr.EndsWith(".png"))
+                return true;
+            else if (fileNamelwr.EndsWith(".tif"))
+                return true;
+            else if (fileNamelwr.EndsWith(".gif"))
+                return true;
+            else if (fileNamelwr.EndsWith("pdf"))
+                return true;
+            return false;
+
+        }
+
+
+
+        public static string GetPath(PathSetting setting, PathType pathtype, string type, string? filename = null)
+        {
+            if (pathtype == PathType.Stream)
+            {
+                var revisedfilename = HttpUtility.UrlEncode(filename);
+                return "/" + string.Join("/", string.Join("/", setting.Stream, type, revisedfilename).ItSplit("/").NoEmpty());
+            }
+            else
+            {
+                var drivepath = Path.GetPathRoot(setting.Base).TrimEndAt("\\");
+                var targetpath = pathtype == PathType.Upload ? setting.Upload : setting.Share;
+
+                var basepath = string.Join("\\", string.Join("/", targetpath.StartsWith('/') ? drivepath : setting.Base, targetpath, type, filename).ItSplit("/").NoEmpty());
+
+                return basepath;
+
+            }
+
+
+        }
+
+        public static DateTime Trim(this DateTime date, long ticks)
+        {
+            return new DateTime(date.Ticks - (date.Ticks % ticks), date.Kind);
+        }
+
+        public static string TrimStartAt(this string input, string find, int count = 1)
+        {
+            var tmpinput = input;
+            if (string.IsNullOrEmpty(input))
+                return input;
+            while (tmpinput.IndexOf(find) > -1 && tmpinput.StartsWith(find))
+            {
+                tmpinput = tmpinput.Substring(tmpinput.IndexOf(find) + find.Length);
+                count--;
+                if (count <= 0)
+                    break;
+            }
+
+            return tmpinput;
+        }
+
+        public static string TrimEndAt(this string input, string find)
+        {
+            var tmpinput = input;
+            if (string.IsNullOrEmpty(input))
+                return input;
+            while (tmpinput.LastIndexOf(find) > -1 && tmpinput.EndsWith(find))
+            {
+                tmpinput = tmpinput.Substring(0, tmpinput.LastIndexOf(find));
+            }
+
+            return tmpinput;
+        }
+
+        public static bool Contains(this string input, string find, StringComparison comparisonType)
+        {
+            return String.IsNullOrWhiteSpace(input) ? false : input.IndexOf(find, comparisonType) > -1;
+        }
+
+        public static IEnumerable<string> NoEmpty(this IEnumerable<string> input)
+        {
+            foreach (var i in input.Where(e => !string.IsNullOrEmpty(e)))
+                yield return i;
+        }
+
+        public static IEnumerable<string> ItSplit(this string str, string sep = ",")
+        {
+
+            if (string.IsNullOrEmpty(str))
+                yield return "";
+            else if (string.IsNullOrEmpty(sep))
+                yield return str;
+            else
+            {
+                var sb = new StringBuilder(str);
+                while (sb.ToString().IndexOf(sep) >= 0)
+                {
+                    var sbstr = sb.ToString();
+                    var sepindex = sbstr.IndexOf(sep);
+                    sbstr = sbstr.Substring(0, sepindex);
+                    yield return sbstr.Trim();
+
+                    sb = sb.Remove(0, sepindex + sep.Length);
+                }
+                if (sb.Length > 0)
+                {
+                    yield return sb.ToString().Trim();
+                }
+
+            }
+
+
+        }
+
+    }
+
     public static class PropsExtensions
     {
+
+        public static Type GetTypeForDefaultValue(object value)
+        {
+            DateTime resultvalue = DateTime.Now;
+            if (DateTime.TryParse(value.ToString(), out resultvalue))
+                return typeof(DateTime);
+            else
+                return BaseType(value.GetType());
+        }
+
+        public static Type BaseType(Type objType)
+        {
+            // ensure the passed objType 1) is valid, 2) .IsValueType, 3) and is logicially nullable
+            if (objType != null && objType.IsValueType && objType.IsGenericType && objType.GetGenericTypeDefinition() == typeof(Nullable<>))
+                return Nullable.GetUnderlyingType(objType);
+            else
+                return objType;
+        }
+
+        public static bool IsSimpleType(
+    this Type type)
+        {
+            return
+                type.IsValueType ||
+                type.IsPrimitive ||
+                new Type[] {
+                typeof(String),
+                typeof(Decimal),
+                typeof(DateTime),
+                typeof(DateTimeOffset),
+                typeof(TimeSpan),
+                typeof(Guid)
+            }.Contains(type) ||
+                Convert.GetTypeCode(type) != TypeCode.Object;
+        }
 
         public static Uri AddQuery(this Uri uri, string name, string value)
         {
@@ -131,21 +292,6 @@ namespace JwtWork.Abstraction.Tools
             return (PropertyInfo)Exp.Member;
         }
 
-        public static string GetTabulatorSorter<T>()
-        {
-            switch (typeof(T).Name)
-            {
-                case "String":
-                    return "string";
-                case "DateTime":
-                    return "datetime";
-                case "Boolean":
-                    return "boolean";
-            }
-
-            return "number";
-
-        }
 
         //example : [expression].GetMemberName()
         public static string GetMemberName(this LambdaExpression memberSelector)
@@ -275,7 +421,8 @@ namespace JwtWork.Abstraction.Tools
                 if (toConvert)
                 {
 
-                    return (target, value) => {
+                    return (target, value) =>
+                    {
                         //var cnt = TypeDescriptor.GetConverter(prop.PropertyType);
                         //var valueAstype = cnt.ConvertFrom(value.ToString());
 
