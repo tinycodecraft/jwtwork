@@ -86,7 +86,7 @@ export const DropFormGroup: FunctionComponent = (props: Partial<DropzoneProps>) 
               <MenuList>
                 {uploadFiles.map((fi) => (
                   <MenuItem key={fi.filePath}>
-                    <a href={fi.filePath} key={`ac-${fi.fileDesc}`}>
+                    <a href={fi.filePath} key={`ac-${fi.fileDesc}`} target='_blank' rel='noreferrer'>
                       {fi.fileDesc}
                     </a>{' '}
                   </MenuItem>

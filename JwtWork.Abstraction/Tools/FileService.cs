@@ -21,12 +21,12 @@ namespace JwtWork.Abstraction.Tools
             _pathsetting = pathsetting;
             _logger = logger;
         }
-        public async Task<string> DownloadFilesAsync(Stream fileStream, string type, string filename)
+        public async Task<string> DownloadFilesAsync(Stream fileStream, string type, string filename,bool inupload=false)
         {
             var file = string.Empty;
             try
             {
-                file = SubStringExtensions.GetPath(_pathsetting.Value, PathType.Share, type, filename);
+                file = SubStringExtensions.GetPath(_pathsetting.Value, inupload ? PathType.Upload: PathType.Share, type, filename);
                 if (File.Exists(file))
                 {
                     var bytes = await File.ReadAllBytesAsync(file);
@@ -84,7 +84,7 @@ namespace JwtWork.Abstraction.Tools
 
 
 
-            var uploadpath = SubStringExtensions.GetPath(_pathsetting.Value, PathType.Upload, "All");
+            var uploadpath = SubStringExtensions.GetPath(_pathsetting.Value, PathType.Upload, type);
             Directory.CreateDirectory(uploadpath);
 
 

@@ -6,7 +6,7 @@ namespace JwtWork.Abstraction
     {
         public interface IFileService
         {
-            Task<string> DownloadFilesAsync(Stream fileStream, string type, string filename);
+            Task<string> DownloadFilesAsync(Stream fileStream, string type, string filename,bool inupload=false);
             Task<FileUploadSummary> UploadFileAsync(Stream fileStream, string contentType, string type);
         }
         public interface ILanguageService
