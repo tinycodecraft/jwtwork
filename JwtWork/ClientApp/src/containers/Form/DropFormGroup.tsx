@@ -67,10 +67,10 @@ export const DropFormGroup: FunctionComponent = (props: Partial<DropzoneProps>) 
             Upload
           </a>
           {uploadFiles && dropstatus === UploadStatusEnum.SUCCESS && (
-            <Menu shadow='md' width={200}>
+            <Menu shadow='md' width={200} trigger='hover'>
               <Menu.Target>
                 <Button
-                  variant='light'
+                  variant='outline'
                   leftIcon={<IconPhoto />}
                   styles={(theme) => ({
                     root: {
@@ -80,7 +80,7 @@ export const DropFormGroup: FunctionComponent = (props: Partial<DropzoneProps>) 
                       paddingLeft: rem(20),
                       paddingRight: rem(20),
                       '&:not([data-disabled])': theme.fn.hover({
-                        backgroundColor: theme.fn.darken('#00acee', 0.05),
+                        backgroundColor: theme.fn.darken('#beeafc', 0.05),
                       }),
                     },
 
