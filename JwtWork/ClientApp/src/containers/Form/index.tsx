@@ -18,7 +18,7 @@ const Form: FunctionComponent = () => (
       </div>
       <div className='box container-box'>
         <div className='columns form-columns'>
-          <MantineProvider>
+          <MantineProvider withNormalizeCSS>
             <DropFormGroup />
           </MantineProvider>
         </div>

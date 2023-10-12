@@ -7,6 +7,10 @@ import type { UploadStatusEnum } from "src/store/uploadSlice";
 import type { AuthStatusEnum } from "src/store/authSlice";
 export as namespace fragmentSps;
 
+export type UploadedFileState ={
+  filePath?: string;
+  fileDesc?: string;
+}
 
 export type UploadState ={
   connectionId: string;
@@ -14,7 +18,7 @@ export type UploadState ={
   progress?: number;
   filePaths?:string[];
   fileDescs?:string[];
-  
+  fileResults? : UploadedFileState[];
 }
 
 export interface ColorType {
@@ -34,7 +38,7 @@ export type FileUploadSummaryState={
   totalFilesUploaded: number;
   totalSizeUploaded: string;
   filePaths: string[];
-  FileDescs: string[];
+  fileDescs: string[];
 }
 
 export type Credentials = {

@@ -73,8 +73,8 @@ namespace JwtWork.Abstraction.Tools
             {
                 TotalFilesUploaded = fileCount,
                 TotalSizeUploaded = ConvertSizeToString(totalSizeInBytes),
-                FilePaths = filePaths,
-                FileDescs = fileDescs,
+                FilePaths = filePaths.ToArray(),
+                FileDescs = fileDescs.ToArray(),
 
             };
         }

@@ -1,11 +1,13 @@
 import React, { useRef, useState, type FunctionComponent, useCallback } from 'react'
-import { Group, Text, useMantineTheme, rem, Image, SimpleGrid } from '@mantine/core'
+import { Group, Text, useMantineTheme, rem, Image, SimpleGrid, Menu, Button, Anchor } from '@mantine/core'
 import { IconUpload, IconPhoto, IconX } from '@tabler/icons-react'
 import { Dropzone, type DropzoneProps, MIME_TYPES, type FileWithPath } from '@mantine/dropzone'
 import { useAppDispatch, useAppSelector } from 'src/store'
 import { UploadStatusEnum, setUploadStatus, uploadFileAsync } from 'src/store/uploadSlice'
-import { useEventListener } from '@mantine/hooks'
+import { range, useEventListener } from '@mantine/hooks'
 import { canWait } from 'src/utils'
+import type { UploadedFileState } from 'src/fragments/types'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 export const DropFormGroup: FunctionComponent = (props: Partial<DropzoneProps>) => {
   const theme = useMantineTheme()
@@ -13,8 +15,7 @@ export const DropFormGroup: FunctionComponent = (props: Partial<DropzoneProps>) 
   const openRef = useRef<() => void>(null)
   const [files, setFiles] = useState<FileWithPath[]>([])
   const connectionId = useAppSelector<string | undefined>((state) => state.auth.connectionId)
-  const uploadFiles = useAppSelector<string[] | undefined>((state) => state.file?.filePaths ?? [])
-  const uploadDescs = useAppSelector<string[]|undefined>((state)=> state.file.fileDescs ?? [])
+  const uploadFiles = useAppSelector<UploadedFileState[] | undefined>((state) => state.file?.fileResults ?? [])
   const dropstatus = useAppSelector<UploadStatusEnum>((state) => state.file?.status ?? UploadStatusEnum.IDLE)
   const dispatch = useAppDispatch()
   const dispatchUploadStatus = useCallback(
@@ -32,7 +33,6 @@ export const DropFormGroup: FunctionComponent = (props: Partial<DropzoneProps>) 
       await dispatchUploadStatus(UploadStatusEnum.PROCESSING)
       await canWait(500) // working
       await dispatch(uploadFileAsync({ connectionId, files }))
-
     } else {
       dispatchUploadStatus(UploadStatusEnum.FAIL)
     }
@@ -41,11 +41,10 @@ export const DropFormGroup: FunctionComponent = (props: Partial<DropzoneProps>) 
   const oncancel = useCallback(async () => {
     await dispatchUploadStatus(UploadStatusEnum.IDLE)
     setFiles([])
-
-  },[dropstatus])
+  }, [dropstatus])
 
   const uploadRef = useEventListener('click', onupload)
-  const cancelRef =useEventListener('click',oncancel)
+  const cancelRef = useEventListener('click', oncancel)
 
   const previews = files.map((file, index) => {
     const imageUrl = URL.createObjectURL(file)
@@ -64,17 +63,59 @@ export const DropFormGroup: FunctionComponent = (props: Partial<DropzoneProps>) 
           <h3 className='title is-4'>File Drop Zone</h3>
         </p>
         <p className='level-item'>
-          <a className='button is-success' {...{ disabled: !files || files.length == 0 || dropstatus!== UploadStatusEnum.IDLE }} ref={uploadRef}>
+          <a className='button is-success' {...{ disabled: !files || files.length == 0 || dropstatus !== UploadStatusEnum.IDLE }} ref={uploadRef}>
             Upload
           </a>
-          <a className='button is-light' {...{ disabled: !(dropstatus ===UploadStatusEnum.SUCCESS || dropstatus===UploadStatusEnum.FAIL)}} ref={cancelRef}>Cancel</a>
+          {uploadFiles && dropstatus === UploadStatusEnum.SUCCESS && (
+            <Menu shadow='md' width={200}>
+              <Menu.Target>
+                <Button
+                  variant='light'
+                  leftIcon={<IconPhoto />}
+                  styles={(theme) => ({
+                    root: {
+                      backgroundColor: '#00acee',
+                      border: 0,
+                      height: rem(42),
+                      paddingLeft: rem(20),
+                      paddingRight: rem(20),
+                      '&:not([data-disabled])': theme.fn.hover({
+                        backgroundColor: theme.fn.darken('#00acee', 0.05),
+                      }),
+                    },
+
+                    leftIcon: {
+                      marginRight: theme.spacing.md,
+                    },
+                  })}
+                >
+                  Files Uploaded
+                </Button>
+              </Menu.Target>
+              <Menu.Dropdown>
+                {uploadFiles.map((fi) => (
+                  <Menu.Item key={fi.filePath}>
+                    <Anchor href={fi.filePath} key={`ac-${fi.fileDesc}`}>
+                      {fi.fileDesc}
+                    </Anchor>
+                  </Menu.Item>
+                ))}
+              </Menu.Dropdown>
+            </Menu>
+          )}
+          <a
+            className='button is-light'
+            {...{ disabled: !(dropstatus === UploadStatusEnum.SUCCESS || dropstatus === UploadStatusEnum.FAIL) }}
+            ref={cancelRef}
+          >
+            Cancel
+          </a>
         </p>
       </div>
 
       <Dropzone
         {...{ loading: dropstatus === UploadStatusEnum.PROCESSING }}
-        {...{disabled: dropstatus !== UploadStatusEnum.IDLE}}
-        
+        {...{ disabled: dropstatus !== UploadStatusEnum.IDLE }}
         openRef={openRef}
         onDrop={ondrop}
         onReject={(files) => console.log('rejected files', files)}
@@ -106,12 +147,7 @@ export const DropFormGroup: FunctionComponent = (props: Partial<DropzoneProps>) 
             <div>
               <Text size='xl' color='dimmed' inline mb={7}>
                 Files below successfully uploaded:
-              </Text>              
-              {uploadFiles && uploadDescs &&
-                uploadFiles.map((f, i) => (
-                  <a key={`${f}${i}`} href={`${f}`}>{uploadDescs[i]}</a>
-
-                ))}
+              </Text>
             </div>
           )}
           {dropstatus === UploadStatusEnum.FAIL && (

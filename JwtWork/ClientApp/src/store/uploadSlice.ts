@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-redeclare */
 import { UploadApi } from 'src/api'
 import { createAsyncThunk, createSlice, type PayloadAction } from '@reduxjs/toolkit'
-import { type UploadState, type UploadDataInput } from 'src/fragments/types'
+import { type UploadState, type UploadDataInput, type UploadedFileState } from 'src/fragments/types'
+import { range } from 'src/utils'
 
 export const UploadStatusEnum = {
   FAIL: 'fail',
@@ -18,13 +19,14 @@ const initialState: UploadState = {
   progress: 0,
 }
 
-const replaceState = (state: UploadState, { connectionId, status, progress, filePaths,fileDescs }: UploadState) => {
+const replaceState = (state: UploadState, { connectionId, status, progress, filePaths,fileDescs, fileResults }: UploadState) => {
   state.connectionId = connectionId
 
   state.status = status
 
   state.filePaths = filePaths
   state.fileDescs=fileDescs
+  state.fileResults = fileResults
   if (progress) {
     state.progress = progress
   }
@@ -58,8 +60,17 @@ export const uploadFileAsync = createAsyncThunk('file/uploadFileAsync', async (d
     })
     
     const finalstatus = (result.filePaths?.length ?? 0) > 0 ? UploadStatusEnum.SUCCESS : UploadStatusEnum.FAIL
-    console.log(`the result received: `,result)
-    dispatch(setUploadState({ status: finalstatus, connectionId: data.connectionId, filePaths: result.filePaths, fileDescs: result.FileDescs }))
+    console.log(`the result received: `,result, ` and length is ${result.filePaths?.length}`)
+    const fileResults : UploadedFileState[] =[]
+    if(finalstatus=== UploadStatusEnum.SUCCESS)
+    {
+      range(result.filePaths.length).forEach((v,i)=>{
+        fileResults.push({fileDesc: result.fileDescs[i], filePath: result.filePaths[i]})
+      })
+
+    }
+
+    dispatch(setUploadState({ status: finalstatus, connectionId: data.connectionId, filePaths: result.filePaths, fileDescs: result.fileDescs, fileResults: fileResults }))
   } catch (e) {
 
     console.log(e)
