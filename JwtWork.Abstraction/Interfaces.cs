@@ -4,6 +4,11 @@ namespace JwtWork.Abstraction
 {
     public class Interfaces
     {
+
+        public interface IBelongtoTable
+        {
+            string tablename { get; set; }
+        }
         public interface IFileService
         {
             Task<string> DownloadFilesAsync(Stream fileStream, string type, string filename,bool inupload=false);
