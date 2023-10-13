@@ -1,5 +1,6 @@
 ﻿using JwtWork.Abstraction.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.VisualBasic;
 using System;
 using System.Collections;
@@ -109,6 +110,46 @@ namespace JwtWork.Abstraction.Tools
             
             return mi;
         }
+
+        public static NameValueCollection AddQueryParam<T,V>(this NameValueCollection nv, Expression<Func<T, V>> GetPropertyLambda,string op,string value)
+        {
+            if(nv== null)
+                nv = new NameValueCollection();
+            var MemberName = GetPropertyLambda.GetMemberName();
+            if (string.IsNullOrEmpty(value))
+                return nv;
+            switch(op)
+            {
+                case "gte":
+                    nv.Add($"__{nameof(QueryOpType.GreaterOrEq)}__{MemberName}", value);
+                    break;
+                case "lte":
+                    nv.Add($"__{nameof(QueryOpType.LessOrEq)}__{MemberName}", value);
+                    break;
+                case "lt":
+                    nv.Add($"__{nameof(QueryOpType.Less)}__{MemberName}", value);
+                    break;
+                case "ct":
+                    nv.Add($"__{nameof(QueryOpType.LikesWith)}__{MemberName}", value);
+                    break;
+                case "bt":
+                    nv.Add($"__{nameof(QueryOpType.StartsWith)}__{MemberName}", value);
+                    break;
+                case "et":
+                    nv.Add($"__{nameof(QueryOpType.EndsWith)}__{MemberName}", value);
+                    break;
+                case "at":
+                    nv.Add($"__{nameof(QueryOpType.InListOp)}__{MemberName}", value);
+                    break;
+                default:
+                    break;
+
+            }
+
+            return nv;
+        }
+
+
 
         /// <summary>
         /// Convert an expression with two parameters to one parameter, 
@@ -281,7 +322,7 @@ namespace JwtWork.Abstraction.Tools
                         break;
                     case QueryOpType.InListOp:
                         Expression OrExp = Expression.Equal(Expression.Constant(0), Expression.Constant(1));
-                        var valuelist = paramValue.ToString().Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                        var valuelist = paramValue.ToString().Split(new[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
                         foreach (var val in valuelist)
                         {
                             OrExp = Expression.OrElse(OrExp, Expression.Equal(columnExpr, Expression.Constant(val, typeof(string))));
@@ -399,5 +440,146 @@ namespace JwtWork.Abstraction.Tools
 
         }
 
+
+        #region Helper for preload objects 
+
+        /// <summary>
+        /// load the navigation properties
+        /// </summary>
+        /// <param name="ctx">db context</param>
+        /// <param name="result">starting entity </param>
+        /// <param name="navpaths">navigation paths of entity</param>
+        public static void LoadRelatedFor(DbContext ctx, object result, params string[] navpaths)
+        {
+            navpaths = navpaths.Select((x, i) => $"{i}!{x}").ToArray();
+            var instanceBag = new Queue<object>();
+            var navStack = new Stack<string>(navpaths.Reverse());
+            instanceBag.Enqueue(result);
+            while (navStack.Count > 0)
+            {
+                var p = navStack.Pop();
+                var nextnav = string.Empty;
+                if (p.Contains("."))
+                {
+                    var navs = p.Split(new[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
+                    nextnav = navs[1];
+                    p = navs[0];
+                }
+                while (instanceBag.Count > 0)
+                {
+                    var instance = instanceBag.Dequeue();
+
+                    var typeOfinst = instance.GetType();
+                    var nameOfproperty = p.Substring(p.IndexOf("!") + 1);
+                    if (!typeOfinst.GetProperties().Any(y => y.Name.Equals(nameOfproperty)))
+                        break;
+
+                    var propOfp = typeOfinst.GetProperty(nameOfproperty);
+                    var isCollectionOfChild = typeof(IEnumerable).IsAssignableFrom(propOfp.PropertyType);
+
+                    if (isCollectionOfChild)
+                        ctx.Entry(instance).Collection(nameOfproperty).Load();
+                    else
+                        ctx.Entry(instance).Reference(nameOfproperty).Load();
+
+
+                    var instancegetter = PropsExtensions.FindGetter(instance.GetType(), nameOfproperty);
+
+                    if (instancegetter != null)
+                    {
+                        instance = instancegetter(instance);
+                        if (instance != null)
+                        {
+                            if (isCollectionOfChild)
+                            {
+                                var c = (instance as IEnumerable).Cast<object>().Count();
+                                if (c == 0)
+                                    break;
+                                foreach (var insItem in instance as IEnumerable)
+                                {
+                                    instanceBag.Enqueue(insItem);
+
+                                }
+                                var listofnav = navpaths.ToList();
+                                var nextindex = listofnav.IndexOf(nextnav);
+                                var restofnav = listofnav.Skip(int.Parse(p.Substring(0, p.IndexOf("!"))) + 1).ToArray();
+                                navStack = ReCreateStack(navStack, c, string.IsNullOrEmpty(nextnav) ? nextnav : $"{p}.{nextnav}", (listofnav.Count > nextindex + 1 && nextindex != -1) ? listofnav[nextindex + 1] : null, restofnav, p);
+
+
+                                break;
+                            }
+                            else
+                            {
+                                instanceBag.Enqueue(instance);
+                                var listofnav = navpaths.ToList();
+                                var nextindex = listofnav.IndexOf(nextnav);
+                                var restofnav = listofnav.Skip(int.Parse(p.Substring(0, p.IndexOf("!"))) + 1).ToArray();
+                                navStack = ReCreateStack(navStack, 1, string.IsNullOrEmpty(nextnav) ? nextnav : $"{p}.{nextnav}", (listofnav.Count > nextindex + 1 && nextindex != -1) ? listofnav[nextindex + 1] : null, restofnav, p);
+
+                                break;
+                            }
+                        }
+
+
+                    }
+
+                }
+
+
+            }
+
+        }
+
+        private static Stack<string> ReCreateStack(Stack<string> orgstack, int count, string nextnav, string tailnav, string[] restofnav, string currentnav)
+        {
+            if (!string.IsNullOrEmpty(nextnav))
+            {
+                var childnav = nextnav.Split('.').LastOrDefault();
+                if (!string.IsNullOrEmpty(childnav))
+                {
+                    var headarr = orgstack.ToArray().Where(y => y.Contains(".")).ToArray();
+                    var tailarr = orgstack.ToArray().Where(y => (!y.Contains(".") && (string.IsNullOrEmpty(tailnav) || y != tailnav))).ToArray();
+                    if (!string.IsNullOrEmpty(tailnav))
+                    {
+                        childnav = string.Join(".", new[] { childnav, tailnav });
+                    }
+
+                    orgstack.Clear();
+                    var newstack = headarr.Concat(Enumerable.Repeat(childnav, count)).Concat(tailarr).Reverse();
+                    return new Stack<string>(newstack);
+                }
+
+
+            }
+
+
+            if (restofnav.Length == 1)
+            {
+                orgstack = new Stack<string>(restofnav.Reverse());
+                while (--count > 0)
+                {
+                    orgstack.Push(orgstack.Peek());
+                }
+
+            }
+            else if (restofnav.Length > 1)
+            {
+                orgstack.Clear();
+                var restnavs = restofnav.Skip(2).Reverse();
+                foreach (var n in restnavs)
+                {
+                    orgstack.Push(n);
+                }
+                var newnav = string.Join(".", restofnav.Take(2));
+                while (count-- > 0)
+                {
+                    orgstack.Push(newnav);
+                }
+            }
+            return orgstack;
+        }
     }
+    #endregion
+
+
 }

@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Web;
 using JwtWork.Abstraction.Models;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 
 namespace JwtWork.Abstraction.Tools
 {
@@ -188,6 +189,28 @@ namespace JwtWork.Abstraction.Tools
 
     public static class PropsExtensions
     {
+
+        public static bool IsInteger(this string s)
+        {
+            try
+            {
+                if (s == null)
+                    return false;
+                int t = int.Parse(s);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public static bool IsBase64String(this string s)
+        {
+            s = s.Trim();
+            return (s.Length % 4 == 0) && Regex.IsMatch(s, @"^[a-zA-Z0-9\+/]*={0,3}$", RegexOptions.None);
+
+        }
 
         public static Type GetTypeForDefaultValue(object value)
         {

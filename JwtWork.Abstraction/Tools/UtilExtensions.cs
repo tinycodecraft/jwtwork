@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Reflection.Emit;
 using System.Text;
@@ -38,6 +39,9 @@ namespace JwtWork.Abstraction.Tools
     }
     public static class UtilExtensions
     {
+
+
+        
 
         public static async Task CopyToAsync(this Stream source, Stream destination, IProgress<long> progress, CancellationToken cancellationToken = default(CancellationToken), int bufferSize = 0x1000)
         {
