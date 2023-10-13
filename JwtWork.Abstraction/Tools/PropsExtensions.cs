@@ -10,6 +10,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using JwtWork.Abstraction.Models;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+using System.Text.Json;
 
 namespace JwtWork.Abstraction.Tools
 {
@@ -19,6 +21,53 @@ namespace JwtWork.Abstraction.Tools
 
     public static class SubStringExtensions
     {
+
+        public static dynamic GetDynamicObjFromJSON(string jsonvalues)
+        {           
+            var d = JsonSerializer.Deserialize<dynamic>(jsonvalues);
+            return d;
+        }
+
+        public static async IAsyncEnumerable<T> CreateJSONObjList<T>(string strJSON) where T : class
+        {
+            bool skip = false;
+            if (string.IsNullOrEmpty(strJSON) || strJSON == "{}")
+                skip = true;
+
+            if(!skip)
+            {
+                var formattedValues = strJSON.Replace(Environment.NewLine, string.Empty);
+                if (!formattedValues.TrimStart().StartsWith("["))
+                {
+                    formattedValues = $"[{formattedValues}]";
+                }
+                using var stream = new MemoryStream(Encoding.UTF8.GetBytes(formattedValues));
+                var arrJSON = JsonSerializer.DeserializeAsyncEnumerable<T>(stream);
+
+                await foreach (T item in arrJSON)
+                {
+                    yield return item;
+                }
+
+            }
+
+
+
+        }
+        public static T GetEnum<T>(this string val) where T : Enum
+        {
+            try
+            {
+                var enumT = (T)Enum.Parse(typeof(T), val); ;
+                return enumT;
+            }
+            catch (Exception ex)
+            {
+                return default(T);
+            }
+
+
+        }
 
         public static bool CanInline(string fileName)
         {
