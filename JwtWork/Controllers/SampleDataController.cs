@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Authorization;
+using JwtWork.PISDB.Models;
 
 namespace JwtWork.Controllers
 {
@@ -14,8 +15,11 @@ namespace JwtWork.Controllers
     public class SampleDataController : ControllerBase
     {
         private readonly ILogger _logger;
-        public SampleDataController(ILogger<SampleDataController> logger) { 
+
+        private readonly JWTPISContext _db;
+        public SampleDataController(ILogger<SampleDataController> logger,JWTPISContext db) { 
             _logger = logger;
+            _db= db;
             _logger.LogInformation("Same Data Controller being invoked.");
         }
 
@@ -37,5 +41,9 @@ namespace JwtWork.Controllers
             })
             .ToArray();
         }
+
+        
+        
+
     }
 }
