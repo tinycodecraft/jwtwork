@@ -10,7 +10,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using JwtWork.Abstraction.Models;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 using System.Text.Json;
 
 namespace JwtWork.Abstraction.Tools
