@@ -1,4 +1,6 @@
-﻿namespace JwtWork.Models
+﻿using JwtWork.Abstraction;
+
+namespace JwtWork.Models
 {
     public class AuthUser : IAuthUser
     {
@@ -25,7 +27,7 @@
 
         public static AuthUser CreateFailureFor(string userName,string error,bool needNew)
         {
-            return new AuthUser("fail", "", "", userName, error, needNew);
+            return new AuthUser(Constants.Status.failure, "", "", userName, error, needNew);
 
         }
     }

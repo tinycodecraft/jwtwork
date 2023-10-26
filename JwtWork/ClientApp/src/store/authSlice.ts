@@ -4,7 +4,7 @@ import { createAsyncThunk, createSlice, type PayloadAction } from '@reduxjs/tool
 import { type Credentials, type AuthState } from 'src/fragments/types';
 
 export const AuthStatusEnum = {
-  FAIL: 'fail',
+  FAILURE: 'failure',
   NONE: 'none',
   PROCESS: 'process',
   SUCCESS: 'success'
@@ -74,7 +74,7 @@ export const loginAsync = createAsyncThunk(
       const payload = { ...authUser, isAuthenticated: !authUser.error };
       dispatch(setUserLogin(payload));
     } catch (e) {
-      dispatch(setAuthStatus(AuthStatusEnum.FAIL));
+      dispatch(setAuthStatus(AuthStatusEnum.FAILURE));
     }
   }
 );

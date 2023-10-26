@@ -23,7 +23,7 @@ const ROTATE_KEYFRAMES = keyframes`
 
 const getChildDivBorderColor = (authStatus: AuthStatusEnum): string => {
   switch (authStatus) {
-    case AuthStatusEnum.FAIL: return '#e93e60';
+    case AuthStatusEnum.FAILURE: return '#e93e60';
     case AuthStatusEnum.SUCCESS: return '#09d3ac';
     default: return 'rgba(9, 30, 66, 0.35)';
   }
@@ -79,7 +79,7 @@ const Authenticator = memo<AuthenticatorProps>(({
   useEffect(() => {
     const authHandler = setTimeout(() => {
       switch (authStatus) {
-        case AuthStatusEnum.FAIL: return handleOnFail(error);
+        case AuthStatusEnum.FAILURE: return handleOnFail(error);
         case AuthStatusEnum.SUCCESS: return handleOnSuccess();
         default: return;
       }
