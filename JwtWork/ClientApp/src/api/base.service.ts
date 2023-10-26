@@ -64,7 +64,7 @@ export abstract class BaseService {
 
             const response = await AuthApi.getNewTokenAsync(tokenstate);
             console.log(`the response from refresh ${response}`)
-            if(response && response.status!='fail')
+            if(response && response.status!='failure')
             {
               this.token = response.newToken  ?? this.token
             }

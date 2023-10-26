@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.AspNetCore.Localization;
 using System.Collections.Generic;
 using System.Globalization;
+using Mapster;
+using GhostUI.Models;
+using System.Reflection;
 
 namespace JwtWork.Extensions
 {
@@ -14,6 +17,16 @@ namespace JwtWork.Extensions
 
 
     {
+
+        public static IServiceCollection AddMapster(this IServiceCollection services)
+        {
+            TypeAdapterConfig typeAdapterConfig = TypeAdapterConfig.GlobalSettings;
+            // Scan the Application to find models for mapping based on BaseDto.
+            Assembly appAssembly = typeof(BaseDto<,>).Assembly;
+            typeAdapterConfig.Scan(appAssembly);
+
+            return services;
+        }
 
         public static IServiceCollection AddCustomLocalization(this IServiceCollection services)
         {

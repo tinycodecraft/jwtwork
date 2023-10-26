@@ -96,6 +96,7 @@ builder.Services.AddDbContext<JWTWORKContext>();
 builder.Services.AddDbContext<JWTPISContext>();
 
 
+
 //hosting environment variable in iwebhostenvironment
 //var isproduction = builder.Environment.IsProduction();
 
@@ -110,7 +111,7 @@ builder.Host.UseSerilog((ctx, srv, cfg) =>
 
 
 });
-
+builder.Services.AddMapster();
 
 builder.Services.AddScoped<IJwtManager, UserManager>();
 

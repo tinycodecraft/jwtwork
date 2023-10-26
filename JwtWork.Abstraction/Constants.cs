@@ -21,6 +21,17 @@ namespace JwtWork.Abstraction
             OrderBy,
             ThenBy,
         }
+        public static class Status
+        {
+            public const string success = nameof(success);
+            public const string failure = nameof(failure);  
+        }
+        public static class Session
+        {
+            public const string REFRESHTOKEN = nameof(REFRESHTOKEN);
+            public const string USERID=nameof(USERID);
+            
+        }
 
         public static class Setting
         {

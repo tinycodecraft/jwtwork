@@ -17,6 +17,8 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
 using JwtWork.Abstraction.Models;
+using System.Reflection.Metadata;
+using JwtWork.Abstraction;
 
 namespace JwtWork.Controllers
 {
@@ -43,17 +45,17 @@ namespace JwtWork.Controllers
         [ProducesResponseType(typeof(RefreshTokenState),StatusCodes.Status200OK)]
         public async Task<IActionResult> Renew([FromBody]TokenState request)
         {
-            var savedrefresh = HttpContext.Session.GetString("REFRESHTOKEN");
-            var saveduserid = HttpContext.Session.GetString("USERID");
+            var savedrefresh = HttpContext.Session.GetString(Constants.Session.REFRESHTOKEN);
+            var saveduserid = HttpContext.Session.GetString(Constants.Session.USERID);
 
             var user =await _context.UserTB.FirstOrDefaultAsync(e => e.UserId == saveduserid);
             if(user!=null && savedrefresh == request.Token && request.Token != null)
             {
                 var newtoken = jwtsvc.CreateToken(user);
-                return Ok(new RefreshTokenState { NewToken= newtoken,Status="success" });
+                return Ok(new RefreshTokenState { NewToken= newtoken,Status= Constants.Status.success });
             }
 
-            return Ok(new RefreshTokenState { Status = "fail" });
+            return Ok(new RefreshTokenState { Status = Constants.Status.failure });
            
         }
 
@@ -87,16 +89,16 @@ namespace JwtWork.Controllers
                 return Ok(AuthUser.CreateFailureFor( request.UserName, loginError.Error,loginError.NeedNew)); 
             }
             
-            await _hubContext.Clients.All.SendAsync("UserLogin");
+            await _hubContext.Clients.All.SendAsync(nameof(IUsersHub.UserLogin));
             
             var token =  jwtsvc.CreateToken(user);
             
             var refreshtoken = TokenService.GenerateRefreshToken();
 
-            HttpContext.Session.SetString("REFRESHTOKEN", refreshtoken);
-            HttpContext.Session.SetString("USERID", user.UserId);
+            HttpContext.Session.SetString(Constants.Session.REFRESHTOKEN, refreshtoken);
+            HttpContext.Session.SetString(Constants.Session.USERID, user.UserId);
 
-            var authUser = new AuthUser("success", token, refreshtoken, request?.UserName ?? "");
+            var authUser = new AuthUser(Constants.Status.success, token, refreshtoken, request?.UserName ?? "");
 
             return Ok(authUser);
         }
@@ -108,7 +110,7 @@ namespace JwtWork.Controllers
             _logger.LogInformation("Logout api is called.");
             
 
-            await _hubContext.Clients.All.SendAsync("UserLogout");
+            await _hubContext.Clients.All.SendAsync(nameof(IUsersHub.UserLogout));
             return Ok();
         }
     }
