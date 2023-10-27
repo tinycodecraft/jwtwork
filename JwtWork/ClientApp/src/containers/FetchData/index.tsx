@@ -14,14 +14,10 @@ import { WeatherStateInit } from 'src/config';
 const FetchData: FunctionComponent = () => {
   const dispatch = useAppDispatch();
   const { startDateIndex: startDateIndexDefault = '0' } = useParams();
-  console.log(`fetching component init with param ${startDateIndexDefault}`)
+  
 
   const intNextStartDateIndex = parseInt(startDateIndexDefault, 10);  
   const { isLoading,startDateIndex,forecasts } = useAppSelector<WeatherState>((state)=> state.weather ?? WeatherStateInit);
-
-
-
-  console.log(`all constants should be ready for fetch data with state ${startDateIndex}`)
 
   useEffect(() => {
     if (startDateIndex !== intNextStartDateIndex) {

@@ -12,7 +12,7 @@ const replaceState = (
   resetOnly = false,
 
 ) => {
-  console.log(`${error} with status ${status} and neednew status: ${resetOnly}`);
+  
   state.token = token;
   state.status = status;
   state.userName = userName;
@@ -55,10 +55,11 @@ export const loginAsync = createAsyncThunk(
   async (credentials: Credentials, { dispatch }) => {
     try {
       const authUser = await AuthApi.loginAsync(credentials);
-      console.log(authUser);
+      
       const payload = { ...authUser, isAuthenticated: !authUser.error };
       dispatch(setUserLogin(payload));
     } catch (e) {
+      console.log(e);
       dispatch(setAuthStatus(ApiStatusEnum.FAILURE));
     }
   }

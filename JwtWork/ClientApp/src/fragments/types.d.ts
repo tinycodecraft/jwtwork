@@ -16,8 +16,6 @@ export type UploadState ={
   connectionId: string;
   status : ApiStatusEnum;
   progress?: number;
-  filePaths?:string[];
-  fileDescs?:string[];
   fileResults? : UploadedFileState[];
 }
 

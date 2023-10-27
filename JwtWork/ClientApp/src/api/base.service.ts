@@ -1,5 +1,5 @@
 import axios, { type AxiosInstance } from 'axios'
-import { BASEURL, NUGET_URL_CONFIG } from 'src/config'
+import { ApiStatusEnum, BASEURL, NUGET_URL_CONFIG } from 'src/config'
 import type { RefreshTokenState, TokenState } from 'src/fragments/types'
 import { AuthApi } from './auth.service'
 
@@ -39,8 +39,7 @@ export abstract class BaseService {
     })
     this.$wAuthHttp.interceptors.request.use(
       (config) => {
-        console.log(`try to log token for request!`);
-        console.log(this.token);
+
         if (this.token) {
           config.headers.Authorization = `Bearer ${this.token}`
         }
@@ -64,7 +63,7 @@ export abstract class BaseService {
 
             const response = await AuthApi.getNewTokenAsync(tokenstate);
             console.log(`the response from refresh ${response}`)
-            if(response && response.status!='failure')
+            if(response && response.status!=ApiStatusEnum.FAILURE)
             {
               this.token = response.newToken  ?? this.token
             }

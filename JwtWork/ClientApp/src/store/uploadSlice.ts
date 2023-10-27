@@ -6,13 +6,10 @@ import { range } from 'src/utils'
 import { ApiStatusEnum, UploadStateInit } from 'src/config'
 
 
-const replaceState = (state: UploadState, { connectionId, status, progress, filePaths,fileDescs, fileResults }: UploadState) => {
+const replaceState = (state: UploadState, { connectionId, status, progress, fileResults }: UploadState) => {
   state.connectionId = connectionId
 
   state.status = status
-
-  state.filePaths = filePaths
-  state.fileDescs=fileDescs
   state.fileResults = fileResults
   if (progress) {
     state.progress = progress
@@ -47,7 +44,7 @@ export const uploadFileAsync = createAsyncThunk('file/uploadFileAsync', async (d
     })
     
     const finalstatus = (result.filePaths?.length ?? 0) > 0 ? ApiStatusEnum.SUCCESS : ApiStatusEnum.FAILURE
-    console.log(`the result received: `,result, ` and length is ${result.filePaths?.length}`)
+    
     const fileResults : UploadedFileState[] =[]
     if(finalstatus=== ApiStatusEnum.SUCCESS)
     {
@@ -57,7 +54,7 @@ export const uploadFileAsync = createAsyncThunk('file/uploadFileAsync', async (d
 
     }
 
-    dispatch(setUploadState({ status: finalstatus, connectionId: data.connectionId, filePaths: result.filePaths, fileDescs: result.fileDescs, fileResults: fileResults }))
+    dispatch(setUploadState({ status: finalstatus, connectionId: data.connectionId, fileResults: fileResults }))
   } catch (e) {
 
     console.log(e)

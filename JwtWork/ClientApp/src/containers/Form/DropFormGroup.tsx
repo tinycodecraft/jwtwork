@@ -35,7 +35,7 @@ export const DropFormGroup: FunctionComponent = (props: Partial<DropzoneProps>) 
     if (connectionId) {
       await dispatchUploadStatus(ApiStatusEnum.PROCESS)
       await canWait(500) // working
-      await dispatch(uploadFileAsync({ connectionId, files }))
+      dispatch(uploadFileAsync({ connectionId, files }))
     } else {
       dispatchUploadStatus(ApiStatusEnum.FAILURE)
     }

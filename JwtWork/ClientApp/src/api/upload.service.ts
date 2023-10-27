@@ -16,7 +16,7 @@ class UploadService extends BaseService {
 
   public async uploadAsync(datainput: UploadDataInput, report: (value: number) => void): Promise<FileUploadSummaryState> {
     const fdata = new FormData()
-    console.log(`uploadasync called with val:`,datainput)
+    
     if (datainput && datainput.files && datainput.files.length > 0) {
       datainput.files.forEach((e) => {
         fdata.append("Files", e)
