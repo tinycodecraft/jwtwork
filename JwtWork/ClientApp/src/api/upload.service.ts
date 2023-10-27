@@ -29,6 +29,7 @@ class UploadService extends BaseService {
         "Content-Type": "multipart/form-data",
       },
       onUploadProgress: (progress) => {
+        // Please note that progress is working if you specify the network to more slow connection (e.g. 3G)
         if (progress.total) report((progress.loaded / progress.total) * 100)
       },
     })

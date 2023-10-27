@@ -2,16 +2,9 @@
 import { AuthApi } from 'src/api';
 import { createAsyncThunk, createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import { type Credentials, type AuthUserState } from 'src/fragments/types';
-import { ApiStatusEnum } from 'src/config';
+import { ApiStatusEnum, AuthUserStateInit } from 'src/config';
 
-const initialState: AuthUserState = {
-  token: '',
-  userName: '',
-  isAuthenticated: false,
-  status: ApiStatusEnum.NONE,
-  needNew: false,
-  error: ''
-};
+
 
 const replaceState = (
   state: AuthUserState,
@@ -35,7 +28,7 @@ const replaceState = (
 
 export const authSlice = createSlice({
   name: 'auth',
-  initialState,
+  initialState: AuthUserStateInit,
   reducers: {
     setConnectionValue: (state,action: PayloadAction<string>)=> {
       state.connectionId = action.payload;
@@ -52,7 +45,7 @@ export const authSlice = createSlice({
 
     },
     resetState: (state) => {      
-      replaceState(state, initialState,state.needNew);      
+      replaceState(state, AuthUserStateInit,state.needNew);      
     }
   }
 });

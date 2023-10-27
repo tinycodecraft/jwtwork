@@ -1,5 +1,5 @@
 import type { AnchorHTMLAttributes } from 'react';
-import type { SelectOption,WeatherState,FormState } from 'src/fragments/types';
+import type { SelectOption,WeatherState,FormState, AuthUserState, UploadState } from 'src/fragments/types';
 
 
 export const ApiStatusEnum = {
@@ -56,3 +56,18 @@ export const FormStateInit: FormState = {
   checked: false,
   selectedOption: DROPDOWN_TEST_DATA[0]
 };
+
+export const AuthUserStateInit: AuthUserState = {
+  token: '',
+  userName: '',
+  isAuthenticated: false,
+  status: ApiStatusEnum.NONE,
+  needNew: false,
+  error: ''
+};
+
+export const UploadStateInit: UploadState = {
+  connectionId: '',
+  status: ApiStatusEnum.NONE,
+  progress: 0,
+}

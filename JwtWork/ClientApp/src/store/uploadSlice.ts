@@ -3,13 +3,8 @@ import { UploadApi } from 'src/api'
 import { createAsyncThunk, createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import { type UploadState, type UploadDataInput, type UploadedFileState } from 'src/fragments/types'
 import { range } from 'src/utils'
-import { ApiStatusEnum } from 'src/config'
+import { ApiStatusEnum, UploadStateInit } from 'src/config'
 
-const initialState: UploadState = {
-  connectionId: '',
-  status: ApiStatusEnum.NONE,
-  progress: 0,
-}
 
 const replaceState = (state: UploadState, { connectionId, status, progress, filePaths,fileDescs, fileResults }: UploadState) => {
   state.connectionId = connectionId
@@ -26,7 +21,7 @@ const replaceState = (state: UploadState, { connectionId, status, progress, file
 
 export const uploadSlice = createSlice({
   name: 'file',
-  initialState,
+  initialState: UploadStateInit,
   reducers: {
     setUploadStatus: (state, action: PayloadAction<ApiStatusEnum>) => {
       state.status = action.payload
@@ -39,7 +34,7 @@ export const uploadSlice = createSlice({
     },
 
     resetUploadState: (state) => {
-      replaceState(state, initialState)
+      replaceState(state, UploadStateInit)
     },
   },
 })
