@@ -1,13 +1,14 @@
 import { useEffect, memo } from 'react';
-import { AuthStatusEnum } from 'src/store/authSlice';
+
 import styled from '@emotion/styled';
 import { keyframes } from '@emotion/react';
 import PropTypes from 'prop-types'
+import { ApiStatusEnum } from 'src/config';
 
 
 type AuthenticatorProps = Readonly<{
   delay?: number;
-  authStatus: AuthStatusEnum;
+  authStatus: ApiStatusEnum;
   error: any;  
   handleOnFail: (...args: typeof PropTypes.any[]) => void|typeof PropTypes.any;
   handleOnSuccess: (...args: typeof PropTypes.any[]) => void|typeof PropTypes.any;
@@ -21,10 +22,10 @@ const ROTATE_KEYFRAMES = keyframes`
   }
 `;
 
-const getChildDivBorderColor = (authStatus: AuthStatusEnum): string => {
+const getChildDivBorderColor = (authStatus: ApiStatusEnum): string => {
   switch (authStatus) {
-    case AuthStatusEnum.FAILURE: return '#e93e60';
-    case AuthStatusEnum.SUCCESS: return '#09d3ac';
+    case ApiStatusEnum.FAILURE: return '#e93e60';
+    case ApiStatusEnum.SUCCESS: return '#09d3ac';
     default: return 'rgba(9, 30, 66, 0.35)';
   }
 };
@@ -79,8 +80,8 @@ const Authenticator = memo<AuthenticatorProps>(({
   useEffect(() => {
     const authHandler = setTimeout(() => {
       switch (authStatus) {
-        case AuthStatusEnum.FAILURE: return handleOnFail(error);
-        case AuthStatusEnum.SUCCESS: return handleOnSuccess();
+        case ApiStatusEnum.FAILURE: return handleOnFail(error);
+        case ApiStatusEnum.SUCCESS: return handleOnSuccess();
         default: return;
       }
     }, delay);
@@ -90,7 +91,7 @@ const Authenticator = memo<AuthenticatorProps>(({
     }
   }, [authStatus,error, delay, handleOnFail, handleOnSuccess]);
 
-  if (!authStatus || authStatus === AuthStatusEnum.NONE) {
+  if (!authStatus || authStatus === ApiStatusEnum.NONE) {
     return null;
   }
 

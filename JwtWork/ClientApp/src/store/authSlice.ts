@@ -1,29 +1,21 @@
 /* eslint-disable @typescript-eslint/no-redeclare */
 import { AuthApi } from 'src/api';
 import { createAsyncThunk, createSlice, type PayloadAction } from '@reduxjs/toolkit';
-import { type Credentials, type AuthState } from 'src/fragments/types';
+import { type Credentials, type AuthUserState } from 'src/fragments/types';
+import { ApiStatusEnum } from 'src/config';
 
-export const AuthStatusEnum = {
-  FAILURE: 'failure',
-  NONE: 'none',
-  PROCESS: 'process',
-  SUCCESS: 'success'
-} as const;
-
-export type AuthStatusEnum = typeof AuthStatusEnum[keyof typeof AuthStatusEnum];
-
-const initialState: AuthState = {
+const initialState: AuthUserState = {
   token: '',
   userName: '',
   isAuthenticated: false,
-  status: AuthStatusEnum.NONE,
+  status: ApiStatusEnum.NONE,
   needNew: false,
   error: ''
 };
 
 const replaceState = (
-  state: AuthState,
-  { status, token, refreshToken, userName, isAuthenticated, error,needNew }: AuthState,
+  state: AuthUserState,
+  { status, token, refreshToken, userName, isAuthenticated, error,needNew }: AuthUserState,
   resetOnly = false,
 
 ) => {
@@ -49,10 +41,10 @@ export const authSlice = createSlice({
       state.connectionId = action.payload;
 
     },
-    setAuthStatus: (state, action: PayloadAction<AuthStatusEnum>) => {
+    setAuthStatus: (state, action: PayloadAction<ApiStatusEnum>) => {
       state.status = action.payload;
     },
-    setUserLogin: (state, action: PayloadAction<AuthState>) => {
+    setUserLogin: (state, action: PayloadAction<AuthUserState>) => {
       replaceState(state, action.payload);
     },
     setNewToken: (state, action: PayloadAction<string>)=> {
@@ -74,7 +66,7 @@ export const loginAsync = createAsyncThunk(
       const payload = { ...authUser, isAuthenticated: !authUser.error };
       dispatch(setUserLogin(payload));
     } catch (e) {
-      dispatch(setAuthStatus(AuthStatusEnum.FAILURE));
+      dispatch(setAuthStatus(ApiStatusEnum.FAILURE));
     }
   }
 );

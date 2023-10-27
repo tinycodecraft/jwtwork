@@ -4,7 +4,8 @@ import internal from "stream";
 import { type SingleValue } from 'react-select';
 import { type FileWithPath } from "@mantine/dropzone";
 import type { UploadStatusEnum } from "src/store/uploadSlice";
-import type { AuthStatusEnum } from "src/store/authSlice";
+import { ApiStatusEnum } from "src/config";
+
 export as namespace fragmentSps;
 
 export type UploadedFileState ={
@@ -52,13 +53,13 @@ export type AuthUser = {
   token?: string;
   refreshToken?:string;
   userName?: string;
-  status: AuthStatusEnum;
+  status: ApiStatusEnum;
   error?: string;
   needNew: boolean;
   connectionId?: string;
 };
 
-export type AuthState = AuthUser & { isAuthenticated: boolean; };
+export type AuthUserState = AuthUser & { isAuthenticated: boolean; };
 
 export type WeatherForecast = Readonly<{
   id: number

@@ -3,12 +3,12 @@ import React, { useContext, type FunctionComponent, useCallback, type FormEvent,
 import { Authenticator } from 'src/fragments'
 import BasedGhostLogoPNG from 'src/assets/image/based-ghost-main.png'
 import { useAppDispatch, useAppSelector } from 'src/store'
-import { Routes } from 'src/config'
+import { ApiStatusEnum, Routes } from 'src/config'
 import { toast, type Id } from 'react-toastify'
 import alerttoast from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
 import LoginContext from 'src/context/LoginContext'
-import { loginAsync, setAuthStatus, resetState, AuthStatusEnum, setConnectionValue } from 'src/store/authSlice'
+import { loginAsync, setAuthStatus, resetState,  setConnectionValue } from 'src/store/authSlice'
 import { type Credentials } from 'src/fragments/types'
 import { Button, Checkbox, Input, Typography } from '@material-tailwind/react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -34,12 +34,12 @@ const LoginForm: FunctionComponent = () => {
   } = useContext(LoginContext)
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
-  const status = useAppSelector<AuthStatusEnum>((state) => state.auth.status)
+  const status = useAppSelector<ApiStatusEnum>((state) => state.auth.status)
   const error = useAppSelector<string | undefined>((state) => state.auth.error)
 
   const newShow = useAppSelector<boolean>((state) => state.auth.needNew)
   const dispatchAuthStatus = useCallback(
-    (status: AuthStatusEnum): void => {
+    (status: ApiStatusEnum): void => {
       dispatch(setAuthStatus(status))
     },
     [dispatch],
@@ -48,7 +48,7 @@ const LoginForm: FunctionComponent = () => {
     (error: any): void => {
       alerttoast.error(`login fails with ${error}`)
       setLastError && setLastError(error)
-      dispatchAuthStatus(AuthStatusEnum.NONE)
+      dispatchAuthStatus(ApiStatusEnum.NONE)
       dispatch(resetState())
       setInvalid && setInvalid(true)
     },
@@ -65,7 +65,7 @@ const LoginForm: FunctionComponent = () => {
 
   const handleLogin = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault()
-    if (status === AuthStatusEnum.PROCESS) {
+    if (status === ApiStatusEnum.PROCESS) {
       return
     }
 
@@ -81,7 +81,7 @@ const LoginForm: FunctionComponent = () => {
       // Clear any toast notifications and prepare state for Login request stub / run login request stub
       toast.dismiss()
       setInvalid && setInvalid(false)
-      dispatchAuthStatus(AuthStatusEnum.PROCESS)
+      dispatchAuthStatus(ApiStatusEnum.PROCESS)
 
       setTimeout(() => {
         const credentials: Credentials = {

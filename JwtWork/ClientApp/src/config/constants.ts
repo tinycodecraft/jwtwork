@@ -1,6 +1,16 @@
 import type { AnchorHTMLAttributes } from 'react';
 import type { SelectOption,WeatherState,FormState } from 'src/fragments/types';
 
+
+export const ApiStatusEnum = {
+  FAILURE: 'failure',
+  NONE: 'none',
+  PROCESS: 'process',
+  SUCCESS: 'success'
+} as const;
+
+export type ApiStatusEnum = typeof ApiStatusEnum[keyof typeof ApiStatusEnum];
+
 /**
  * Select control test data
  */
