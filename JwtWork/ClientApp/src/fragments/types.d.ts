@@ -3,7 +3,6 @@ import React, { PropsWithChildren } from "react";
 import internal from "stream";
 import { type SingleValue } from 'react-select';
 import { type FileWithPath } from "@mantine/dropzone";
-import type { UploadStatusEnum } from "src/store/uploadSlice";
 import { ApiStatusEnum } from "src/config";
 
 export as namespace fragmentSps;
@@ -15,7 +14,7 @@ export type UploadedFileState ={
 
 export type UploadState ={
   connectionId: string;
-  status : UploadStatusEnum;
+  status : ApiStatusEnum;
   progress?: number;
   filePaths?:string[];
   fileDescs?:string[];

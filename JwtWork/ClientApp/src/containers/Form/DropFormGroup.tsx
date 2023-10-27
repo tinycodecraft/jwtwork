@@ -3,12 +3,13 @@ import { Group, Text, useMantineTheme, rem, Image, SimpleGrid } from '@mantine/c
 import { IconUpload, IconPhoto, IconX } from '@tabler/icons-react'
 import { Dropzone, type DropzoneProps, MIME_TYPES, type FileWithPath } from '@mantine/dropzone'
 import { useAppDispatch, useAppSelector } from 'src/store'
-import { UploadStatusEnum, setUploadStatus, uploadFileAsync } from 'src/store/uploadSlice'
+import {  setUploadStatus, uploadFileAsync } from 'src/store/uploadSlice'
 import { useEventListener } from '@mantine/hooks'
 import { canWait } from 'src/utils'
 import type { UploadedFileState } from 'src/fragments/types'
 import { Button, Menu, MenuHandler, MenuItem, MenuList } from '@material-tailwind/react'
 import { ChevronDownIcon } from '@heroicons/react/24/outline'
+import { ApiStatusEnum } from 'src/config'
 
 export const DropFormGroup: FunctionComponent = (props: Partial<DropzoneProps>) => {
   const theme = useMantineTheme()
@@ -18,10 +19,10 @@ export const DropFormGroup: FunctionComponent = (props: Partial<DropzoneProps>) 
   const [openMenu, setOpenMenu] = useState(false)
   const connectionId = useAppSelector<string | undefined>((state) => state.auth.connectionId)
   const uploadFiles = useAppSelector<UploadedFileState[] | undefined>((state) => state.file?.fileResults ?? [])
-  const dropstatus = useAppSelector<UploadStatusEnum>((state) => state.file?.status ?? UploadStatusEnum.IDLE)
+  const dropstatus = useAppSelector<ApiStatusEnum>((state) => state.file?.status ?? ApiStatusEnum.NONE)
   const dispatch = useAppDispatch()
   const dispatchUploadStatus = useCallback(
-    (status: UploadStatusEnum) => {
+    (status: ApiStatusEnum) => {
       return dispatch(setUploadStatus(status))
     },
     [dispatch],
@@ -32,16 +33,16 @@ export const DropFormGroup: FunctionComponent = (props: Partial<DropzoneProps>) 
   }
   const onupload = useCallback(async () => {
     if (connectionId) {
-      await dispatchUploadStatus(UploadStatusEnum.PROCESSING)
+      await dispatchUploadStatus(ApiStatusEnum.PROCESS)
       await canWait(500) // working
       await dispatch(uploadFileAsync({ connectionId, files }))
     } else {
-      dispatchUploadStatus(UploadStatusEnum.FAIL)
+      dispatchUploadStatus(ApiStatusEnum.FAILURE)
     }
   }, [connectionId, files])
 
   const oncancel = useCallback(async () => {
-    await dispatchUploadStatus(UploadStatusEnum.IDLE)
+    await dispatchUploadStatus(ApiStatusEnum.NONE)
     setFiles([])
   }, [dropstatus])
 
@@ -65,10 +66,10 @@ export const DropFormGroup: FunctionComponent = (props: Partial<DropzoneProps>) 
           <h3 className='title is-4'>File Drop Zone</h3>
         </p>
         <p className='level-item gap-1'>
-          <a className='button is-success' {...{ disabled: !files || files.length == 0 || dropstatus !== UploadStatusEnum.IDLE }} ref={uploadRef}>
+          <a className='button is-success' {...{ disabled: !files || files.length == 0 || dropstatus !== ApiStatusEnum.NONE }} ref={uploadRef}>
             Upload
           </a>
-          {uploadFiles && dropstatus === UploadStatusEnum.SUCCESS && (
+          {uploadFiles && dropstatus === ApiStatusEnum.SUCCESS && (
             <Menu
               animate={{
                 mount: { y: 0 },
@@ -96,7 +97,7 @@ export const DropFormGroup: FunctionComponent = (props: Partial<DropzoneProps>) 
           )}
           <a
             className='button is-light'
-            {...{ disabled: !(dropstatus === UploadStatusEnum.SUCCESS || dropstatus === UploadStatusEnum.FAIL) }}
+            {...{ disabled: !(dropstatus === ApiStatusEnum.SUCCESS || dropstatus === ApiStatusEnum.FAILURE) }}
             ref={cancelRef}
           >
             Cancel
@@ -105,8 +106,8 @@ export const DropFormGroup: FunctionComponent = (props: Partial<DropzoneProps>) 
       </div>
 
       <Dropzone
-        {...{ loading: dropstatus === UploadStatusEnum.PROCESSING }}
-        {...{ disabled: dropstatus !== UploadStatusEnum.IDLE }}
+        {...{ loading: dropstatus === ApiStatusEnum.PROCESS }}
+        {...{ disabled: dropstatus !== ApiStatusEnum.NONE }}
         openRef={openRef}
         onDrop={ondrop}
         onReject={(files) => console.log('rejected files', files)}
@@ -124,7 +125,7 @@ export const DropFormGroup: FunctionComponent = (props: Partial<DropzoneProps>) 
           <Dropzone.Idle>
             <IconPhoto size='3.2rem' stroke={1.5} />
           </Dropzone.Idle>
-          {dropstatus === UploadStatusEnum.IDLE && (
+          {dropstatus === ApiStatusEnum.NONE && (
             <div>
               <Text size='xl' inline>
                 Drag images here or click to select files
@@ -134,14 +135,14 @@ export const DropFormGroup: FunctionComponent = (props: Partial<DropzoneProps>) 
               </Text>
             </div>
           )}
-          {dropstatus === UploadStatusEnum.SUCCESS && (
+          {dropstatus === ApiStatusEnum.SUCCESS && (
             <div>
               <Text size='xl' color='dimmed' inline mb={7}>
                 Files below successfully uploaded:
               </Text>
             </div>
           )}
-          {dropstatus === UploadStatusEnum.FAIL && (
+          {dropstatus === ApiStatusEnum.FAILURE && (
             <div>
               <Text size='xl' inline>
                 Your files could not be upload!!
