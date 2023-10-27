@@ -13,9 +13,7 @@ using System;
 using JwtWork.Middleware;
 using JwtWork.Services;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
-using JwtWork.Abstraction.Models;
 using JwtWork.Abstraction.Tools;
-using JwtWork.Abstraction;
 
 
 using static JwtWork.Abstraction.Interfaces;
@@ -65,13 +63,13 @@ var builder = WebApplication.CreateBuilder(new WebApplicationOptions
     //WebRootPath = "wwwroot"
 });
 
-var authsetting = builder.Configuration.GetSection(Constants.Setting.AuthSetting);
-var pathsetting = builder.Configuration.GetSection(Constants.Setting.PathSetting);
+var authsetting = builder.Configuration.GetSection(Setting.AuthSetting);
+var pathsetting = builder.Configuration.GetSection(Setting.PathSetting);
 var encryptionService = new StringEncrypService();
-authsetting[nameof(AuthSetting.Secret)] = encryptionService.EncryptString(authsetting[nameof(AuthSetting.SecretKey)] ?? "");
-pathsetting[nameof(PathSetting.Base)] = Directory.GetCurrentDirectory();
-builder.Services.Configure<AuthSetting>(authsetting);
-builder.Services.Configure<PathSetting>(pathsetting);
+authsetting[nameof(md.AuthSetting.Secret)] = encryptionService.EncryptString(authsetting[nameof(md.AuthSetting.SecretKey)] ?? "");
+pathsetting[nameof(md.PathSetting.Base)] = Directory.GetCurrentDirectory();
+builder.Services.Configure<md.AuthSetting>(authsetting);
+builder.Services.Configure<md.PathSetting>(pathsetting);
 
 builder.Services.Configure<FormOptions>(opt =>
 {
@@ -166,10 +164,10 @@ builder.Services
             ValidateAudience = true,
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
-            ValidIssuer = authsetting[nameof(AuthSetting.Issuer)],
-            ValidAudience = authsetting[nameof(AuthSetting.Audience)],
+            ValidIssuer = authsetting[nameof(md.AuthSetting.Issuer)],
+            ValidAudience = authsetting[nameof(md.AuthSetting.Audience)],
             IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(authsetting[nameof(AuthSetting.Secret)] ?? "")
+                Encoding.UTF8.GetBytes(authsetting[nameof(md.AuthSetting.Secret)] ?? "")
             ),
 
         };

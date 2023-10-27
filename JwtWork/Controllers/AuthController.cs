@@ -1,24 +1,16 @@
-﻿using System;
+﻿using JwtWork.Abstraction;
+using JwtWork.Abstraction.Tools;
 using JwtWork.Hubs;
 using JwtWork.Models;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.SignalR;
-using Microsoft.Extensions.Logging;
-
-using System.Linq;
-
-using static JwtWork.Abstraction.Interfaces;
-using JwtWork.Abstraction.Tools;
 using JwtWork.SQLDB.Models;
 using Microsoft.AspNetCore.Authentication;
-using System.Collections.Generic;
-using System.Security.Claims;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
-using JwtWork.Abstraction.Models;
-using System.Reflection.Metadata;
-using JwtWork.Abstraction;
+using Microsoft.Extensions.Logging;
+using System.Threading.Tasks;
+
 
 namespace JwtWork.Controllers
 {
@@ -42,26 +34,26 @@ namespace JwtWork.Controllers
             jwtsvc = jwtmgr;
         }
         [HttpPost]
-        [ProducesResponseType(typeof(RefreshTokenState),StatusCodes.Status200OK)]
-        public async Task<IActionResult> Renew([FromBody]TokenState request)
+        [ProducesResponseType(typeof(md.RefreshTokenState),StatusCodes.Status200OK)]
+        public async Task<IActionResult> Renew([FromBody]md.TokenState request)
         {
-            var savedrefresh = HttpContext.Session.GetString(Constants.Session.REFRESHTOKEN);
-            var saveduserid = HttpContext.Session.GetString(Constants.Session.USERID);
+            var savedrefresh = HttpContext.Session.GetString(Session.REFRESHTOKEN);
+            var saveduserid = HttpContext.Session.GetString(Session.USERID);
 
             var user =await _context.UserTB.FirstOrDefaultAsync(e => e.UserId == saveduserid);
             if(user!=null && savedrefresh == request.Token && request.Token != null)
             {
                 var newtoken = jwtsvc.CreateToken(user);
-                return Ok(new RefreshTokenState { NewToken= newtoken,Status= Constants.Status.success });
+                return Ok(new md.RefreshTokenState { NewToken= newtoken,Status= Status.success });
             }
 
-            return Ok(new RefreshTokenState { Status = Constants.Status.failure });
+            return Ok(new md.RefreshTokenState { Status = Status.failure });
            
         }
 
         [HttpPost]
-        [ProducesResponseType(typeof(AuthUser), StatusCodes.Status200OK)]
-        public async Task<IActionResult> Login([FromBody]Credentials request)
+        [ProducesResponseType(typeof(md.RtAuthUser), StatusCodes.Status200OK)]
+        public async Task<IActionResult> Login([FromBody]md.ItCredentials request)
         {
             _logger.LogInformation("Login api is called.");
             var hasuser = await mgr.HasUser();
@@ -70,7 +62,7 @@ namespace JwtWork.Controllers
                 var registerError = await mgr.Register(request.UserName, request.Password);
                 if(!string.IsNullOrEmpty(registerError))
                 {
-                    return Ok(AuthUser.CreateFailureFor(request.UserName, registerError, false));
+                    return Ok(md.RtAuthUser.CreateFailureFor(request.UserName, registerError, false));
 
                 }
             }
@@ -80,13 +72,13 @@ namespace JwtWork.Controllers
 
             if(user==null)
             {
-                return Ok(AuthUser.CreateFailureFor(request.UserName, "No user found!", false));
+                return Ok(md.RtAuthUser.CreateFailureFor(request.UserName, "No user found!", false));
             }
 
             if (loginError!=null && loginError.Error.HasError())
             {
                 
-                return Ok(AuthUser.CreateFailureFor( request.UserName, loginError.Error,loginError.NeedNew)); 
+                return Ok(md.RtAuthUser.CreateFailureFor( request.UserName, loginError.Error,loginError.NeedNew)); 
             }
             
             await _hubContext.Clients.All.SendAsync(nameof(IUsersHub.UserLogin));
@@ -95,10 +87,10 @@ namespace JwtWork.Controllers
             
             var refreshtoken = TokenService.GenerateRefreshToken();
 
-            HttpContext.Session.SetString(Constants.Session.REFRESHTOKEN, refreshtoken);
-            HttpContext.Session.SetString(Constants.Session.USERID, user.UserId);
+            HttpContext.Session.SetString(Session.REFRESHTOKEN, refreshtoken);
+            HttpContext.Session.SetString(Session.USERID, user.UserId);
 
-            var authUser = new AuthUser(Constants.Status.success, token, refreshtoken, request?.UserName ?? "");
+            var authUser = new md.RtAuthUser(Status.success, token, refreshtoken, request?.UserName ?? "");
 
             return Ok(authUser);
         }

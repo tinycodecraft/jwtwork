@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Authorization;
 using JwtWork.PISDB.Models;
 
+
 namespace JwtWork.Controllers
 {
     [ApiController]
@@ -29,11 +30,11 @@ namespace JwtWork.Controllers
         });
 
         [HttpGet,Authorize]
-        public IEnumerable<WeatherForecast> WeatherForecasts(int startDateIndex)
+        public IEnumerable<md.RtWeatherForecast> WeatherForecasts(int startDateIndex)
         {
             var rng = new Random();
 
-            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
+            return Enumerable.Range(1, 5).Select(index => new md.RtWeatherForecast
             {
                 TemperatureC = rng.Next(-20, 55),
                 Summary = Summaries[rng.Next(Summaries.Length)],

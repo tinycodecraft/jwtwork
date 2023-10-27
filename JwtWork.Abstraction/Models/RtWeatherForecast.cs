@@ -1,18 +1,19 @@
-﻿using JwtWork.Resources;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace JwtWork.Models
+namespace JwtWork.Abstraction.Models
 {
-    public class WeatherForecast : IWeatherForecast //, IValidatableObject
+    public class RtWeatherForecast:IRtWeatherForecast
     {
-        public int     TemperatureC  { get; set; }
+        public int TemperatureC { get; set; }
         public string? DateFormatted { get; set; }
         //[Display(ResourceType = typeof(DisplayNameResource), Name = "SummaryOfWeather")]
         //[Required(ErrorMessageResourceType = typeof(ErrorMessageResource), ErrorMessageResourceName = "RequiredError")]
         //[StringLength(250, MinimumLength = 3, ErrorMessageResourceType = typeof(ErrorMessageResource), ErrorMessageResourceName = "StringLengthError")]
-        public string? Summary       { get; set; }
+        public string? Summary { get; set; }
 
         public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
 

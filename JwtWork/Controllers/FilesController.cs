@@ -8,9 +8,8 @@ using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using Microsoft.Net.Http.Headers;
 using System.IO;
-
 using System.Threading.Tasks;
-using static JwtWork.Abstraction.Interfaces;
+
 
 namespace GhostUI.Controllers
 {

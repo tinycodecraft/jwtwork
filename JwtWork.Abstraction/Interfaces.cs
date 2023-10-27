@@ -4,6 +4,30 @@ namespace JwtWork.Abstraction
 {
     public class Interfaces
     {
+        public interface IRtAuthUser
+        {
+            string Status { get; }
+            string Token { get; }
+            string RefreshToken { get; }
+            string UserName { get; }
+
+            string Error { get; }
+        }
+        public interface IItCredentials
+        {
+            string? UserName { get; set; }
+            string? Password { get; set; }
+            bool RememberMe { get; set; }
+        }
+
+        public interface IRtWeatherForecast
+        {
+            int Id { get; }
+            int TemperatureF { get; }
+            int TemperatureC { get; set; }
+            string? DateFormatted { get; set; }
+            string? Summary { get; set; }
+        }
 
         public interface IBelongtoTable
         {
