@@ -1,9 +1,11 @@
+/* eslint-disable camelcase */
 import { RadioProps } from "@mui/material";
 import React, { PropsWithChildren } from "react";
 import internal from "stream";
 import { type SingleValue } from 'react-select';
 import { type FileWithPath } from "@mantine/dropzone";
 import { ApiStatusEnum } from "src/config";
+import type { MRT_ColumnFiltersState, MRT_SortingState } from "mantine-react-table";
 
 export as namespace fragmentSps;
 
@@ -55,6 +57,39 @@ export type AuthUser = {
   needNew: boolean;
   connectionId?: string;
 };
+export type MantineQuery ={
+ type: string;
+ start: number;
+ size: number;
+ filtering?: MRT_ColumnFiltersState;
+ globalFilter?: string;
+ sorting?: MRT_SortingState;
+}
+export type DataVerseState = {
+  status: ApiStatusEnum;
+  total_count: number;
+  start: number;
+  data: DataVerseItem[] ;
+  error: string;
+  
+}
+export type DataVerseItem = Readonly<{
+  name: string;
+  description?: string;
+  type: string;
+  url?: string;
+  dataset_name: string;
+  file_id:string;
+  file_type:string;
+  file_content_type:string;
+  size_in_bytes:string;
+  published_at: Date;
+
+}>;
+export type ApiError = Readonly<{
+  error?:string;
+  status: ApiStatusEnum
+}>;
 
 export type AuthUserState = AuthUser & { isAuthenticated: boolean; };
 

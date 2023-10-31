@@ -2,15 +2,15 @@
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Threading;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+
 
 namespace JwtWork.Extensions
 {
 
     public static class JsonSerializerExtensions
     {
-        public static T? DeserializeAnonymousType<T>(string json, T anonymousTypeObject, JsonSerializerOptions? options = default)
-            => JsonSerializer.Deserialize<T>(json, options);
+        public static T? DeserializeAnonymousType<T>(this string json, T? anonymousTypeObject=default, JsonSerializerOptions? options = default) where T: class
+            => JsonSerializer.Deserialize<T>(json, options ?? new JsonSerializerOptions { PropertyNameCaseInsensitive = true, ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles });
 
 
         

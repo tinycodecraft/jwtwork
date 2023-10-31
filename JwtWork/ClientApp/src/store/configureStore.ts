@@ -2,6 +2,7 @@ import authReducer from './authSlice'
 import formReducer from './formSlice'
 import weatherReducer from './weatherSlice'
 import fileReducer from './uploadSlice'
+import verseReducer from './verseSlice'
 import { configureStore, combineReducers } from '@reduxjs/toolkit'
 import { setupListeners } from '@reduxjs/toolkit/query'
 
@@ -28,6 +29,7 @@ const rootReducer = combineReducers({
   form: formReducer,
   weather: weatherReducer,
   file: fileReducer,
+  verse: verseReducer,
 })
 const persistedReducer = persistReducer<ReturnType<typeof rootReducer>>(persistConfig, rootReducer)
 

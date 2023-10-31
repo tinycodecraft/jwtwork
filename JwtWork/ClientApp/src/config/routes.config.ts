@@ -1,6 +1,6 @@
 import type { ComponentType } from 'react';
 import type { Params } from 'react-router-dom';
-import { Login, Dashboard, FetchData, Form,Quillboard, DndBoard } from 'src/containers';
+import { Login, Dashboard, FetchData, Form,Quillboard, DndBoard, MantineVerse } from 'src/containers';
 import type { IconProp } from '@fortawesome/fontawesome-svg-core';
 
 
@@ -81,5 +81,17 @@ export const Routes: Route[] = [
       startDateIndex: '0'
     },
     iconIndex:4,
-  }
+  },
+  {
+    showInNav: true,
+    name: 'Data Verse',
+    path: '/verse/:startIndex',
+    Component: MantineVerse,
+    transition: TRANSITION_DEFAULT,
+    params: {
+      startIndex: '0'
+    },
+    iconIndex: 5
+
+  },
 ];

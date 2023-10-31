@@ -14,11 +14,14 @@ import { Toaster } from 'react-hot-toast';
 import { ThemeProvider } from '@material-tailwind/react';
 import { PersistGate } from 'redux-persist/integration/react';
 import { canWait } from './utils';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
 
 registerIcons();
 
 const container = document.getElementById('root');
 const root = createRoot(container as HTMLElement);
+const query = new QueryClient()
 
 function AppRenderer() {
   useEffect(() => {
@@ -33,7 +36,9 @@ function AppRenderer() {
   return (
     <Fragment>
       <BrowserRouter basename={process.env.PUBLIC_URL}>
+        <QueryClientProvider client={query} >
         <Provider store={store}>
+          
           <PersistGate loading={null} persistor={persistor}>
             {/* Strict Mode only enable for Development, Please remove it for Production */}
           <StrictMode>
@@ -44,6 +49,7 @@ function AppRenderer() {
           </PersistGate>
 
         </Provider>
+        </QueryClientProvider>
       </BrowserRouter>
       <ToastContainer {...toastifyProps} />
       <Toaster />

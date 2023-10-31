@@ -1,5 +1,6 @@
+/* eslint-disable camelcase */
 import type { AnchorHTMLAttributes } from 'react';
-import type { SelectOption,WeatherState,FormState, AuthUserState, UploadState } from 'src/fragments/types';
+import type { SelectOption,WeatherState,FormState, AuthUserState, UploadState, DataVerseState } from 'src/fragments/types';
 
 
 export const ApiStatusEnum = {
@@ -70,4 +71,13 @@ export const UploadStateInit: UploadState = {
   connectionId: '',
   status: ApiStatusEnum.NONE,
   progress: 0,
+}
+
+export const DataVerseStateInit: DataVerseState = {
+  data:[],
+  status: ApiStatusEnum.NONE,
+  start: -1,
+  total_count:0,
+  error: ''
+
 }

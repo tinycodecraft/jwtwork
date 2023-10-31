@@ -4,3 +4,4 @@ export { default as Dashboard } from './Dashboard';
 export { default as FetchData } from './FetchData';
 export { default as Quillboard } from './Quillboard/';
 export { default as DndBoard} from './Dndboard'
+export { default as MantineVerse} from './MantineVerse'
