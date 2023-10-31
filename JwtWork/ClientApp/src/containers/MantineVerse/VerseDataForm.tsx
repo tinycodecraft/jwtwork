@@ -18,7 +18,7 @@ export const VerseDataForm = () => {
         {
             dispatch(getDataVerseAsync({type:'file',size:20, start }))
         }
-    },[dispatch,nextStartIndex,start])
+    },[])
 
   return (
     <div>VersDataForm</div>

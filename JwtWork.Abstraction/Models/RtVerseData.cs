@@ -55,6 +55,6 @@ namespace JwtWork.Abstraction.Models
         public int total_count { get; set; }
         public int start { get; set; }
         
-        public RtItem[] items { get; set;}=new RtItem[0];
+        public RtItem[] data { get; set;}=new RtItem[0];
     }
 }

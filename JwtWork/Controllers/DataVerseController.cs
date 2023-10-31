@@ -53,9 +53,9 @@ namespace GhostUI.Controllers
                         {
                             result = new RtDTOVerseData
                             {
-                                status = rtResult.status,
+                                status = rtResult.status == "OK" ? "success": "failure",
                                 total_count = rtResult.data.total_count,
-                                items = rtResult.data.items,
+                                data = rtResult.data.items,
                                 start = newstart + query.Size,
                             };
                         }
