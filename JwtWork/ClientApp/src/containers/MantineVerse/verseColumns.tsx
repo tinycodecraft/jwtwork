@@ -2,7 +2,7 @@
 import type { MRT_ColumnDef } from "mantine-react-table";
 import type { DataVerseItem } from "src/fragments/types";
 
-export const columns : MRT_ColumnDef<DataVerseItem>[]= [
+export const verseColumns : MRT_ColumnDef<DataVerseItem>[]= [
     {
         accessorKey: 'name',
         header: 'File Name',
