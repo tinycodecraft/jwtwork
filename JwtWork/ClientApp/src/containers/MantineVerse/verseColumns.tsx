@@ -46,7 +46,7 @@ export const verseColumns : MRT_ColumnDef<DataVerseItem>[]= [
             const datevalue = cell.getValue<Date>();
             console.log(`date value is :`,datevalue)
             if(datevalue)
-                return dayjs(datevalue).format('YYYY-MM-DD');
+                return dayjs(datevalue).format('DD/MM/YYYY');
             return '';
 
         },

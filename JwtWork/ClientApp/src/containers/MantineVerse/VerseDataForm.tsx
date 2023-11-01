@@ -86,6 +86,10 @@ export const VerseDataForm = () => {
       color: 'red',
       children: 'Error loading data',
     },
+    mantineFilterDateInputProps: {
+      valueFormat: 'DD/MM/YYYY',
+      // maxDate, minDate, dateParser
+    },
     onColumnFiltersChange: setFiltering,
     onGlobalFilterChange: setGlobalFilter,
     onSortingChange: setSorting,
