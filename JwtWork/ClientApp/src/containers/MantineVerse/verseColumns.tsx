@@ -20,6 +20,7 @@ export const verseColumns : MRT_ColumnDef<DataVerseItem>[]= [
         accessorKey: 'published_at',
         id:'published_at',
         header: 'Published Date',
+        // even filterFn provided, the filter will not be used for manual filtering enabled. (server data)
         filterFn: (row,_colIds,filtervalue,meta)=> {
             console.log(`the value here `,filtervalue,` with `,meta)
             const datevalue = row.getValue<Date>('published_at');
