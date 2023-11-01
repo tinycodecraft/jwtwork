@@ -41,6 +41,7 @@ namespace GhostUI.Controllers
                 url= url.AddQuery("q", query.GlobalFilter ?? "*");
                 url= url.AddQuery("start", $"{newstart}");
                 url= url.AddQuery("per_page", $"{query.Size}");
+                url = url.AddQuery("type", query.Type);
                 
                 using(var response = await cl.GetAsync(url))
                 {
