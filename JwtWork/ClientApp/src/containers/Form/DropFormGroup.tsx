@@ -62,9 +62,9 @@ export const DropFormGroup: FunctionComponent = (props: Partial<DropzoneProps>) 
   return (
     <div className='column'>
       <div className='level-right'>
-        <p className='level-item'>
+        <div className='level-item'>
           <h3 className='title is-4'>File Drop Zone</h3>
-        </p>
+        </div>
         <p className='level-item gap-1'>
           <a className='button is-success' {...{ disabled: !files || files.length == 0 || dropstatus !== ApiStatusEnum.NONE }} ref={uploadRef}>
             Upload
