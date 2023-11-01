@@ -17,7 +17,7 @@ namespace JwtWork.Abstraction.Models
     public class ItFilter
     {
         public string Id { get; set; }  
-        public string Value { get; set; }
+        public dynamic Value { get; set; }
     }
 
     public class ItMantineQuery

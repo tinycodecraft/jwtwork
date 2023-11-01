@@ -33,6 +33,7 @@ export const VerseDataContextProvider = ({ children, fetchSize }: { children: Re
     queryKey: ['table-verse', columnFilters, globalFilter, sorting],
     getNextPageParam: (_lastGroup, groups) => groups.length,
     queryFn: async ({ pageParam = 0 }) => {
+      console.log(`the true filter values `, columnFilters);
       const response = await VerseApi.getDataVerseAsync({
         start: pageParam * fetchSize,
         size: fetchSize,

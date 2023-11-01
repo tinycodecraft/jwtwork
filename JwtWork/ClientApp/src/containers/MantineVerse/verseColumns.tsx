@@ -18,7 +18,30 @@ export const verseColumns : MRT_ColumnDef<DataVerseItem>[]= [
     },
     {
         accessorKey: 'published_at',
+        id:'published_at',
         header: 'Published Date',
+        filterFn: (row,_colIds,filtervalue,meta)=> {
+            console.log(`the value here `,filtervalue,` with `,meta)
+            const datevalue = row.getValue<Date>('published_at');
+            const datestring = dayjs(datevalue ).format('YYYYMMDD');
+            let lowervalue = '19000101';
+            let uppervalue = '39990101';
+            if(filtervalue && filtervalue instanceof Array)
+            {
+                if(filtervalue.length >1)
+                {
+                    lowervalue= dayjs( filtervalue[0]).format('YYYYMMDD');
+                    uppervalue= dayjs( filtervalue[1]).format('YYYYMMDD');
+                }
+            }
+            else {
+                lowervalue =  dayjs( filtervalue).format('YYYYMMDD');
+            }
+            
+            return datestring >=lowervalue && datestring< uppervalue;
+
+        },
+        filterVariant: 'date-range',
         Cell: ({cell}) => {
             const datevalue = cell.getValue<Date>();
             console.log(`date value is :`,datevalue)
