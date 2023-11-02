@@ -98,7 +98,7 @@ const LoginForm: FunctionComponent = () => {
 
   return (
     <section className='section section-login'>
-      <div className='container has-text-centered'>
+      <div className='container is-widescreen has-text-centered'>
         <div className='column is-4 is-offset-4'>
           <h3 className='title font-fira'>Login</h3>
           <p className='subtitle'>Please login to proceed</p>
