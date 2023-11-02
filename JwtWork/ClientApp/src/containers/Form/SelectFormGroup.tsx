@@ -25,6 +25,9 @@ const SelectFormGroup: FunctionComponent = () => {
       <h3 className="title is-4">Dropdown</h3>
       <h5 className="subtitle is-5">Select options from the dropdown</h5>
       <div className="field form-control-group">
+      <p className="subtitle is-5">
+        Value: <code className="form-value">{selectedOption?.label}</code>
+      </p>
         <Select
           styles={{
             dropdownIndicator: (base, state) => ({
@@ -57,9 +60,7 @@ const SelectFormGroup: FunctionComponent = () => {
           onChange={onOptionChange}
         />
       </div>
-      <p className="subtitle is-5">
-        Value: <code className="form-value">{selectedOption?.label}</code>
-      </p>
+
     </div>
   );
 };
