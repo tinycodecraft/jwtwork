@@ -22,7 +22,7 @@ export const verseColumns : MRT_ColumnDef<DataVerseItem>[]= [
         header: 'Published Date',
         // even filterFn provided, the filter will not be used for manual filtering enabled. (server data)
         filterFn: (row,_colIds,filtervalue,meta)=> {
-            console.log(`the value here `,filtervalue,` with `,meta)
+            // console.log(`the value here `,filtervalue,` with `,meta)
             const datevalue = row.getValue<Date>('published_at');
             const datestring = dayjs(datevalue ).format('YYYYMMDD');
             let lowervalue = '19000101';
@@ -45,7 +45,7 @@ export const verseColumns : MRT_ColumnDef<DataVerseItem>[]= [
         filterVariant: 'date-range',
         Cell: ({cell}) => {
             const datevalue = cell.getValue<Date>();
-            console.log(`date value is :`,datevalue)
+            
             if(datevalue)
                 return dayjs(datevalue).format('DD/MM/YYYY');
             return '';
