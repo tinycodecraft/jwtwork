@@ -17,6 +17,7 @@ export const Row = styled.div`
   display: flex;
   flex-direction: row;
   gap: 10px;
+
   `
 
 export const Col = styled.div<{ width?: string }>`

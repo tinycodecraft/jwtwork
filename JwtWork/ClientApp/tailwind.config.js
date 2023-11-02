@@ -11,7 +11,17 @@ module.exports = withMT({
         vibe: ["Great Vibes", "cursive"],
         monr: ["Montserrat"],
         fira: ["Fira Code", "New Times Roman"] 
+      },
+      container: {
+        screens: {
+          sm: '640px',
+          md: '768px',
+          lg: '1024px',
+          xl: '1280px',
+          '2xl': '1496px',
+        }
       }
+
     },
   },
   plugins: [],

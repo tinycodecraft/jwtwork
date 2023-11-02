@@ -21,6 +21,7 @@ export type Route = Readonly<{
   Component: RouteComponent;
   params?: Readonly<Params<string>>;
   iconIndex? : number;
+  
 }>;
 
 export const Routes: Route[] = [

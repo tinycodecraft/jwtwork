@@ -5,7 +5,7 @@ import { useCSSTransitionProps } from 'src/utils';
 import { useLocation, Route, Routes } from 'react-router-dom';
 import { CSSTransition, SwitchTransition } from 'react-transition-group';
 import { Dashboard } from './containers';
-import { Container } from '@mantine/core';
+
 
 
 
@@ -18,11 +18,11 @@ const App: FunctionComponent = () => {
   return (
     <Layout>
       <SwitchTransition mode="out-in">
-        <CSSTransition {...cssProps} nodeRef={nodeRefs.length> refIndex ? nodeRefs[refIndex]: null}>
+        <CSSTransition {...cssProps} nodeRef={nodeRefs[refIndex]}>
           <Routes location={location}>
             {routes.map(({ path, Component,name, ...rest },index) => {
               nodeRefs[index] = useRef(null)
-              const ForwComponent =forwardRef<HTMLDivElement>((props,ref)=> (<Container size={'xl'} ref={ref}><Component {...props}  /></Container>));
+              const ForwComponent =forwardRef<HTMLDivElement>((props,ref)=> (<div className='container' ref={ref}><Component {...props}  /></div>));
               ForwComponent.displayName = `${name}Forwarded`;
               return (<Route
                 key={path}
