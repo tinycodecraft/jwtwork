@@ -40,8 +40,20 @@ namespace JwtWork.Abstraction.Tools
     public static class UtilExtensions
     {
 
+        /// <summary>
+        /// Creates a byte array from the string, using the 
+        /// System.Text.Encoding.Default encoding unless another is specified.
+        /// </summary>
+        /// <param name="str">The str<see cref="string"/>.</param>
+        /// <param name="encoding">The encoding<see cref="Encoding"/>.</param>
+        /// <returns>The <see cref="byte[]"/>.</returns>
+        public static byte[] ToByteArray(string str, Encoding encoding = null)
+        {
+            if (encoding == null)
+                encoding = Encoding.Default;
+            return encoding.GetBytes(str);
+        }
 
-        
 
         public static async Task CopyToAsync(this Stream source, Stream destination, IProgress<long> progress, CancellationToken cancellationToken = default(CancellationToken), int bufferSize = 0x1000)
         {

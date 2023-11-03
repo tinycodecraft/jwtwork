@@ -5,6 +5,7 @@ export const ClockSlider = () => {
   const [pointers, setPointers] = useState<ISettingsPointer[]>([{ value: 0 }])
   return (
     <RoundSlider
+      
       pointers={pointers}
       onChange={setPointers}
       textColor={'#8993B7'}

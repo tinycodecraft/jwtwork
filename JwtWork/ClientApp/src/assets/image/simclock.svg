@@ -1,0 +1,19 @@
+<svg width="200" height="200">
+    <g>
+          <path class="path-vert" fill="#01a09e" stroke-width="3" stroke="#01a09e" d="M100 100 h100"/>
+        <line x1="100" y1="100" x2="100" y2="55" transform="rotate(80 100 100)"
+            style="stroke-width: 3px; stroke: #fffbf9;" id="hourhand">
+            <animatetransform attributeName="transform" attributeType="XML" type="rotate" dur="43200s"
+                repeatCount="indefinite" />
+        </line>
+        <line x1="100" y1="100" x2="100" y2="40" style="stroke-width: 4px; stroke: #fdfdfd;" transform="rotate(80 100 100)" id="minutehand">
+            <animatetransform attributeName="transform" attributeType="XML" type="rotate" dur="3600s"
+                repeatCount="indefinite" />
+        </line>
+        <line x1="100" y1="100" x2="100" y2="30" style="stroke-width: 2px; stroke: #C1EFED;" transform="rotate(80 100 100)" id="secondhand">
+            <animatetransform attributeName="transform" attributeType="XML" type="rotate" dur="60s"
+                repeatCount="indefinite" />
+        </line>
+    </g>
+    <circle id="center" style="fill:#128A86; stroke: #C1EFED; stroke-width: 2px;" cx="100" cy="100" r="3"></circle>
+</svg>

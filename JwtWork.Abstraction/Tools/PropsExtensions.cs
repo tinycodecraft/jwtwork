@@ -22,6 +22,29 @@ namespace JwtWork.Abstraction.Tools
     public static class SubStringExtensions
     {
 
+        public static Dictionary<string, string> ZipStrPair(string values, string fields, string sep = "!")
+        {
+            if (string.IsNullOrEmpty(values) || string.IsNullOrEmpty(fields))
+                return new Dictionary<string, string>();
+
+            var valuelist = values.Split(sep.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            var fieldlist = fields.Split(sep.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            if (fieldlist.Length > 0)
+
+                return fieldlist.Select((v, i) => new KeyValuePair<string, string>(v, valuelist[i])).ToDictionary(e => e.Key, e => e.Value);
+
+            return new Dictionary<string, string>();
+        }
+
+        public static string ItRevertAmpSign(this string str, string sub = "--")
+        {
+            return (str ?? "").Replace("&", "--");
+        }
+        public static string ItRestoreAmpSign(this string str, string sub = "--")
+        {
+            return (str ?? "").Replace("--", "&");
+        }
+
         public static dynamic GetDynamicObjFromJSON(string jsonvalues)
         {           
             var d = JsonSerializer.Deserialize<dynamic>(jsonvalues);
@@ -189,6 +212,17 @@ namespace JwtWork.Abstraction.Tools
 
     public static class PropsExtensions
     {
+
+
+        public static DateTime ParseDateOrDefault(string datestr, string fmt, DateTime defaultval)
+        {
+            var newvalue = defaultval;
+            var success = DateTime.TryParseExact(datestr, fmt, null, System.Globalization.DateTimeStyles.None, out newvalue);
+            if (success)
+                return newvalue;
+            return defaultval;
+
+        }
 
         public static bool IsInteger(this string s)
         {

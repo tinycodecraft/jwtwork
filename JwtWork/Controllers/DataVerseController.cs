@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Specialized;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -28,6 +30,23 @@ namespace GhostUI.Controllers
             _logger.LogInformation("Data Verse Controller being invoked (for querying mantine table clients).");
         }
 
+        //Just test the code , work on sort and filter
+
+        //private dynamic[] TestSort()
+        //{
+        //    var filters = new NameValueCollection();
+        //    filters.AddQueryParam(_db.PSJob, e => e.JobTitle, "%fully%");
+           
+                
+        //    var query = _db.GetSearch<PSJob>(filters).ToList();
+
+        //    var querysort = _db.PSJob.BuildOrder(new SortDescription { Direction = System.ComponentModel.ListSortDirection.Ascending, PropertyName = nameof(PSJob.JobTitle) });
+
+        //    return query.ToArray();
+            
+
+            
+        //}
 
         [HttpPost]
         [ProducesResponseType(typeof(md.RtDTOVerseData),StatusCodes.Status200OK)]
@@ -35,6 +54,7 @@ namespace GhostUI.Controllers
         {
             var result = new RtDTOVerseData() { start=0, status="failure", total_count=0};
             var url = new Uri("https://demo.dataverse.org/api/search");
+            //var withdata = TestSort();
             using (var cl =new HttpClient())
             {
                 var newstart = query.Start < 0 ? 0 : query.Start;

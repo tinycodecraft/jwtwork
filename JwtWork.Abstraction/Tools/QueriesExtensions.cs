@@ -97,9 +97,10 @@ namespace JwtWork.Abstraction.Tools
         public static readonly MethodInfo ContainsMethod = MethodOf(() => "".Contains(default(string)));
         public static readonly MethodInfo StartsWithMethod = MethodOf(() => "".StartsWith(default(string)));
         public static readonly MethodInfo EndsWithMethod = MethodOf(() => "".EndsWith(default(string)));
+        public static readonly MethodInfo QyLikeMethod = MethodOf(()=> EF.Functions.Like(default(string),default(string)));
         public static readonly MethodInfo AnyMethod = MethodOf(() => Enumerable.Any(default(IEnumerable<object>), default(Func<object, bool>))).GetGenericMethodDefinition();
 
-        public static readonly MethodInfo LikeMethod = typeof(DbFunctionsExtensions).GetMethod("Like", new[] { typeof(DbFunctions), typeof(string), typeof(string) });
+        //public static readonly MethodInfo LikeMethod = typeof(DbFunctionsExtensions).GetMethod("Like", new[] { typeof(DbFunctions), typeof(string), typeof(string) });
 
         public static MethodInfo MethodOf<T>(Expression<Func<T>> method)
         {
@@ -111,26 +112,44 @@ namespace JwtWork.Abstraction.Tools
             return mi;
         }
 
-        public static NameValueCollection AddQueryParam<T,V>(this NameValueCollection nv, Expression<Func<T, V>> GetPropertyLambda,string op,string value)
+        public static NameValueCollection AddQueryParam<T,V>(this NameValueCollection nv,IQueryable<T> query, Expression<Func<T, V>> GetPropertyLambda,string value,string op="ct",string sep="|")
         {
             if(nv== null)
                 nv = new NameValueCollection();
             var MemberName = GetPropertyLambda.GetMemberName();
             if (string.IsNullOrEmpty(value))
                 return nv;
+            string value1 = value;
+            string value2 = string.Empty;
+            if(value.Contains(sep))
+            {
+                value2 = value.Substring(value.IndexOf(sep)+1);
+                value1 = value.Substring(0,value.IndexOf(sep));
+
+            }
+
             switch(op)
             {
+                case ">=":
                 case "gte":
                     nv.Add($"__{nameof(QueryOpType.GreaterOrEq)}__{MemberName}", value);
                     break;
+                case "<=":
                 case "lte":
                     nv.Add($"__{nameof(QueryOpType.LessOrEq)}__{MemberName}", value);
                     break;
-                case "lt":
+                case "<":
+                case "lt":                   
                     nv.Add($"__{nameof(QueryOpType.Less)}__{MemberName}", value);
                     break;
                 case "ct":
                     nv.Add($"__{nameof(QueryOpType.LikesWith)}__{MemberName}", value);
+                    break;
+                case "bw":
+                    if (!string.IsNullOrEmpty(value1))
+                        nv.Add($"__{nameof(QueryOpType.GreaterOrEq)}__{MemberName}", value1);
+                    if (!string.IsNullOrEmpty(value2))
+                        nv.Add($"__{nameof(QueryOpType.LessOrEq)}__{MemberName}", value2);
                     break;
                 case "bt":
                     nv.Add($"__{nameof(QueryOpType.StartsWith)}__{MemberName}", value);
@@ -148,6 +167,7 @@ namespace JwtWork.Abstraction.Tools
 
             return nv;
         }
+
 
 
 
@@ -170,6 +190,47 @@ namespace JwtWork.Abstraction.Tools
                 new ResolveParameterVisitor(modelParameterEx, model)
                 .ResolveLocalValues(expression.Body), expression.Parameters.Where(p => p != modelParameterEx));
             return newExpression;
+        }
+
+
+        public static IQueryable<T> BuildOrder<T>(this IQueryable<T> source, params SortDescription[] properties)
+        {
+            if (properties == null || properties.Length == 0) return source;
+
+            var thenBy = false;
+            var queryExpr = source.Expression;
+            var worktype = typeof(T);
+            foreach (var item in properties
+                .Select(prop => new { PropertyInfo = worktype.GetProperty(prop.PropertyName, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance), prop.Direction }))
+            {
+                var paremeterExpr = Expression.Parameter(worktype, "o");
+                var propertyInfo = item.PropertyInfo;
+                //property = "SomeProperty"
+                var propertyExpr = Expression.Property(paremeterExpr, item.PropertyInfo);
+                var selectorExpr = Expression.Lambda(propertyExpr, paremeterExpr);
+                var propertyType = propertyInfo.PropertyType;
+                var isAscending = item.Direction == ListSortDirection.Ascending;
+                var currentOrderIs = !thenBy ? nameof(QueryOpType.OrderBy) : nameof(QueryOpType.ThenBy);
+
+
+                queryExpr = Expression.Call(
+                        //type to call method on
+                        typeof(Queryable),
+                        //method to call
+                        isAscending ? currentOrderIs : $"{currentOrderIs}Descending",
+                        //generic types of the order by method
+                        new Type[] {
+                source.ElementType,
+                propertyType },
+                        //existing expression to call method on
+                        queryExpr,
+                        //method parameter, in our case which property to order on
+                        selectorExpr);
+
+                thenBy = true;
+
+            }
+            return source.Provider.CreateQuery<T>(queryExpr);
         }
 
         /// <summary>
@@ -242,9 +303,9 @@ namespace JwtWork.Abstraction.Tools
 
 
 
-            var criterionConstant = new Expression[] { Expression.Constant(searchString) };
+            var criterionConstant = new Expression[] { Expression.Constant(searchString),Expression.Constant($"%{searchString}%") };
             // Create the MethodCallExpression like x.firstName.Contains(criterion)
-            MethodInfo methodHandler = LikeMethod;
+            MethodInfo methodHandler = QyLikeMethod;
             #region
             switch (methodCall)
             {
@@ -255,17 +316,30 @@ namespace JwtWork.Abstraction.Tools
                     methodHandler = EndsWithMethod;
                     break;
                 default:
-                    methodHandler = LikeMethod;
+                    methodHandler = QyLikeMethod;
                     break;
             }
             #endregion
-            //methodHandler = typeof(System.Data.Linq.SqlClient.SqlMethods).GetMethods().Where(x => x.Name == "Like").First();
-            var containsCall = Expression.Call(methodHandler, criterionConstant[0], dbFieldMember);
-            // Create a lambda like x => x.firstName.Contains(criterion)
-            //var lambda = Expression.Lambda(containsCall, dbTypeParameter) ;
-            // Apply!            
 
-            return containsCall;
+            if (methodCall != QueryOpType.LikesWith)
+            {
+                var containsCall = Expression.Call(methodHandler, criterionConstant[0], dbFieldMember);
+                return containsCall;
+            }
+            else
+            {
+                //The following code example is also valid
+                //var containsCall = Expression.Call(typeof(DbFunctionsExtensions), nameof(DbFunctionsExtensions.Like), null, Expression.Constant(EF.Functions), dbFieldMember, criterionConstant[0]);
+                var containsCall = Expression.Call(QyLikeMethod,
+                                    Expression.Property(null, typeof(EF), nameof(EF.Functions)), dbFieldMember, criterionConstant[1]);
+
+
+                return containsCall;
+            }
+
+
+
+
         }
 
 
@@ -428,7 +502,7 @@ namespace JwtWork.Abstraction.Tools
             return Expression.Parameter(paramtype, symbol);
         }
 
-        public static IQueryable GetSearch<T>(this DbContext MyContext, NameValueCollection nv) where T : class
+        public static IQueryable<T> GetSearch<T>(this DbContext MyContext, NameValueCollection nv) where T : class
         {
 
             var exprbase = CreateBaseExpr(typeof(T));
@@ -436,7 +510,7 @@ namespace JwtWork.Abstraction.Tools
             var query = MyContext.Set<T>().AsQueryable() as IQueryable;
             query = query.Search(exprbase, nv, null);
 
-            return query;
+            return query as IQueryable<T>;
 
         }
 
