@@ -35,17 +35,18 @@ namespace GhostUI.Controllers
         //private dynamic[] TestSort()
         //{
         //    var filters = new NameValueCollection();
-        //    filters.AddQueryParam(_db.PSJob, e => e.JobTitle, "%fully%");
-           
-                
-        //    var query = _db.GetSearch<PSJob>(filters).ToList();
+        //    filters.AddQueryParam(_db.PSJob, e => e.JobTitle, "foo").AddQueryParam(_db.PSJob, e => e.JobNo, String.Join("|","S5","S7","S336","S35") , Op.Within); ;
+            
 
-        //    var querysort = _db.PSJob.BuildOrder(new SortDescription { Direction = System.ComponentModel.ListSortDirection.Ascending, PropertyName = nameof(PSJob.JobTitle) });
+
+        //    var query = _db.GetSearch<PSJob>(filters);
+
+        //    query= query.BuildOrder(new SortDescription { Direction = System.ComponentModel.ListSortDirection.Ascending, PropertyName = nameof(PSJob.JobTitle) });
 
         //    return query.ToArray();
-            
 
-            
+
+
         //}
 
         [HttpPost]
@@ -54,7 +55,15 @@ namespace GhostUI.Controllers
         {
             var result = new RtDTOVerseData() { start=0, status="failure", total_count=0};
             var url = new Uri("https://demo.dataverse.org/api/search");
-            //var withdata = TestSort();
+            //try
+            //{
+            //    var withdata = TestSort();
+            //}
+            //catch(Exception ex)
+            //{
+            //    _logger.LogError(ex, ex.Message);
+            //}
+            
             using (var cl =new HttpClient())
             {
                 var newstart = query.Start < 0 ? 0 : query.Start;

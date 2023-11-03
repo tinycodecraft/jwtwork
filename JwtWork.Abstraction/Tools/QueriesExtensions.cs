@@ -119,7 +119,7 @@ namespace JwtWork.Abstraction.Tools
             return mi;
         }
 
-        public static NameValueCollection AddQueryParam<T,V>(this NameValueCollection nv,IQueryable<T> query, Expression<Func<T, V>> GetPropertyLambda,string value,string op="ct",string sep="|")
+        public static NameValueCollection AddQueryParam<T,V>(this NameValueCollection nv,IQueryable<T> query, Expression<Func<T, V>> GetPropertyLambda,string value,string op=Op.itLikes,string sep="|")
         {
             if(nv== null)
                 nv = new NameValueCollection();
@@ -142,36 +142,36 @@ namespace JwtWork.Abstraction.Tools
             switch(op)
             {
                 case ">=":
-                case "gte":
+                case Op.greaterThanOrEqual:
                     nv.Add($"__{nameof(QueryOpType.GreaterOrEq)}__{MemberName}", value);
                     break;
                 case "<=":
-                case "lte":
+                case Op.lessThanOrEqual:
                     nv.Add($"__{nameof(QueryOpType.LessOrEq)}__{MemberName}", value);
                     break;
                 case "<":
-                case "lt":                   
+                case  Op.lessThan:                   
                     nv.Add($"__{nameof(QueryOpType.Less)}__{MemberName}", value);
                     break;
-                case "ct":
+                case Op.itLikes:
                     nv.Add($"__{nameof(QueryOpType.LikesWith)}__{MemberName}", value);
                     break;
-                case "bw":
+                case Op.Between:
                     if (!string.IsNullOrEmpty(value1))
                         nv.Add($"__{nameof(QueryOpType.GreaterOrEq)}__{MemberName}", value1);
                     if (!string.IsNullOrEmpty(value2))
                         nv.Add($"__{nameof(QueryOpType.LessOrEq)}__{MemberName}", value2);
                     break;
-                case "bt":
+                case Op.BeginWith:
                     nv.Add($"__{nameof(QueryOpType.StartsWith)}__{MemberName}", value);
                     break;
-                case "et":
+                case Op.EndWith:
                     nv.Add($"__{nameof(QueryOpType.EndsWith)}__{MemberName}", value);
                     break;
-                case "in":
+                case Op.Within:
                     nv.Add($"__{nameof(QueryOpType.ContainsWith)}__{MemberName}", value);
                     break;
-                case "at":
+                case Op.CheckListIn:
                     nv.Add($"__{nameof(QueryOpType.InListOp)}__{MemberName}", value);
                     break;
                 default:
@@ -390,9 +390,9 @@ namespace JwtWork.Abstraction.Tools
 
                 object paramValue = Convert.ChangeType(nvSetValues[key], PropsExtensions.BaseType(columnProperty.PropertyType));
                 MemberExpression columnExpr = Expression.Property(exprBase, columnProperty);
-                //barbara
-                if (paramValue.ToString().Contains("%") || paramValue.ToString().Contains("_"))
-                    functionKey = nameof(QueryOpType.LikesWith);
+                ////barbara
+                //if (paramValue.ToString().Contains("%") || paramValue.ToString().Contains("_"))
+                //    functionKey = nameof(QueryOpType.LikesWith);
 
 
                 QueryOpType funcKeyType = SubStringExtensions.GetEnum<QueryOpType>(functionKey);

@@ -22,6 +22,20 @@ namespace JwtWork.Abstraction
             OrderBy,
             ThenBy,
         }
+
+        public static class Op
+        {
+            public const string greaterThanOrEqual = "gte";
+            public const string lessThanOrEqual = "lte";
+            public const string lessThan = "lt";
+            public const string itLikes = "ct";
+            public const string Between = "bw";
+            public const string BeginWith = "bt";
+            public const string EndWith = "et";
+            public const string Within = "in";
+            public const string CheckListIn = "at";
+        }
+
         public static class Status
         {
             public const string success = nameof(success);
