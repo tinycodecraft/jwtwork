@@ -12,6 +12,7 @@ namespace JwtWork.Abstraction
         {
             StartsWith,
             EndsWith,
+            ContainsWith,
             LikesWith,
             NotEq,
             GreaterOrEq,

@@ -93,7 +93,7 @@ namespace JwtWork.Abstraction.Tools
     public static class QueriesExtensions
 
     {
-
+        public static readonly MethodInfo InListMethod = MethodsOf((IEnumerable<string> q) => q.Contains((string)null));
         public static readonly MethodInfo ContainsMethod = MethodOf(() => "".Contains(default(string)));
         public static readonly MethodInfo StartsWithMethod = MethodOf(() => "".StartsWith(default(string)));
         public static readonly MethodInfo EndsWithMethod = MethodOf(() => "".EndsWith(default(string)));
@@ -102,6 +102,13 @@ namespace JwtWork.Abstraction.Tools
 
         //public static readonly MethodInfo LikeMethod = typeof(DbFunctionsExtensions).GetMethod("Like", new[] { typeof(DbFunctions), typeof(string), typeof(string) });
 
+        public static MethodInfo MethodsOf<E,T>(Expression<Func<E,T>> method)
+        {
+            MethodCallExpression mce = (MethodCallExpression)method.Body;
+            MethodInfo mi = mce.Method;
+
+            return mi;
+        }
         public static MethodInfo MethodOf<T>(Expression<Func<T>> method)
         {
             
@@ -121,11 +128,15 @@ namespace JwtWork.Abstraction.Tools
                 return nv;
             string value1 = value;
             string value2 = string.Empty;
-            if(value.Contains(sep))
+            if(value.Contains(sep) && op=="bw")
             {
                 value2 = value.Substring(value.IndexOf(sep)+1);
                 value1 = value.Substring(0,value.IndexOf(sep));
 
+            }
+            else if(value.Contains(sep) && op=="in")
+            {
+                value = string.Join("||", value.ItSplit(sep));
             }
 
             switch(op)
@@ -156,6 +167,9 @@ namespace JwtWork.Abstraction.Tools
                     break;
                 case "et":
                     nv.Add($"__{nameof(QueryOpType.EndsWith)}__{MemberName}", value);
+                    break;
+                case "in":
+                    nv.Add($"__{nameof(QueryOpType.ContainsWith)}__{MemberName}", value);
                     break;
                 case "at":
                     nv.Add($"__{nameof(QueryOpType.InListOp)}__{MemberName}", value);
@@ -303,19 +317,27 @@ namespace JwtWork.Abstraction.Tools
 
 
 
-            var criterionConstant = new Expression[] { Expression.Constant(searchString),Expression.Constant($"%{searchString}%") };
+            var criterionConstant = new Expression[] { Expression.Constant(searchString),Expression.Constant($"%{searchString}%"),Expression.Constant(searchString.ItSplit("||")) };
             // Create the MethodCallExpression like x.firstName.Contains(criterion)
             MethodInfo methodHandler = QyLikeMethod;
+            int constantIndex = 0;
             #region
             switch (methodCall)
             {
+                case QueryOpType.ContainsWith:
+                    constantIndex = 2;
+                    methodHandler = InListMethod;
+                    break;
                 case QueryOpType.StartsWith:
+                    constantIndex = 0;
                     methodHandler = StartsWithMethod;
                     break;
                 case QueryOpType.EndsWith:
+                    constantIndex = 0;
                     methodHandler = EndsWithMethod;
                     break;
                 default:
+                    constantIndex = 1;
                     methodHandler = QyLikeMethod;
                     break;
             }
@@ -323,7 +345,7 @@ namespace JwtWork.Abstraction.Tools
 
             if (methodCall != QueryOpType.LikesWith)
             {
-                var containsCall = Expression.Call(methodHandler, criterionConstant[0], dbFieldMember);
+                var containsCall = Expression.Call(methodHandler, criterionConstant[constantIndex], dbFieldMember);
                 return containsCall;
             }
             else
@@ -331,7 +353,7 @@ namespace JwtWork.Abstraction.Tools
                 //The following code example is also valid
                 //var containsCall = Expression.Call(typeof(DbFunctionsExtensions), nameof(DbFunctionsExtensions.Like), null, Expression.Constant(EF.Functions), dbFieldMember, criterionConstant[0]);
                 var containsCall = Expression.Call(QyLikeMethod,
-                                    Expression.Property(null, typeof(EF), nameof(EF.Functions)), dbFieldMember, criterionConstant[1]);
+                                    Expression.Property(null, typeof(EF), nameof(EF.Functions)), dbFieldMember, criterionConstant[constantIndex]);
 
 
                 return containsCall;
@@ -389,6 +411,8 @@ namespace JwtWork.Abstraction.Tools
                     case QueryOpType.Less:
                         yield return Expression.LessThan(columnExpr, Expression.Constant(paramValue, columnProperty.PropertyType));
                         break;
+                    // Please note the contains with only work for array of contants (which is forced to sep => `||`
+                    case QueryOpType.ContainsWith:
                     case QueryOpType.LikesWith:
                     case QueryOpType.StartsWith:
                     case QueryOpType.EndsWith:
