@@ -11,6 +11,9 @@ export const ClockSlider = () => {
       textColor={'#8993B7'}
       connectionBgColor={'#ced3e2'}
       pointerRadius={50}
+      // hide text true will make prefix suffix not appearing
+      // hideText={true}
+      
       pointerSVG={
         <svg
           xmlns='http://www.w3.org/2000/svg'
