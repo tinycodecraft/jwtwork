@@ -17,6 +17,7 @@ import { Trash } from './trash'
 import ColorPickContext from 'src/context/ColorPickContext'
 import { createPortal } from 'react-dom'
 import { SimpleGrid, Stack } from '@mantine/core'
+import { ClockSlider } from './clock-slider'
 
 export const ColorBoard: FC = () => {
   const {
@@ -86,7 +87,7 @@ export const ColorBoard: FC = () => {
             {palletteItems ? <ColorPallette items={palletteItems} /> : null}
           </div>
         </SimpleGrid>
-        <div>This is Place Holder for Clock</div>
+        <ClockSlider />
       </SimpleGrid>
 
       {/* The Drag Overlay is always rendered but the children are
