@@ -5,15 +5,24 @@ export const ClockSlider = () => {
   const [pointers, setPointers] = useState<ISettingsPointer[]>([{ value: 0 }])
   return (
     <RoundSlider
-      
+      pathRadius={200}
       pointers={pointers}
       onChange={setPointers}
+      pathInnerBgColor={ 'url(#color-slider-gradient)' }
       textColor={'#8993B7'}
       connectionBgColor={'#ced3e2'}
+      // why pointer Radius affect the tracking of svg pointer??
       pointerRadius={50}
       // hide text true will make prefix suffix not appearing
       // hideText={true}
-      
+      SvgDefs={
+        <>
+          <linearGradient id='color-slider-gradient' x1='0%' y1='0%' x2='0%' y2='100%'>
+            <stop offset='0%' stopColor={`hsl(${pointers[0].value}, 100%, 40%)`} />
+            <stop offset='100%' stopColor={`hsl(${pointers[0].value}, 50%, 20%)`} />
+          </linearGradient>
+        </>
+      }
       pointerSVG={
         <svg
           xmlns='http://www.w3.org/2000/svg'
@@ -26,7 +35,7 @@ export const ClockSlider = () => {
           strokeLinecap='round'
           strokeLinejoin='round'
         >
-          <g transform={`rotate(${Number(pointers[0].value)/100*360} 12 12)`}>
+          <g transform={`rotate(${(Number(pointers[0].value) / 100) * 360} 12 12)`}>
             <path stroke='none' d='M0 0h24v24H0z' fill='none'></path>
             <path
               d='M12 10c-1.32 0 -1.983 .421 -2.931 1.924l-.244 .398l-.395 .688a50.89 50.89 0 0 0 -.141 .254c-.24 .434 -.571 .753 -1.139 1.142l-.55 .365c-.94 .627 -1.432 1.118 -1.707 1.955c-.124 .338 -.196 .853 -.193 1.28c0 1.687 1.198 2.994 2.8 2.994l.242 -.006c.119 -.006 .234 -.017 .354 -.034l.248 -.043l.132 -.028l.291 -.073l.162 -.045l.57 -.17l.763 -.243l.455 -.136c.53 -.15 .94 -.222 1.283 -.222c.344 0 .753 .073 1.283 .222l.455 .136l.764 .242l.569 .171l.312 .084c.097 .024 .187 .045 .273 .062l.248 .043c.12 .017 .235 .028 .354 .034l.242 .006c1.602 0 2.8 -1.307 2.8 -3c0 -.427 -.073 -.939 -.207 -1.306c-.236 -.724 -.677 -1.223 -1.48 -1.83l-.257 -.19l-.528 -.38c-.642 -.47 -1.003 -.826 -1.253 -1.278l-.27 -.485l-.252 -.432c-1.011 -1.696 -1.618 -2.099 -3.053 -2.099z'
