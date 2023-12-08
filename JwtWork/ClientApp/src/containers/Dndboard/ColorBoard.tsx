@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
 // externals
-import { type FC, useContext } from 'react'
+import { type FC, useContext, useState, useEffect } from 'react'
 import { ChromePicker, type ColorResult } from 'react-color'
 
 // dnd-kit
@@ -10,14 +10,15 @@ import { DndContext, DragOverlay, rectIntersection } from '@dnd-kit/core'
 import { DraggableItem } from './draggable-item'
 import { DropZone } from './drop-zone'
 
-import { Row, Col, Item, ColorSquare } from 'src/fragments'
+import { Item, ColorSquare, ClockSlider } from 'src/fragments'
 import { ColorPallette } from './color-pallete'
 import { Trash } from './trash'
 
 import ColorPickContext from 'src/context/ColorPickContext'
 import { createPortal } from 'react-dom'
 import { SimpleGrid, Stack } from '@mantine/core'
-import { ClockSlider } from './clock-slider'
+
+import type { IKnotProps } from 'src/fragments/rndclktypes'
 
 export const ColorBoard: FC = () => {
   const {
@@ -36,6 +37,11 @@ export const ColorBoard: FC = () => {
     setPickerColor,
   } = useContext(ColorPickContext)
   const validfuncs = setActiveItem && setActiveItemOrigin && setPickerColor && findItem && true
+
+  const [knots, setKnots] = useState<IKnotProps[]>([{ value: 0 }])
+  useEffect(() => {
+    console.log(`parent level , the knots changed...`)
+  }, [knots])
 
   return (
     <DndContext
@@ -87,7 +93,33 @@ export const ColorBoard: FC = () => {
             {palletteItems ? <ColorPallette items={palletteItems} /> : null}
           </div>
         </SimpleGrid>
-        <ClockSlider />
+        <ClockSlider
+          knots={knots}
+          onChange={setKnots}
+          min={0}
+          max={12}
+          step={0.2}
+          ropeBgColor={'#fff'}
+          pathBgColor={'#000'}
+          pathBorder={3}
+          pathBorderColor={'#000'}
+          knotBgColorHover={'#e23d31d2'}
+          knotBorder={10}
+          knotBorderColor={'#4e105c'}
+          knotBgColor={'#e2df31d2'}
+          knotBgColorSelected={'#b8b527d2'}
+          enableTicks={true}
+          clockAngleShift={270}
+          ticksWidth={3}
+          ticksHeight={10}
+          longerTicksHeight={25}
+          ticksCount={60}
+          ticksGroupSize={5}
+          longerTickValuesOnly={true}
+          ticksDistanceToPanel={3}
+          ticksColor={'#efefef'}
+          round={2}
+        />
       </SimpleGrid>
 
       {/* The Drag Overlay is always rendered but the children are
