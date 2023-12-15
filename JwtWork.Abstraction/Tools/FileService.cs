@@ -1,8 +1,11 @@
-﻿using JwtWork.Abstraction.Models;
+﻿using DocumentFormat.OpenXml.Bibliography;
+using JwtWork.Abstraction.Models;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.Net.Http.Headers;
+using OpenXmlPowerTools;
+using System.Xml.Linq;
 using static JwtWork.Abstraction.Interfaces;
 
 namespace JwtWork.Abstraction.Tools
@@ -43,6 +46,42 @@ namespace JwtWork.Abstraction.Tools
 
         }
 
+        public string GenerateWordWithData(string xmldata,string templatename,string type=null)
+        {
+            string file = string.Empty;
+            try
+            {
+                var templatepath = SubStringExtensions.GetPath(_pathsetting.Value, PathType.Template, type ?? "All", templatename);
+                var sharepath = SubStringExtensions.GetPath(_pathsetting.Value, PathType.Share, type ?? "All", Path.GetTempFileName());
+                WmlDocument wmlDoc = new WmlDocument(templatepath);
+                using (StringReader textreader = new StringReader(xmldata))
+                {
+                    var data = XElement.Load(textreader);
+                    bool templateError; 
+                    var wmlAssembledDoc= DocumentAssembler.AssembleDocument(wmlDoc,data,out templateError);
+                    if(templateError)
+                    {
+                        _logger.LogError($"{templatepath} get template error!");
+                        _logger.LogError("Errors in template.");
+                        _logger.LogError("See AssembledDoc.docx to determine the errors in the template.");
+                    }
+
+                    FileInfo assembledDoc = new FileInfo(sharepath);
+                    wmlAssembledDoc.SaveAs(assembledDoc.FullName);
+                    return assembledDoc.FullName;
+
+                }
+
+
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return "";
+            }
+
+            
+        }
 
         public async Task<FileUploadSummary> UploadFileAsync(Stream fileStream, string contentType, string type)
         {

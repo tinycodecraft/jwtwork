@@ -1,16 +1,15 @@
 /* eslint-disable camelcase */
-import type { AnchorHTMLAttributes } from 'react';
-import type { SelectOption,WeatherState,FormState, AuthUserState, UploadState, DataVerseState } from 'src/fragments/types';
-
+import type { AnchorHTMLAttributes } from 'react'
+import type { SelectOption, WeatherState, FormState, AuthUserState, UploadState, DataVerseState, DownloadLinkResult } from 'src/fragments/types'
 
 export const ApiStatusEnum = {
   FAILURE: 'failure',
   NONE: 'none',
   PROCESS: 'process',
-  SUCCESS: 'success'
-} as const;
+  SUCCESS: 'success',
+} as const
 
-export type ApiStatusEnum = typeof ApiStatusEnum[keyof typeof ApiStatusEnum];
+export type ApiStatusEnum = typeof ApiStatusEnum[keyof typeof ApiStatusEnum]
 
 /**
  * Select control test data
@@ -25,21 +24,20 @@ export const DROPDOWN_TEST_DATA: SelectOption[] = [
   { value: 7, label: 'Option 7' },
   { value: 8, label: 'Option 8' },
   { value: 9, label: 'Option 9' },
-];
+]
 
 /**
  * HealthChecks/Swagger response path config
  */
 
-export const BASEURL= process.env.NODE_ENV === 'production' ? 'http://localhost:8086': 'http://localhost:52580';
+export const BASEURL = process.env.NODE_ENV === 'production' ? 'http://localhost:8086' : 'http://localhost:52580'
 
 export const NUGET_URL_CONFIG = {
   HealthUi: `${BASEURL}/healthchecks-ui`,
   HealthJson: `${BASEURL}/healthchecks-json`,
   SwaggerDocs: `${BASEURL}/swagger`,
   RefreshTokenUrl: `${BASEURL}/api/auth/RefreshToken`,
-
-};
+}
 
 /**
  * HTML attributes to spread on anchor elements in Settings.tsx component
@@ -47,8 +45,8 @@ export const NUGET_URL_CONFIG = {
 export const LINK_ATTRIBUTES: AnchorHTMLAttributes<HTMLAnchorElement> = {
   role: 'button',
   target: '_blank',
-  rel: 'noopener noreferrer'
-};
+  rel: 'noopener noreferrer',
+}
 
 export const WeatherStateInit: WeatherState = {
   forecasts: [],
@@ -59,8 +57,8 @@ export const WeatherStateInit: WeatherState = {
 export const FormStateInit: FormState = {
   count: 0,
   checked: false,
-  selectedOption: DROPDOWN_TEST_DATA[0]
-};
+  selectedOption: DROPDOWN_TEST_DATA[0],
+}
 
 export const AuthUserStateInit: AuthUserState = {
   token: '',
@@ -68,8 +66,8 @@ export const AuthUserStateInit: AuthUserState = {
   isAuthenticated: false,
   status: ApiStatusEnum.NONE,
   needNew: false,
-  error: ''
-};
+  error: '',
+}
 
 export const UploadStateInit: UploadState = {
   connectionId: '',
@@ -78,10 +76,14 @@ export const UploadStateInit: UploadState = {
 }
 
 export const DataVerseStateInit: DataVerseState = {
-  data:[],
+  data: [],
   status: ApiStatusEnum.NONE,
   start: -1,
-  total_count:0,
-  error: ''
-
+  total_count: 0,
+  error: '',
+}
+export const DownloadLinkInit: DownloadLinkResult = {
+  status: ApiStatusEnum.NONE,
+  DownloadLink: '',
+  type: '',
 }

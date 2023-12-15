@@ -1,5 +1,5 @@
 import { BaseService } from './base.service';
-import type { WeatherForecast } from 'src/fragments/types';
+import type { DownloadLinkResult, WeatherForecast } from 'src/fragments/types';
 
 /**
  * SampleData API abstraction layer communication via Axios (typescript singleton pattern)
@@ -21,6 +21,13 @@ class SampleService extends BaseService {
     const { data } = await this.$wAuthHttp.get<WeatherForecast[]>(url);
     return data;
   }
+
+  public async getWordDemoAsync(type:string): Promise<DownloadLinkResult> {
+    const url = `GetWordSample?type=${type}`;
+    const { data} = await this.$wAuthHttp.get<DownloadLinkResult>(url);
+    return data;
+  }
+
 }
 
 export const SampleApi = SampleService.Instance;

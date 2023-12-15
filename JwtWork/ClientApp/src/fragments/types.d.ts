@@ -124,3 +124,9 @@ export type RefreshTokenState =Readonly<{
   status: string
   newToken?: string
 }>;
+
+export type DownloadLinkResult = Readonly<{
+  status: ApiStatusEnum,
+  DownloadLink: string,
+  type: string
+}>

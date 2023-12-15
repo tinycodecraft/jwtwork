@@ -10,6 +10,7 @@ export const weatherSlice = createSlice({
   name: 'weather',
   initialState: WeatherStateInit,
   reducers: {
+
     
     requestForecasts: (state, action: PayloadAction<number>) => {
       state.isLoading = true
@@ -28,6 +29,7 @@ export const weatherSlice = createSlice({
     },
   },
 })
+
 
 export const getForecastsAsync = createAsyncThunk('weather/getForecastsAsync', async (startDateIndex: number, { dispatch, getState }) => {
   // If param startDateIndex === state.startDateIndex, do not perform action

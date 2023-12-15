@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace JwtWork.Abstraction.Tools
 {
@@ -39,6 +40,18 @@ namespace JwtWork.Abstraction.Tools
     }
     public static class UtilExtensions
     {
+
+        public static string CreateXml<T>(T input) where T: class
+        {
+            var x = new XmlSerializer(typeof(T));
+
+            using (StringWriter textWriter = new StringWriter())
+            {
+                x.Serialize(textWriter, input);
+
+                return textWriter.ToString();
+            }
+        }
 
         /// <summary>
         /// Creates a byte array from the string, using the 

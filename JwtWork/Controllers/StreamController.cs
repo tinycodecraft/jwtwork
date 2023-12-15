@@ -32,11 +32,18 @@ namespace GhostUI.Controllers
         [Route("Download/{type}/{filename}")]
         public async Task Get(string type, string filename)
         {
-            var filepath = await _fileService.DownloadFilesAsync(Response.Body, type, filename,true);
+            var besplit = type != null && type.Contains(".");
+            if(besplit)
+            {
+
+                // var pathtype = type.Substring(0,type.IndexOf("."));
+                type= type.Substring(type.IndexOf(".") + 1);
+            }
+            var filepath = await _fileService.DownloadFilesAsync(Response.Body, type, filename,!besplit);
 
             var provider = new FileExtensionContentTypeProvider();
             var filecontenttype = string.Empty;
-            if (provider.TryGetContentType(filepath, out filecontenttype))
+            if (!provider.TryGetContentType(filepath, out filecontenttype))
             {
                 filecontenttype = "application/octet-stream";
 
