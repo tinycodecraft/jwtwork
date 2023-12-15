@@ -111,12 +111,12 @@ namespace JwtWork.Abstraction.Tools
 
         }
 
-        public static Func<T, bool> GetCanBe<T>(T bevalue) where T: struct, IComparable, IFormattable, IConvertible, IComparable<T>, IEquatable<T>
+        public static Func<T, bool> GetCanBe<T>(T bevalue) where T: struct
         {
             return (T datum) => EqualityComparer<T>.Default.Equals( bevalue ,datum);
         }
 
-        public static R Coalesce<T,R>(T targetvalue,List<R> values,params T[] canReturns) where T: struct,  IComparable, IFormattable, IConvertible, IComparable<T>, IEquatable<T>
+        public static R Coalesce<T,R>(T targetvalue,List<R> values,params T[] canReturns) where T: struct
         {
             int i = -1;
             foreach(var canBevalue in canReturns)
