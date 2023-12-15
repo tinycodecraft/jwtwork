@@ -12,6 +12,8 @@ namespace JwtWork.Abstraction.Models
         public string Upload { get; set; }
         public string Stream { get; set; }
 
+        public string Template { get; set; }
+
         public string Base { get; set; }
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 //using JwtWork.SQLDB.Models.POCO;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 
@@ -64,4 +65,26 @@ public partial class JWTWORKContext : DbContext
     }
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+}
+
+public class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<JWTWORKContext>
+{
+    IHostEnvironment _env;
+
+    public DesignTimeDbContextFactory(IHostEnvironment env)
+    {
+        _env = env;
+
+    }
+    public JWTWORKContext CreateDbContext(string[] args)
+    {
+        IConfigurationRoot configuration = new ConfigurationBuilder()
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile(@Directory.GetCurrentDirectory() + "/../JwtWork/appsettings.json")
+            .Build();
+        var builder = new DbContextOptionsBuilder<JWTWORKContext>();
+        var connectionString = configuration.GetConnectionString("jwtSQLDB");
+        builder.UseSqlServer(connectionString, opt => opt.MigrationsAssembly("JwtWork.SQLDB"));
+        return new JWTWORKContext(builder.Options, _env);
+    }
 }

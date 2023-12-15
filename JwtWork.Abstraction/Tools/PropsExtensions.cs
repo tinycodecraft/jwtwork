@@ -111,6 +111,27 @@ namespace JwtWork.Abstraction.Tools
 
         }
 
+        public static Func<T, bool> GetCanBe<T>(T bevalue) where T: struct
+        {
+            return (T datum) => EqualityComparer<T>.Default.Equals( bevalue ,datum);
+        }
+
+        public static R Coalesce<T,R>(T targetvalue,List<R> values,params T[] canReturns) where T:struct
+        {
+            int i = -1;
+            foreach(var canBevalue in canReturns)
+            {
+                i++;
+                if(i>= values.Count)
+                {
+                    return default(R);
+                }
+                if (GetCanBe(canBevalue)(targetvalue))
+                    return values[i];
+            }
+
+            return default(R);
+        }
 
 
         public static string GetPath(PathSetting setting, PathType pathtype, string type, string? filename = null)
@@ -123,7 +144,8 @@ namespace JwtWork.Abstraction.Tools
             else
             {
                 var drivepath = Path.GetPathRoot(setting.Base).TrimEndAt("\\");
-                var targetpath = pathtype == PathType.Upload ? setting.Upload : setting.Share;
+                
+                var targetpath = Coalesce(pathtype, new[] { setting.Upload, setting.Template, setting.Share }.ToList(), PathType.Upload, PathType.Template, PathType.Share);
 
                 var basepath = string.Join("\\", string.Join("/", targetpath.StartsWith('/') ? drivepath : setting.Base, targetpath, type, filename).ItSplit("/").NoEmpty());
 

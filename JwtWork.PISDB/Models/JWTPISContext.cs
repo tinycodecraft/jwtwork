@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 
@@ -97,4 +98,27 @@ public partial class JWTPISContext : DbContext
     }
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+}
+
+public class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<JWTPISContext>
+{
+    IHostEnvironment _env;
+
+    public DesignTimeDbContextFactory(IHostEnvironment env)
+    {
+        _env = env;
+
+    }
+    public JWTPISContext CreateDbContext(string[] args)
+    {
+        IConfigurationRoot configuration = new ConfigurationBuilder()
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile(@Directory.GetCurrentDirectory() + "/../JwtWork/appsettings.json")
+            .Build();
+        var builder = new DbContextOptionsBuilder<JWTPISContext>();
+        var connectionString = configuration.GetConnectionString("jwtPISDB");
+        builder.UseSqlServer(connectionString, opt => opt.MigrationsAssembly("JwtWork.PISDB"));
+        return new JWTPISContext(builder.Options, _env);
+
+    }
 }

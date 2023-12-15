@@ -10,6 +10,7 @@ namespace JwtWork.Abstraction.Models
     {
         Share,
         Upload,
-        Stream
+        Stream,
+        Template
     }
 }
