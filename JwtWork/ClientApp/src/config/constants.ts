@@ -84,6 +84,6 @@ export const DataVerseStateInit: DataVerseState = {
 }
 export const DownloadLinkInit: DownloadLinkResult = {
   status: ApiStatusEnum.NONE,
-  DownloadLink: '',
+  downloadLink: '',
   type: '',
 }

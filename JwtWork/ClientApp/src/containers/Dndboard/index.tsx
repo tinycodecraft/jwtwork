@@ -17,7 +17,7 @@ const DndBoard: FunctionComponent = () => {
   const [knots, setKnots] = useState<IKnotProps[]>([{ value: 0 }])
   const {
     status: downloadStatus,
-    DownloadLink,
+    downloadLink,
     type: downloadType,
   } = useAppSelector<DownloadLinkResult>((state) => state.download ?? DownloadLinkInit)
   useEffect(() => {
@@ -35,7 +35,7 @@ const DndBoard: FunctionComponent = () => {
         <SimpleGrid cols={1} className='content-center'>
           {downloadStatus == ApiStatusEnum.SUCCESS ? (
             <Button fullWidth>
-              <a href={DownloadLink} target='_blank' rel='noreferrer'>
+              <a href={downloadLink} target='_blank' rel='noreferrer'>
                 Download your sample word
               </a>{' '}
             </Button>

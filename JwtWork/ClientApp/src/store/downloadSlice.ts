@@ -16,7 +16,7 @@ export const downloadSlice = createSlice({
     receiveWordSample: (state, action: PayloadAction<DownloadLinkResult>) => {
       state.status = action.payload.status
       state.type = action.payload.type
-      state.DownloadLink = action.payload.DownloadLink
+      state.downloadLink = action.payload.downloadLink
     },
   },
 })
@@ -37,6 +37,7 @@ export const getWordSampleAsync = createAsyncThunk('download/getWordSampleAsync'
         SampleApi.refreshToken = renewToken
     }
     const wordSample = await SampleApi.getWordDemoAsync(type)
+    console.log(`the word sample is `,wordSample)
     dispatch(receiveWordSample(wordSample))
     dispatch(setNewToken(SampleApi.token))
 

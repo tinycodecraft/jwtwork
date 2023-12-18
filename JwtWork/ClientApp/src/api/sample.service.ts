@@ -26,6 +26,7 @@ class SampleService extends BaseService {
     console.log(`calling generate word demo!!`)
     const url = `GetWordSample`
     const { data } = await this.$wAuthHttp.post<DownloadLinkResult>(url,{ type: type})
+    
     return data
   }
 }
