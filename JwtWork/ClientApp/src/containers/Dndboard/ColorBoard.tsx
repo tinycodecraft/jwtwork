@@ -38,11 +38,6 @@ export const ColorBoard: FC = () => {
   } = useContext(ColorPickContext)
   const validfuncs = setActiveItem && setActiveItemOrigin && setPickerColor && findItem && true
 
-  const [knots, setKnots] = useState<IKnotProps[]>([{ value: 0 }])
-  useEffect(() => {
-    console.log(`parent level , the knots changed...`)
-  }, [knots])
-
   return (
     <DndContext
       onDragStart={({ active }) => {
@@ -60,6 +55,8 @@ export const ColorBoard: FC = () => {
       onDragEnd={endDrag}
       collisionDetection={rectIntersection}
     >
+
+      <SimpleGrid cols={1}>
       <div>
         <ul>
           <li>Use the Color picker to choose a color</li>
@@ -69,8 +66,8 @@ export const ColorBoard: FC = () => {
           <li>The pallette is implemented using the @dnd-kit/sortable presets</li>
         </ul>
       </div>
-      <SimpleGrid cols={2}>
-        <SimpleGrid cols={3}>
+      <SimpleGrid cols={3}>
+
           <div>
             <ChromePicker onChange={(color: ColorResult) => validfuncs && setPickerColor(color.hex)} color={pickerColor} />
           </div>
@@ -92,34 +89,7 @@ export const ColorBoard: FC = () => {
             <p>Color Pallette</p>
             {palletteItems ? <ColorPallette items={palletteItems} /> : null}
           </div>
-        </SimpleGrid>
-        <ClockSlider
-          knots={knots}
-          onChange={setKnots}
-          min={0}
-          max={12}
-          step={0.2}
-          ropeBgColor={'#fff'}
-          pathBgColor={'#000'}
-          pathBorder={3}
-          pathBorderColor={'#000'}
-          knotBgColorHover={'#e23d31d2'}
-          knotBorder={10}
-          knotBorderColor={'#4e105c'}
-          knotBgColor={'#e2df31d2'}
-          knotBgColorSelected={'#b8b527d2'}
-          enableTicks={true}
-          clockAngleShift={270}
-          ticksWidth={3}
-          ticksHeight={10}
-          longerTicksHeight={25}
-          ticksCount={60}
-          ticksGroupSize={5}
-          longerTickValuesOnly={true}
-          ticksDistanceToPanel={3}
-          ticksColor={'#efefef'}
-          round={2}
-        />
+        </SimpleGrid>      
       </SimpleGrid>
 
       {/* The Drag Overlay is always rendered but the children are
