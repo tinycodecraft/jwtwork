@@ -133,7 +133,20 @@ namespace JwtWork.Abstraction.Tools
             return default(R);
         }
 
-
+        public static string GetRandomFileInType(string type)
+        {
+            var filerandom = Path.GetRandomFileName();
+            filerandom = Path.GetFileNameWithoutExtension(filerandom);
+            switch(type)
+            {
+                case "word":
+                    return filerandom + ".docx";
+                case "excel":
+                    return filerandom + ".xlsx";
+                default:
+                    return filerandom + ".txt";
+            }
+        }
         public static string GetPath(PathSetting setting, PathType pathtype, string type, string? filename = null)
         {
             if (pathtype == PathType.Stream)

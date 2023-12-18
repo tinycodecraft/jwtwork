@@ -52,7 +52,7 @@ namespace JwtWork.Abstraction.Tools
             try
             {
                 var templatepath = SubStringExtensions.GetPath(_pathsetting.Value, PathType.Template, type ?? "All", templatename);
-                var sharepath = SubStringExtensions.GetPath(_pathsetting.Value, PathType.Share, type ?? "All", Path.GetTempFileName());
+                var sharepath = SubStringExtensions.GetPath(_pathsetting.Value, PathType.Share, type ?? "All",SubStringExtensions.GetRandomFileInType(type));
                 WmlDocument wmlDoc = new WmlDocument(templatepath);
                 using (StringReader textreader = new StringReader(xmldata))
                 {
@@ -67,6 +67,10 @@ namespace JwtWork.Abstraction.Tools
                     }
 
                     FileInfo assembledDoc = new FileInfo(sharepath);
+                    if (!Directory.Exists(Path.GetDirectoryName(sharepath)))
+                    {
+                        Directory.CreateDirectory(Path.GetDirectoryName(sharepath));
+                    }
                     wmlAssembledDoc.SaveAs(assembledDoc.FullName);
                     return assembledDoc.FullName;
 

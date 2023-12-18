@@ -51,19 +51,19 @@ namespace JwtWork.Controllers
             .ToArray();
         }
 
-        [HttpGet,Authorize]
+        [HttpPost,Authorize]
         [ProducesResponseType(typeof(md.RtLinkResult), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetWordSample(string type)
+        public async Task<IActionResult> GetWordSample([FromBody]ItWordDownload GenerateWord)
         {
             var xmldata =await System.IO.File.ReadAllTextAsync(ut.SubStringExtensions.GetPath(_pathData.Value, PathType.Share, null, "Data.xml"));
-            var worddemopath = _fileService.GenerateWordWithData(xmldata, "TemplateDocument.docx", type);
+            var worddemopath = _fileService.GenerateWordWithData(xmldata, "TemplateDocument.docx", GenerateWord.Type);
             var status = System.IO.File.Exists(worddemopath) ? "success" : "failure";
-            var downloadlink = ut.SubStringExtensions.GetPath(_pathData.Value, PathType.Stream, $"Share.{type}", System.IO.Path.GetFileName(worddemopath));
+            var downloadlink = ut.SubStringExtensions.GetPath(_pathData.Value, PathType.Stream, $"Share.{GenerateWord.Type}", System.IO.Path.GetFileName(worddemopath));
             return Ok(new md.RtLinkResult
             {
                 Status = status,
                 DownloadLink = downloadlink,
-                Type = type
+                Type = GenerateWord.Type
             });
 
         }

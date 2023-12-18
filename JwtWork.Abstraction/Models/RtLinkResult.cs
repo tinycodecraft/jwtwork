@@ -6,6 +6,11 @@ using System.Threading.Tasks;
 
 namespace JwtWork.Abstraction.Models
 {
+    public class ItWordDownload
+    {
+        public string Type { get; set; }
+    }
+
     public class RtLinkResult
     {
         public string Status { get; set; }        
