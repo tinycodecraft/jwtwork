@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
@@ -58,6 +59,7 @@ var builder = WebApplication.CreateBuilder(new WebApplicationOptions
 
 var authsetting = builder.Configuration.GetSection(Setting.AuthSetting);
 var pathsetting = builder.Configuration.GetSection(Setting.PathSetting);
+var CorsPolicy = builder.Configuration.GetSection(Setting.CorsPolicySetting).Get<md.CorsPolicySetting>();
 var encryptionService = new StringEncrypService();
 authsetting[nameof(md.AuthSetting.Secret)] = encryptionService.EncryptString(authsetting[nameof(md.AuthSetting.SecretKey)] ?? "");
 pathsetting[nameof(md.PathSetting.Base)] = Directory.GetCurrentDirectory();
@@ -120,7 +122,7 @@ builder.Services.AddHealthChecks()
 builder.Services.AddHealthChecksUI()
     .AddInMemoryStorage();
 
-builder.Services.AddCorsConfig(corsPolicyName);
+builder.Services.AddCorsConfig(corsPolicyName,CorsPolicy);
 builder.Services.AddControllers().AddJsonOptions(opt =>
 {
     opt.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
@@ -239,7 +241,15 @@ else
 //});
 
 app.UseApiExceptionHandling();
-app.UseCors(corsPolicyName);
+if(string.IsNullOrEmpty(CorsPolicy?.Name))
+{
+    app.UseCors(corsPolicyName);
+}
+else
+{
+    app.UseCors(CorsPolicy.Name);
+}
+
 
 
 

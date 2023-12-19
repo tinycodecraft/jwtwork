@@ -52,6 +52,9 @@ namespace JwtWork.Abstraction
         {
             public const string AuthSetting = nameof(AuthSetting);
             public const string PathSetting = nameof(PathSetting);
+
+            public const string CorsPolicySetting = nameof(CorsPolicySetting);
+
         }
     }
 }

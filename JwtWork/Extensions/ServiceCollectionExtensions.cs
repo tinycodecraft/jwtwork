@@ -44,7 +44,7 @@ namespace JwtWork.Extensions
             return services;
         }
 
-        public static IServiceCollection AddCorsConfig(this IServiceCollection services, string name)
+        public static IServiceCollection AddCorsConfig(this IServiceCollection services, string name,md.CorsPolicySetting policy)
         {
             
             
@@ -52,6 +52,10 @@ namespace JwtWork.Extensions
                 options => options.AllowAnyOrigin()
                     .AllowAnyHeader()
                     .AllowAnyMethod()));
+            if(policy!=null && !string.IsNullOrEmpty(policy.Name))
+            {
+                services.AddCors(c=> c.AddPolicy(policy.Name,options=> options.WithOrigins(policy.AllowOrigins).WithHeaders(policy.AllowHeaders).WithMethods(policy.AllowMethods)));
+            }
 
             return services;
         }
