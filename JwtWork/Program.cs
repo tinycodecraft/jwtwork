@@ -65,6 +65,7 @@ authsetting[nameof(md.AuthSetting.Secret)] = encryptionService.EncryptString(aut
 pathsetting[nameof(md.PathSetting.Base)] = Directory.GetCurrentDirectory();
 builder.Services.Configure<md.AuthSetting>(authsetting);
 builder.Services.Configure<md.PathSetting>(pathsetting);
+builder.Services.Configure<md.CorsPolicySetting>(builder.Configuration.GetSection(Setting.CorsPolicySetting));
 
 builder.Services.Configure<FormOptions>(opt =>
 {
