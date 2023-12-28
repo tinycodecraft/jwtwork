@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useRef, useState, type MouseEvent as Rea
 import { ClockPart, KnotPart } from 'src/model'
 import type { IAnimateProps, IKnotInstance, IRopeProps, IStrokeProps } from 'src/fragments/rndclktypes'
 import { type IAnimationResult, animate, mod } from 'mz-math'
-import { RNDCLK_DF_ANIMATION_DURATION, RNDCLK_DF_ROPE_BG_COLOR } from 'src/config/rndclk.contants'
+import { RNDCLK_DF_ANIMATION_DURATION, RNDCLK_DF_ROPE_BG_COLOR } from 'src/config/rndclk.constants'
 import { getAnimationProgressAngle, getMouseInAngle, getStrokeColor } from 'src/utils/geometries'
 import { valueOr } from 'src/utils'
 

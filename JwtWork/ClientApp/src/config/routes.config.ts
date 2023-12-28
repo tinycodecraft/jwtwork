@@ -1,6 +1,6 @@
 import type { ComponentType } from 'react';
 import type { Params } from 'react-router-dom';
-import { Login, Dashboard, FetchData, Form,Quillboard, DndBoard, MantineVerse } from 'src/containers';
+import { Login, Dashboard, FetchData, Form,Quillboard, DndBoard, MantineVerse, LandsDMap } from 'src/containers';
 import type { IconProp } from '@fortawesome/fontawesome-svg-core';
 
 
@@ -95,4 +95,15 @@ export const Routes: Route[] = [
     iconIndex: 5
 
   },
+  {
+    showInNav: true,
+    name: 'LandsD Map',
+    path: '/map',
+    Component: LandsDMap,
+    transition: TRANSITION_DEFAULT,
+
+    iconIndex: 6
+
+  },
+
 ];

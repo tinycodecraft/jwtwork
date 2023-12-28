@@ -12,7 +12,7 @@ import { type IKnotInstance } from 'src/fragments/rndclktypes'
 import { ClockPart, KnotPart } from 'src/model'
 import { checkAngleInArc, getClosestEdge, getDotFillColor, getMouseInAngle } from 'src/utils/geometries'
 import { type Vector2, circleMovement, convertRange, degreesToRadians } from 'mz-math'
-import { RNDCLK_DF_KNOT_BG_COLOR, OUTLINENONE_CSS } from 'src/config/rndclk.contants'
+import { RNDCLK_DF_KNOT_BG_COLOR, OUTLINENONE_CSS } from 'src/config/rndclk.constants'
 
 interface IKnotDotProps {
   knotSVG?: React.ReactNode
