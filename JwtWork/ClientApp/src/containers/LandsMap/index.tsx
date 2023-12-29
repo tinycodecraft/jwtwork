@@ -60,7 +60,7 @@ const LandsDMap: FunctionComponent = () => {
         container: mapTargetElement.current,
         map: webmap,
         center: new Point({ longitude: 833359.88495, latitude: 822961.986247, spatialReference: new SpatialReference({ wkid: HKWKID }) }),
-        zoom: MapInitZoomScale,
+        scale: MapInitZoomScale,
       })
 
       const locationSource = new LayerSearchSource({
