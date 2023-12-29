@@ -1,5 +1,14 @@
 import React, { useRef, type FunctionComponent, useEffect } from 'react'
-import { HKBaseMapVTUrl, HKMapLabelVTUrl, HKLocationSearchUrl, HKNearBySearchUrl, MapInitZoomScale, MapSearchResultScale, HKWKID } from 'src/config'
+import {
+  HKBaseMapVTUrl,
+  HKMapLabelVTUrl,
+  HKLocationSearchUrl,
+  HKNearBySearchUrl,
+  MapInitZoomScale,
+  MapSearchResultScale,
+  HKWKID,
+  MapCSDIPortalApiKey,
+} from 'src/config'
 import { type MapItemSuggestion, type MapNearBySuggestion } from 'src/fragments/types'
 import '@arcgis/core/assets/esri/themes/light/main.css'
 import MapView from '@arcgis/core/views/MapView'
@@ -19,13 +28,23 @@ import { sort } from 'fast-sort'
 
 const LandsDMap: FunctionComponent = () => {
   const mapTargetElement = useRef<HTMLDivElement>(null)
+
   const origin = new URL(HKBaseMapVTUrl).origin
   console.log(origin)
 
-  config.request.trustedServers?.push(origin)
-
   useEffect(() => {
     if (mapTargetElement.current) {
+      if (config.request.interceptors) {
+        config.request.interceptors.push({
+          before: function (params) {
+            params.requestOptions.query = {
+              ...params.requestOptions.query,
+              key: MapCSDIPortalApiKey,
+            }
+          },
+        })
+      }
+
       const baseLayer = new VectorTileLayer({
         url: HKBaseMapVTUrl,
       })
@@ -156,7 +175,6 @@ const LandsDMap: FunctionComponent = () => {
               q: params.suggestTerm.replace(/ /g, '+'),
             },
             responseType: 'json',
-            
           }).then((result) => {
             console.log(`the result from suggestions`, result)
 
