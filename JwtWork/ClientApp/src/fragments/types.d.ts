@@ -146,3 +146,8 @@ export type MapNearBySuggestion = Readonly<{
   y: number;
   additionalInfoKey?: string[];
 }>
+
+export type WindowSize = Readonly<{
+  winWidth : number|undefined;
+  winHeight: number|undefined;
+}>

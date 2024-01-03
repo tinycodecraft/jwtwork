@@ -2,6 +2,9 @@
 import type { AnchorHTMLAttributes } from 'react'
 import type { SelectOption, WeatherState, FormState, AuthUserState, UploadState, DataVerseState, DownloadLinkResult } from 'src/fragments/types'
 
+
+export const HeadIconWidth = 700
+
 export const ApiStatusEnum = {
   FAILURE: 'failure',
   NONE: 'none',

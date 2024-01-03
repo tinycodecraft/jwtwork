@@ -1,19 +1,33 @@
-import { Footer, FloatMenu, Navbar } from 'src/fragments';
-import { OpenMenuProvider} from './context/OpenMenuContext';
+import { Footer, FloatMenu, Navbar } from 'src/fragments'
+import { OpenMenuProvider } from './context/OpenMenuContext'
+import { HeadIconWidth, Routes as routes } from 'src/config'
 
-import { Fragment, type FunctionComponent, type PropsWithChildren } from 'react';
-
+import { Fragment, type FunctionComponent, type PropsWithChildren } from 'react'
+import ManNavBar from './fragments/ManNavBar'
+import { MantineProvider } from '@mantine/core'
 
 const Layout: FunctionComponent<PropsWithChildren> = ({ children }) => (
   <Fragment>
-    <Navbar />
-    <OpenMenuProvider eventlist={['click','touchend']} sideAction='lostFocus'>
+    <OpenMenuProvider eventlist={['click', 'touchend']} sideAction='lostFocus'>
       <FloatMenu />
     </OpenMenuProvider>
-    
-    {children}
-    <Footer />
+    <MantineProvider
+      withGlobalStyles
+      withNormalizeCSS
+      theme={{
+        colorScheme: 'dark',
+        breakpoints: {
+          xs: '30em',
+          sm: '48em',
+          md: '64em',
+          lg: '74em',
+          xl: '90em',
+        },
+      }}
+    >
+      <ManNavBar routes={routes}>{children}</ManNavBar>
+    </MantineProvider>    
   </Fragment>
-);
+)
 
-export default Layout;
+export default Layout
