@@ -27,6 +27,7 @@ const Layout: FunctionComponent<PropsWithChildren> = ({ children }) => (
           md: '64em',
           lg: '74em',
           xl: '90em',
+          xll: '200em'
         },
       }}
     >

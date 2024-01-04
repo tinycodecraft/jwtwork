@@ -1,4 +1,18 @@
-import { AppShell, Burger, Header, MantineProvider, MediaQuery, Footer, Tabs, useMantineTheme, Navbar, ScrollArea, Button, createPolymorphicComponent, type ButtonProps } from '@mantine/core'
+import {
+  AppShell,
+  Burger,
+  Header,
+  MantineProvider,
+  MediaQuery,
+  Footer,
+  Tabs,
+  useMantineTheme,
+  Navbar,
+  ScrollArea,
+  Button,
+  createPolymorphicComponent,
+  type ButtonProps,
+} from '@mantine/core'
 import { useViewportSize } from '@mantine/hooks'
 import React, { useState, type FunctionComponent, useEffect } from 'react'
 import type { Route } from 'src/config'
@@ -7,18 +21,17 @@ import { useIsLoggedIn } from 'src/utils'
 import { useNavigate, generatePath, useLocation, useParams } from 'react-router'
 import { Bars4Icon, BookOpenIcon, IdentificationIcon, PencilIcon, PuzzlePieceIcon, SunIcon, MapIcon } from '@heroicons/react/24/outline'
 
-import styled from '@emotion/styled';
+import styled from '@emotion/styled'
 
 const _StyledButton = styled(Button)`
   border-width: 0.125rem;
   color: ${({ theme }) => (theme.colorScheme === 'dark' ? theme.colors.brand[0] : theme.colors.brand[9])};
-  background-color: ${({ theme }) => (theme.colorScheme === 'dark' ? theme.colors.brand[9] : theme.colors.brand[0])};
+  background-color: ${({ theme }) => (theme.colorScheme === 'dark' ? theme.colors.brand[7] : theme.colors.brand[1])};
   &:hover {
     background-color: ${({ theme }) => (theme.colorScheme === 'dark' ? theme.colors.brand[6] : theme.colors.brand[3])};
   }
-`;
-const StyledButton = createPolymorphicComponent<'button', ButtonProps>(_StyledButton);
-
+`
+const StyledButton = createPolymorphicComponent<'button', ButtonProps>(_StyledButton)
 
 const ManNavBar: FunctionComponent<{ routes: Route[] } & React.ComponentPropsWithRef<'div'>> = ({ routes, children, ...rest }) => {
   const [opened, setOpened] = useState<boolean>(false)
@@ -36,61 +49,29 @@ const ManNavBar: FunctionComponent<{ routes: Route[] } & React.ComponentPropsWit
   }, [width])
   return (
     <AppShell
-      navbar={
-
-        <Navbar p='md' hiddenBreakpoint={`xl`} hidden={!opened} width={{ sm: 200, lg: 300 }}>
-          <Navbar.Section grow mx='-xs' px='xs'>
-            <ScrollArea type='scroll' >
-            <Tabs
-              variant='pills'
-              orientation='vertical'
-              value={generatePath(location.pathname, params)}
-              onTabChange={(value: string) => goto(value)}
-              defaultValue={generatePath('/home')}
-            >
-              <Tabs.List>
-                {routes
-                  .filter(({ showInNav }) => showInNav)
-                  .map(({ path, name, params }, index) => (
-                    <Tabs.Tab
-                      key={`${name}-${index}`}
-                      value={generatePath(path, params)}
-                      icon={React.createElement(icons[index], { className: 'h-[18px] w-[18px] mr-2 inline' })}
-                    >
-                      {name}
-                    </Tabs.Tab>
-                  ))}
-              </Tabs.List>
-            </Tabs>
-            </ScrollArea>
-
-          </Navbar.Section>
-        </Navbar>
-      }
       header={
-        <Header height={{ base: 50, md: 70 }} p='md' style={{ backgroundColor: themefn.colorScheme == 'dark' ? themefn.colors.brand[7] : themefn.colors.brand[3] }}>
-          <div style={{ display: 'flex', alignItems: 'center', height: '100%' }}>
+        <Header
+          height={{ base: 50, md: 70 }}
+          pt={`md`}
+          pb={`xs`}
+          pl={`md`}
+          
+          style={{ backgroundColor: themefn.colorScheme == 'dark' ? themefn.colors.brand[7] : themefn.colors.brand[3] }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', height: '120%' }}>
             <MediaQuery largerThan='md' styles={{ display: 'none' }}>
-              <Burger
-                opened={opened}
-                onClick={() => setOpened((o) => !o)}
-                size='sm'
-                mr='xl'
-              />
+              <Burger opened={opened} onClick={() => setOpened((o) => !o)} size='sm' mr='xl' />
             </MediaQuery>
-            <BulmaLogoSVG
-              width={130}
-              height={65}
-              aria-hidden
-              title='bulma.io-logo'
-              
-            />
+            <BulmaLogoSVG width={130} height={65} aria-hidden title='bulma.io-logo'   />
+            <div className='mr-10'><br className='mr-10' /></div>
             {isLoggedIn && (
               <MediaQuery smallerThan={`md`} styles={{ display: 'none' }}>
+                
                 <Tabs
                   value={generatePath(location.pathname, params)}
                   onTabChange={(value: string) => goto(value)}
                   defaultValue={generatePath('/home')}
+                  className='-mb-1'
                 >
                   <Tabs.List>
                     {routes
@@ -100,6 +81,7 @@ const ManNavBar: FunctionComponent<{ routes: Route[] } & React.ComponentPropsWit
                           key={`${name}-${index}`}
                           value={generatePath(path, params)}
                           icon={React.createElement(icons[index], { className: 'h-[18px] w-[18px] mr-2 inline' })}
+                          className='text-lg'
                         >
                           {name}
                         </Tabs.Tab>
