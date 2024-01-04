@@ -59,14 +59,14 @@ const ManNavBar: FunctionComponent<{ routes: Route[] } & React.ComponentPropsWit
           style={{ backgroundColor: themefn.colorScheme == 'dark' ? themefn.colors.brand[7] : themefn.colors.brand[3] }}
         >
           <div style={{ display: 'flex', alignItems: 'center', height: '120%' }}>
-            <MediaQuery largerThan='md' styles={{ display: 'none' }}>
+            <MediaQuery largerThan='lg' styles={{ display: 'none' }}>
               <Burger opened={opened} onClick={() => setOpened((o) => !o)} size='sm' mr='xl' />
             </MediaQuery>
             <BulmaLogoSVG width={130} height={65} aria-hidden title='bulma.io-logo'   />
             {/* only pseudo element to help give some gap in flex items */}
             <div className='mr-10'><br className='mr-10' /></div>
             {isLoggedIn && (
-              <MediaQuery smallerThan={`md`} styles={{ display: 'none' }}>
+              <MediaQuery smallerThan={`lg`} styles={{ display: 'none' }}>
                 
                 <Tabs
                   value={generatePath(location.pathname, params)}
