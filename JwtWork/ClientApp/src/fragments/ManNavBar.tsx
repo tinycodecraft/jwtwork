@@ -69,6 +69,7 @@ const ManNavBar: FunctionComponent<{ routes: Route[] } & React.ComponentPropsWit
               <MediaQuery smallerThan={`lg`} styles={{ display: 'none' }}>
                 
                 <Tabs
+                  color='grape'
                   value={generatePath(location.pathname, params)}
                   onTabChange={(value: string) => goto(value)}
                   defaultValue={generatePath('/home')}
