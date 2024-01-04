@@ -68,7 +68,7 @@ const ManNavBar: FunctionComponent<{ routes: Route[] } & React.ComponentPropsWit
         </Navbar>
       }
       header={
-        <Header height={{ base: 50, md: 70 }} p='md' style={{ backgroundColor: themefn.colorScheme == 'dark' ? themefn.colors.brand[9] : themefn.colors.brand[0] }}>
+        <Header height={{ base: 50, md: 70 }} p='md' style={{ backgroundColor: themefn.colorScheme == 'dark' ? themefn.colors.brand[7] : themefn.colors.brand[3] }}>
           <div style={{ display: 'flex', alignItems: 'center', height: '100%' }}>
             <MediaQuery largerThan='md' styles={{ display: 'none' }}>
               <Burger
