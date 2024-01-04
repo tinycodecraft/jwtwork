@@ -63,6 +63,7 @@ const ManNavBar: FunctionComponent<{ routes: Route[] } & React.ComponentPropsWit
               <Burger opened={opened} onClick={() => setOpened((o) => !o)} size='sm' mr='xl' />
             </MediaQuery>
             <BulmaLogoSVG width={130} height={65} aria-hidden title='bulma.io-logo'   />
+            {/* only pseudo element to help give some gap in flex items */}
             <div className='mr-10'><br className='mr-10' /></div>
             {isLoggedIn && (
               <MediaQuery smallerThan={`md`} styles={{ display: 'none' }}>
