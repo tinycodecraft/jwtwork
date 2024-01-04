@@ -73,6 +73,7 @@ const ManNavBar: FunctionComponent<{ routes: Route[] } & React.ComponentPropsWit
                   onTabChange={(value: string) => goto(value)}
                   defaultValue={generatePath('/home')}
                   className='-mb-1'
+                  
                 >
                   <Tabs.List>
                     {routes
@@ -82,7 +83,8 @@ const ManNavBar: FunctionComponent<{ routes: Route[] } & React.ComponentPropsWit
                           key={`${name}-${index}`}
                           value={generatePath(path, params)}
                           icon={React.createElement(icons[index], { className: 'h-[18px] w-[18px] mr-2 inline' })}
-                          className='text-lg'
+                          className='text-lg underline-flash'
+                          
                         >
                           {name}
                         </Tabs.Tab>
