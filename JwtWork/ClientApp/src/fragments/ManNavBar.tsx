@@ -1,11 +1,24 @@
-import { AppShell, Burger, Header, MantineProvider, MediaQuery, Footer, Tabs, useMantineTheme } from '@mantine/core'
+import { AppShell, Burger, Header, MantineProvider, MediaQuery, Footer, Tabs, useMantineTheme, Navbar, ScrollArea, Button, createPolymorphicComponent, type ButtonProps } from '@mantine/core'
 import { useViewportSize } from '@mantine/hooks'
 import React, { useState, type FunctionComponent, useEffect } from 'react'
 import type { Route } from 'src/config'
 import { ReactComponent as BulmaLogoSVG } from 'src/assets/image/BulmaLogo.svg'
 import { useIsLoggedIn } from 'src/utils'
 import { useNavigate, generatePath, useLocation, useParams } from 'react-router'
-import { Bars4Icon, BookOpenIcon, IdentificationIcon, PencilIcon, PuzzlePieceIcon, SunIcon,MapIcon } from '@heroicons/react/24/outline'
+import { Bars4Icon, BookOpenIcon, IdentificationIcon, PencilIcon, PuzzlePieceIcon, SunIcon, MapIcon } from '@heroicons/react/24/outline'
+
+import styled from '@emotion/styled';
+
+const _StyledButton = styled(Button)`
+  border-width: 0.125rem;
+  color: ${({ theme }) => (theme.colorScheme === 'dark' ? theme.colors.brand[0] : theme.colors.brand[9])};
+  background-color: ${({ theme }) => (theme.colorScheme === 'dark' ? theme.colors.brand[9] : theme.colors.brand[0])};
+  &:hover {
+    background-color: ${({ theme }) => (theme.colorScheme === 'dark' ? theme.colors.brand[6] : theme.colors.brand[3])};
+  }
+`;
+const StyledButton = createPolymorphicComponent<'button', ButtonProps>(_StyledButton);
+
 
 const ManNavBar: FunctionComponent<{ routes: Route[] } & React.ComponentPropsWithRef<'div'>> = ({ routes, children, ...rest }) => {
   const [opened, setOpened] = useState<boolean>(false)
@@ -15,7 +28,7 @@ const ManNavBar: FunctionComponent<{ routes: Route[] } & React.ComponentPropsWit
   const goto = useNavigate()
   const location = useLocation()
   const params = useParams()
-  const icons = [Bars4Icon, IdentificationIcon, PuzzlePieceIcon, PencilIcon, SunIcon,BookOpenIcon,MapIcon]
+  const icons = [Bars4Icon, IdentificationIcon, PuzzlePieceIcon, PencilIcon, SunIcon, BookOpenIcon, MapIcon]
 
   console.log(`the window width is : ${width} at ${location.pathname}`)
   useEffect(() => {
@@ -23,8 +36,36 @@ const ManNavBar: FunctionComponent<{ routes: Route[] } & React.ComponentPropsWit
   }, [width])
   return (
     <AppShell
+      navbar={
+
+        <Navbar p='md' hiddenBreakpoint={`xl`} hidden={!opened} width={{ sm: 200, lg: 300 }}>
+          <Navbar.Section grow component={ScrollArea} mx='-xs' px='xs'>
+            <Tabs
+              variant='pills'
+              orientation='vertical'
+              value={generatePath(location.pathname, params)}
+              onTabChange={(value: string) => goto(value)}
+              defaultValue={generatePath('/home')}
+            >
+              <Tabs.List>
+                {routes
+                  .filter(({ showInNav }) => showInNav)
+                  .map(({ path, name, params }, index) => (
+                    <Tabs.Tab
+                      key={`${name}-${index}`}
+                      value={generatePath(path, params)}
+                      icon={React.createElement(icons[index], { className: 'h-[18px] w-[18px] mr-2 inline' })}
+                    >
+                      {name}
+                    </Tabs.Tab>
+                  ))}
+              </Tabs.List>
+            </Tabs>
+          </Navbar.Section>
+        </Navbar>
+      }
       header={
-        <Header height={{ base: 50, md: 70 }} p='md'>
+        <Header height={{ base: 50, md: 70 }} p='md' style={{ backgroundColor: themefn.colorScheme == 'dark' ? themefn.colors.brand[9] : themefn.colors.brand[0] }}>
           <div style={{ display: 'flex', alignItems: 'center', height: '100%' }}>
             <MediaQuery largerThan='md' styles={{ display: 'none' }}>
               <Burger
@@ -32,11 +73,6 @@ const ManNavBar: FunctionComponent<{ routes: Route[] } & React.ComponentPropsWit
                 onClick={() => setOpened((o) => !o)}
                 size='sm'
                 mr='xl'
-                styles={(theme) => ({
-                  root: {
-                    color: theme.colorScheme == 'dark' ? theme.colors.dark[1] : theme.colors.dark[9],
-                  },
-                })}
               />
             </MediaQuery>
             <BulmaLogoSVG
@@ -44,7 +80,7 @@ const ManNavBar: FunctionComponent<{ routes: Route[] } & React.ComponentPropsWit
               height={65}
               aria-hidden
               title='bulma.io-logo'
-              style={{ backgroundColor: themefn.colorScheme == 'dark' ? themefn.colors.dark[9] : themefn.colors.dark[0] }}
+              
             />
             {isLoggedIn && (
               <MediaQuery smallerThan={`md`} styles={{ display: 'none' }}>
@@ -57,8 +93,12 @@ const ManNavBar: FunctionComponent<{ routes: Route[] } & React.ComponentPropsWit
                     {routes
                       .filter(({ showInNav }) => showInNav)
                       .map(({ path, name, params }, index) => (
-                        <Tabs.Tab key={`${name}-${index}`} value={generatePath(path, params)} icon={React.createElement(icons[index], { className: 'h-[18px] w-[18px] mr-2 inline' })}>
-                           {name}
+                        <Tabs.Tab
+                          key={`${name}-${index}`}
+                          value={generatePath(path, params)}
+                          icon={React.createElement(icons[index], { className: 'h-[18px] w-[18px] mr-2 inline' })}
+                        >
+                          {name}
                         </Tabs.Tab>
                       ))}
                   </Tabs.List>
@@ -70,7 +110,7 @@ const ManNavBar: FunctionComponent<{ routes: Route[] } & React.ComponentPropsWit
       }
       footer={
         <Footer height={60} p='md'>
-          Application footer
+          <StyledButton>This is a footer button from styled</StyledButton>
         </Footer>
       }
     >

@@ -13,7 +13,7 @@ import {
   RNDCLK_DF_PATH_THICKNESS,
   RNDCLK_DF_ROUND,
   RNDCLK_DF_STEP,
-} from 'src/config/rndclk.constants'
+} from 'src/config'
 import { type Vector3, convertRange, mod, setDecimalPlaces } from 'mz-math'
 
 export class ClockPart {

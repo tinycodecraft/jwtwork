@@ -10,7 +10,7 @@ import {
   RNDCLK_DF_KNOT_BORDER,
   RNDCLK_DF_KNOT_BORDER_COLOR,
   RNDCLK_DF_KNOT_RADIUS,
-} from 'src/config/rndclk.constants'
+} from 'src/config'
 import { getAnglesInDiff, getSteppedAngle } from 'src/utils/geometries'
 import { createStrokeFromKnots } from './helpers'
 

@@ -7,7 +7,7 @@ import {
   RNDCLK_DF_TICKS_GROUP_SIZE,
   RNDCLK_DF_TICKS_HEIGHT,
   RNDCLK_DF_TICKS_VALUES_COLOR,
-} from 'src/config/rndclk.constants'
+} from 'src/config'
 import type { IMarkInstance, IMarkProps, IMarkTemplateProps, ITicksProps } from 'src/fragments/rndclktypes'
 import { ClockPart } from './ClockPart'
 import { valueOr } from 'src/utils'

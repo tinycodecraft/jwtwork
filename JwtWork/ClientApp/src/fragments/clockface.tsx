@@ -3,7 +3,7 @@ import { ClockPart,KnotPart } from 'src/model'
 import { type  IAnimationResult, animate, newId } from 'mz-math'
 import type { IAnchorProps, IAnimateProps, IKnotInstance } from 'src/fragments/rndclktypes'
 import { getAnimationProgressAngle, getMouseInAngle } from 'src/utils/geometries'
-import { RNDCLK_DF_ANIMATION_DURATION, RNDCLK_DF_PATH_BG_COLOR, RNDCLK_DF_PATH_BORDER_COLOR } from 'src/config/rndclk.constants'
+import { RNDCLK_DF_ANIMATION_DURATION, RNDCLK_DF_PATH_BG_COLOR, RNDCLK_DF_PATH_BORDER_COLOR } from 'src/config'
 import { valueOr } from 'src/utils'
 import { InnerFace } from './innerface'
 
