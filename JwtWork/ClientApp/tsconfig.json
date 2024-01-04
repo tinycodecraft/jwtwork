@@ -19,7 +19,7 @@
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
     "typeRoots": [
-      "node_modules/@types","src/fragments"
+      "node_modules/@types","src/fragments/themes.d.ts", "src/fragments/types.d.ts"
     ],
     "lib": [
       "dom",

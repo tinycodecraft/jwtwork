@@ -39,7 +39,8 @@ const ManNavBar: FunctionComponent<{ routes: Route[] } & React.ComponentPropsWit
       navbar={
 
         <Navbar p='md' hiddenBreakpoint={`xl`} hidden={!opened} width={{ sm: 200, lg: 300 }}>
-          <Navbar.Section grow component={ScrollArea} mx='-xs' px='xs'>
+          <Navbar.Section grow mx='-xs' px='xs'>
+            <ScrollArea type='scroll' >
             <Tabs
               variant='pills'
               orientation='vertical'
@@ -61,6 +62,8 @@ const ManNavBar: FunctionComponent<{ routes: Route[] } & React.ComponentPropsWit
                   ))}
               </Tabs.List>
             </Tabs>
+            </ScrollArea>
+
           </Navbar.Section>
         </Navbar>
       }
