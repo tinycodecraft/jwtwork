@@ -10,7 +10,7 @@ declare module '@emotion/react' {
 }
 
 declare module '@mantine/core' {
-  export interface MantineThemeColorOverride {
+  export interface MantineThemeColorsOverride {
     colors: Record<MoreColors, Tuple<string, 10>>
   }
 

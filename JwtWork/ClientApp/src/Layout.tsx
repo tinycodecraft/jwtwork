@@ -18,7 +18,7 @@ const Layout: FunctionComponent<PropsWithChildren> = ({ children }) => (
         colorScheme: 'dark',
 
         colors: {
-          brand: ['#ffe5ff', '#f9b9f8', '#f18def', '#eb60e8', '#e534e0', '#cb1ac7', '#9f139b', '#720b6f', '#460444', '#1b001a'],
+          'brand': ['#ffe5ff', '#f9b9f8', '#f18def', '#eb60e8', '#e534e0', '#cb1ac7', '#9f139b', '#720b6f', '#460444', '#1b001a'],
         },
 
         breakpoints: {
