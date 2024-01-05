@@ -56,7 +56,7 @@ const ManNavBar: FunctionComponent<{ routes: Route[] } & React.ComponentPropsWit
           pb={`xs`}
           pl={`md`}
           
-          style={{ backgroundColor: themefn.colorScheme == 'dark' ? themefn.colors.brand[8] : themefn.colors.brand[3] }}
+          style={{ backgroundColor: themefn.colorScheme == 'dark' ? themefn.colors.brand[9] : themefn.colors.brand[1] }}
         >
           <div style={{ display: 'flex', alignItems: 'center', height: '120%' }}>
             <MediaQuery largerThan='lg' styles={{ display: 'none' }}>
@@ -69,7 +69,7 @@ const ManNavBar: FunctionComponent<{ routes: Route[] } & React.ComponentPropsWit
               <MediaQuery smallerThan={`lg`} styles={{ display: 'none' }}>
                 
                 <Tabs
-                  color='brand'
+                  color='lime'
                   value={generatePath(location.pathname, params)}
                   onTabChange={(value: string) => goto(value)}
                   defaultValue={generatePath('/home')}
