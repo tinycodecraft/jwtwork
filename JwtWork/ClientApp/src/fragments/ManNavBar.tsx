@@ -2,26 +2,24 @@ import {
   AppShell,
   Burger,
   Header,
-  MantineProvider,
   MediaQuery,
   Footer,
   Tabs,
   useMantineTheme,
-  Navbar,
-  ScrollArea,
   Button,
   createPolymorphicComponent,
   type ButtonProps,
+  Drawer,
 } from '@mantine/core'
 import { useViewportSize } from '@mantine/hooks'
-import React, { useState, type FunctionComponent, useEffect } from 'react'
-import type { Route } from 'src/config'
+import React, { useState, type FunctionComponent, useEffect, useRef } from 'react'
+import { FootBarHeight, type Route } from 'src/config'
 import { ReactComponent as BulmaLogoSVG } from 'src/assets/image/BulmaLogo.svg'
-import { useIsLoggedIn } from 'src/utils'
+import { clsxm, useIsLoggedIn } from 'src/utils'
 import { useNavigate, generatePath, useLocation, useParams } from 'react-router'
 import { Bars4Icon, BookOpenIcon, IdentificationIcon, PencilIcon, PuzzlePieceIcon, SunIcon, MapIcon } from '@heroicons/react/24/outline'
-
 import styled from '@emotion/styled'
+import { DragOverlay } from '@dnd-kit/core'
 
 const _StyledButton = styled(Button)`
   border-width: 0.125rem;
@@ -35,6 +33,8 @@ const StyledButton = createPolymorphicComponent<'button', ButtonProps>(_StyledBu
 
 const ManNavBar: FunctionComponent<{ routes: Route[] } & React.ComponentPropsWithRef<'div'>> = ({ routes, children, ...rest }) => {
   const [opened, setOpened] = useState<boolean>(false)
+  const [drawerTop, setDrawerTop] = useState<number>(0)
+  const headRef = useRef<HTMLDivElement | null>(null)
   const { width, height } = useViewportSize()
   const themefn = useMantineTheme()
   const isLoggedIn = useIsLoggedIn()
@@ -44,13 +44,26 @@ const ManNavBar: FunctionComponent<{ routes: Route[] } & React.ComponentPropsWit
   const icons = [Bars4Icon, IdentificationIcon, PuzzlePieceIcon, PencilIcon, SunIcon, BookOpenIcon, MapIcon]
 
   console.log(`the window width is : ${width} at ${location.pathname}`)
+  useEffect(()=>{
+    console.log(`try to render effect`)
+    if (headRef.current) {
+      const { height } = headRef.current.getBoundingClientRect()
+      console.log(`the height of the header is ${height}`)
+      if (height) {
+        setDrawerTop(height)
+      }
+    }
+
+  },[])
   useEffect(() => {
     console.log(`the effect happen on window width changed ${width} `)
+
   }, [width])
   return (
     <AppShell
       header={
         <Header
+          ref={headRef}
           height={{ base: 50, md: 70 }}
           pt={`md`}
           pb={`xs`}
@@ -98,11 +111,41 @@ const ManNavBar: FunctionComponent<{ routes: Route[] } & React.ComponentPropsWit
         </Header>
       }
       footer={
-        <Footer height={60} p='md'>
+        <Footer height={FootBarHeight} p='md'>
           <StyledButton>This is a footer button from styled</StyledButton>
         </Footer>
       }
     >
+      <Drawer.Root opened={opened} size={`14rem`} onClose={() => setOpened(false)} sx={{ 'top': `${drawerTop}px`, 'bottom': `${FootBarHeight}px` }}>
+        <Drawer.Overlay sx={{ 'top': `${drawerTop}px`, 'bottom': `${FootBarHeight}px` }} />
+        <Drawer.Content>
+          <Drawer.Body sx={{ 'marginTop': `${drawerTop}px`, 'marginBottom': `${FootBarHeight}px` }} >
+            <Tabs
+              color='lime'
+              orientation='vertical'
+              value={generatePath(location.pathname, params)}
+              onTabChange={(value: string) => goto(value)}
+              defaultValue={generatePath('/home')}              
+            >
+              <Tabs.List>
+                {routes
+                  .filter(({ showInNav }) => showInNav)
+                  .map(({ path, name, params }, index) => (
+                    <Tabs.Tab
+                      key={`${name}-${index}`}
+                      value={generatePath(path, params)}
+                      icon={React.createElement(icons[index], { className: 'h-[18px] w-[18px] mr-2 inline' })}
+                      className='text-lg underline-flash'
+                    >
+                      {name}
+                    </Tabs.Tab>
+                  ))}
+              </Tabs.List>
+            </Tabs>
+          </Drawer.Body>
+        </Drawer.Content>
+      </Drawer.Root>
+
       {children}
     </AppShell>
   )

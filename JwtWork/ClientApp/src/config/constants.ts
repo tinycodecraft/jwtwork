@@ -4,6 +4,7 @@ import type { SelectOption, WeatherState, FormState, AuthUserState, UploadState,
 
 
 export const HeadIconWidth = 700
+export const FootBarHeight = 60
 
 export const ApiStatusEnum = {
   FAILURE: 'failure',
