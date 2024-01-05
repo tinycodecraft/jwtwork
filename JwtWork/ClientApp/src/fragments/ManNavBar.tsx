@@ -57,7 +57,7 @@ const ManNavBar: FunctionComponent<{ routes: Route[] } & React.ComponentPropsWit
           pl={`md`}
           style={{ backgroundColor: themefn.colorScheme == 'dark' ? themefn.colors.brand[9] : themefn.colors.brand[1] }}
         >
-          <div style={{ display: 'flex', alignItems: 'center', height: '120%' }} className='flex-row items-center h-[120%] justify-between'>
+          <div className='flex items-center h-[120%] justify-between'>
             <div className='mr-10'>
               <BulmaLogoSVG width={130} height={65} aria-hidden title='bulma.io-logo' />
               {/* only pseudo element to help give some gap in flex items */}
