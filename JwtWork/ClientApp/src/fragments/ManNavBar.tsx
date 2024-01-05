@@ -44,7 +44,7 @@ const ManNavBar: FunctionComponent<{ routes: Route[] } & React.ComponentPropsWit
   const icons = [Bars4Icon, IdentificationIcon, PuzzlePieceIcon, PencilIcon, SunIcon, BookOpenIcon, MapIcon]
 
   console.log(`the window width is : ${width} at ${location.pathname}`)
-  useEffect(()=>{
+  useEffect(() => {
     console.log(`try to render effect`)
     if (headRef.current) {
       const { height } = headRef.current.getBoundingClientRect()
@@ -53,11 +53,16 @@ const ManNavBar: FunctionComponent<{ routes: Route[] } & React.ComponentPropsWit
         setDrawerTop(height)
       }
     }
-
-  },[])
+  }, [])
   useEffect(() => {
     console.log(`the effect happen on window width changed ${width} `)
-
+    if (headRef.current) {
+      const { height } = headRef.current.getBoundingClientRect()
+      console.log(`the height of the header is ${height}`)
+      if (height) {
+        setDrawerTop(height)
+      }
+    }
   }, [width])
   return (
     <AppShell
@@ -116,16 +121,45 @@ const ManNavBar: FunctionComponent<{ routes: Route[] } & React.ComponentPropsWit
         </Footer>
       }
     >
-      <Drawer.Root opened={opened} size={`14rem`} onClose={() => setOpened(false)} sx={{ 'top': `${drawerTop}px`, 'bottom': `${FootBarHeight}px` }}>
-        <Drawer.Overlay sx={{ 'top': `${drawerTop}px`, 'bottom': `${FootBarHeight}px` }} />
-        <Drawer.Content>
-          <Drawer.Body sx={{ 'marginTop': `${drawerTop}px`, 'marginBottom': `${FootBarHeight}px` }} >
+      <Drawer.Root
+        opened={opened}
+        size={`14rem`}
+        onClose={() => setOpened(false)}
+        sx={(theme) => ({
+          top: `${drawerTop}px`,
+          bottom: `${FootBarHeight}px`,
+          background: theme.colorScheme == 'dark' ? theme.fn.rgba(theme.colors.dark[9], 0.1) : theme.fn.rgba(theme.colors.dark[0], 0.1),
+        })}
+      >
+        <Drawer.Overlay sx={{ top: `${drawerTop}px`, bottom: `${FootBarHeight}px` }} />
+        <Drawer.Content
+            sx={(theme) => ({
+              
+              background: theme.colorScheme == 'dark' ? theme.fn.rgba(theme.colors.dark[9], 0.1) : theme.fn.rgba(theme.colors.dark[0], 0.1),
+            })}        
+        >
+          <Drawer.Header
+            sx={(theme) => ({
+              height: `${drawerTop}px`,
+              background: theme.colorScheme == 'dark' ? theme.fn.rgba(theme.colors.dark[9], 0.1) : theme.fn.rgba(theme.colors.dark[0], 0.1),
+            })}
+          >
+            
+          </Drawer.Header>
+          <Drawer.Body
+            sx={(theme) => ({
+              background: theme.colorScheme == 'dark' ? theme.fn.rgba(theme.colors.dark[9], 0.1) : theme.fn.rgba(theme.colors.dark[0], 0.1),
+            })}
+          >
             <Tabs
               color='lime'
               orientation='vertical'
               value={generatePath(location.pathname, params)}
-              onTabChange={(value: string) => goto(value)}
-              defaultValue={generatePath('/home')}              
+              onTabChange={(value: string) => {
+                setOpened(false)
+                goto(value)
+              }}
+              defaultValue={generatePath('/home')}
             >
               <Tabs.List>
                 {routes
