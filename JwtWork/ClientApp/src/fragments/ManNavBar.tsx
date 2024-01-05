@@ -55,45 +55,45 @@ const ManNavBar: FunctionComponent<{ routes: Route[] } & React.ComponentPropsWit
           pt={`md`}
           pb={`xs`}
           pl={`md`}
-          
           style={{ backgroundColor: themefn.colorScheme == 'dark' ? themefn.colors.brand[9] : themefn.colors.brand[1] }}
         >
-          <div style={{ display: 'flex', alignItems: 'center', height: '120%' }}>
-            <MediaQuery largerThan='lg' styles={{ display: 'none' }}>
-              <Burger opened={opened} onClick={() => setOpened((o) => !o)} size='sm' mr='xl' />
-            </MediaQuery>
-            <BulmaLogoSVG width={130} height={65} aria-hidden title='bulma.io-logo'   />
-            {/* only pseudo element to help give some gap in flex items */}
-            <div className='mr-10'><br className='mr-10' /></div>
-            {isLoggedIn && (
-              <MediaQuery smallerThan={`lg`} styles={{ display: 'none' }}>
-                
-                <Tabs
-                  color='lime'
-                  value={generatePath(location.pathname, params)}
-                  onTabChange={(value: string) => goto(value)}
-                  defaultValue={generatePath('/home')}
-                  className='-mb-1'
-                  
-                >
-                  <Tabs.List>
-                    {routes
-                      .filter(({ showInNav }) => showInNav)
-                      .map(({ path, name, params }, index) => (
-                        <Tabs.Tab
-                          key={`${name}-${index}`}
-                          value={generatePath(path, params)}
-                          icon={React.createElement(icons[index], { className: 'h-[18px] w-[18px] mr-2 inline' })}
-                          className='text-lg underline-flash'
-                          
-                        >
-                          {name}
-                        </Tabs.Tab>
-                      ))}
-                  </Tabs.List>
-                </Tabs>
+          <div style={{ display: 'flex', alignItems: 'center', height: '120%' }} className='flex-row items-center h-[120%] justify-between'>
+            <div className='mr-10'>
+              <BulmaLogoSVG width={130} height={65} aria-hidden title='bulma.io-logo' />
+              {/* only pseudo element to help give some gap in flex items */}
+              <br className='mr-10' />
+            </div>
+            <div>
+              {isLoggedIn && (
+                <MediaQuery smallerThan={`lg`} styles={{ display: 'none' }}>
+                  <Tabs
+                    color='lime'
+                    value={generatePath(location.pathname, params)}
+                    onTabChange={(value: string) => goto(value)}
+                    defaultValue={generatePath('/home')}
+                    className='-mb-1'
+                  >
+                    <Tabs.List>
+                      {routes
+                        .filter(({ showInNav }) => showInNav)
+                        .map(({ path, name, params }, index) => (
+                          <Tabs.Tab
+                            key={`${name}-${index}`}
+                            value={generatePath(path, params)}
+                            icon={React.createElement(icons[index], { className: 'h-[18px] w-[18px] mr-2 inline' })}
+                            className='text-lg underline-flash'
+                          >
+                            {name}
+                          </Tabs.Tab>
+                        ))}
+                    </Tabs.List>
+                  </Tabs>
+                </MediaQuery>
+              )}
+              <MediaQuery largerThan='lg' styles={{ display: 'none' }}>
+                <Burger opened={opened} onClick={() => setOpened((o) => !o)} size='sm' mr='xl' />
               </MediaQuery>
-            )}
+            </div>
           </div>
         </Header>
       }
