@@ -117,6 +117,7 @@ const LoginForm: FunctionComponent = () => {
                   type='text'
                   value={userName}
                   error={isInvalid}
+                  
                   onChange={(e) => setUserName && setUserName(e.target.value)}
                 />
                 <Input

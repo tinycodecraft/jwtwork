@@ -12,7 +12,7 @@
    "ProjectRootNamespace": "JwtWork.SQLDB",
    "Schemas": null,
    "SelectedHandlebarsLanguage": 3,
-   "SelectedToBeGenerated": 2,
+   "SelectedToBeGenerated": 0,
    "T4TemplatePath": null,
    "Tables": [
       {
@@ -26,6 +26,7 @@
    "UseDatabaseNames": true,
    "UseDateOnlyTimeOnly": false,
    "UseDbContextSplitting": false,
+   "UseDecimalDataAnnotationForSprocResult": true,
    "UseFluentApiOnly": false,
    "UseHandleBars": false,
    "UseHierarchyId": false,
@@ -33,6 +34,7 @@
    "UseLegacyPluralizer": false,
    "UseManyToManyEntity": false,
    "UseNoDefaultConstructor": false,
+   "UseNoNavigations": false,
    "UseNoObjectFilter": false,
    "UseNodaTime": false,
    "UseNullableReferences": false,

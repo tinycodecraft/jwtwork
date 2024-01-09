@@ -3,6 +3,9 @@ const withMT = require('@material-tailwind/react/utils/withMT')
 
 module.exports = withMT({
   content: ['./src/**/*.{js,jsx,ts,tsx,html,css}'],
+  variants: {
+    borderColor: ['resonsive', 'hover', 'focus', 'focus-within'],
+  },
   theme: {
     extend: {
       styles: {
@@ -28,6 +31,12 @@ module.exports = withMT({
             backdropBlur: 'backdrop-blur-sm',
           },
         },
+      },
+      transformOrigin: {
+        0: '0%',
+      },
+      zIndex: {
+        '-1': '-1',
       },
 
       fontFamily: {
