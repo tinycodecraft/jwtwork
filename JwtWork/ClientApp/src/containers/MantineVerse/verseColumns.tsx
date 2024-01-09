@@ -20,9 +20,33 @@ export const verseColumns : MRT_ColumnDef<DataVerseItem>[]= [
         accessorKey: 'published_at',
         id:'published_at',
         header: 'Published Date',
+        /*
+        // example for filtervariants
+            filterVariant: 'range-slider',
+            mantineFilterRangeSliderProps: {
+                min: 1000,
+                max: 100000
+            }        
+            filterVariant: 'select',
+            mantineFilterSelectProps: {
+                data: (['Male', 'Female', 'Other'] as any)
+            },
+            filterVariant: 'multi-select',
+            mantineFilterMultiSelectProps: {
+                data: (['Alabama', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'Florida', 'Georgia', 'New York', 'Texas', 'Washington'] as any)
+            },
+
+            filterVariant: 'autocomplete',
+            mantineFilterAutocompleteProps : {
+                data: (['Alabama', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'Florida', 'Georgia', 'New York', 'Texas', 'Washington'] as any)
+            }
+        
+            
+        */
+        
         // even filterFn provided, the filter will not be used for manual filtering enabled. (server data)
         filterFn: (row,_colIds,filtervalue,meta)=> {
-            // console.log(`the value here `,filtervalue,` with `,meta)
+            console.log(`the value here `,filtervalue,` with `,meta)
             const datevalue = row.getValue<Date>('published_at');
             const datestring = dayjs(datevalue ).format('YYYYMMDD');
             let lowervalue = '19000101';

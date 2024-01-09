@@ -24,7 +24,12 @@ class UploadService extends BaseService {
       })
     }
 
-    const { data } = await this.$http.post<FileUploadSummaryState>(`SimpleUpload?connectionid=${encodeURIComponent(datainput.connectionId)}&type=image`, fdata, {
+    const  uploadParms = new URLSearchParams({
+      connectionid: datainput.connectionId,
+      type: 'image'
+    })
+
+    const { data } = await this.$http.post<FileUploadSummaryState>(`SimpleUpload?${uploadParms.toString()}`, fdata, {
       headers:{
         "Content-Type": "multipart/form-data",
       },

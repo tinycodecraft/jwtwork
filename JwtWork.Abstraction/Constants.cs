@@ -48,6 +48,13 @@ namespace JwtWork.Abstraction
             
         }
 
+        public static class Record
+        {
+            public const string Job = nameof(Job);
+            public const string User = nameof(User);
+
+        }
+
         public static class Setting
         {
             public const string AuthSetting = nameof(AuthSetting);
